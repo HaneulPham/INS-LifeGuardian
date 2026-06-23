@@ -36,47 +36,14 @@ Consider Welfare Check; Alerts/Restorals; Emergency Alarm; Notifications; Tasks/
 - Before Welfare Check work, read `WELFARE_CHECK_QA_CONTEXT.md`.
 - Before Service Request, Device Setup Checklist, cancellation, or Services
   Installed Summary work, read `SERVICE_REQUEST_QA_CONTEXT.md`.
-- Read `QA_PROJECT_CONSTANTS.md` when environment, platform support, test-case
-  identifiers, severity/priority, accessibility, timezone, or release/build
-  conventions are relevant.
 
-Treat these files as supporting QA evidence. Current approved Jira acceptance
-criteria define business intent. The published API contract defines interface
-behavior. If Jira, an API contract, a context file, or observed behavior
-conflicts, do not select one silently; document the conflict and mark the
-expected behavior `Needs confirmation`.
+Treat these files as supporting QA evidence. Current Jira requirements and API
+contracts take precedence, and documented conflicts must remain marked
+`Needs confirmation`.
 
 ## Integrations and services
 
 Consider FCM/push notifications, SMS, email, Twilio, QuickBooks, AWS/backend APIs, authentication/session/token handling, sync services, jobs/queues, alert delivery, notification logs, activity history, and task occurrence history.
-
-## Production safety guardrails
-
-- Never trigger or modify production emergency alarms, restorals, Twilio calls,
-  SMS, email, push notifications, billing, devices, client records, schedules,
-  jobs, or queues without the user's explicit authorization for that exact
-  action.
-- Prefer approved non-production environments, sandbox integrations, synthetic
-  users, and synthetic or de-identified client data.
-- Before an authorized production validation, state the potential external and
-  safety impact, intended recipients, rollback or restoration approach, and
-  evidence to capture.
-- Do not infer that permission to analyze, review, or write test cases authorizes
-  execution against a live system.
-
-## Jira operating rules
-
-- When a Jira issue key or Jira URL is supplied and Jira access is available,
-  retrieve the current issue before completing requirement analysis.
-- Record the Jira issue key and the requirement's updated date or version in QA
-  output when available.
-- Treat approved description and acceptance criteria as requirements. Treat
-  comments, attachments, and linked issues as supporting evidence unless their
-  authority is confirmed.
-- Highlight conflicts between the issue, comments, designs, API contracts,
-  context files, and observed behavior as `Needs confirmation`.
-- Never create, edit, transition, assign, link, or comment on a Jira issue unless
-  the user explicitly requests that external change.
 
 ## Default QA workflow
 
@@ -85,9 +52,7 @@ Unless the user asks for another format, respond in this order:
 1. **Requirement Analysis**: requirement summary; intent and user/business value; impacted modules/platforms; missing requirements/gaps; business/safety and regression risks; backend/API, data-integrity, permissions/security, integration, job/queue, audit/history/log, and report/export impact; assumptions.
 2. **Questions**: group as Critical, Important, and Optional.
 3. **Test Focus Areas**: recommend focus areas before full cases.
-4. **Test Cases**: generate only when explicitly requested. When test cases are
-   requested but information is incomplete, provide best-effort cases and
-   clearly state assumptions or mark unknowns `Needs confirmation`.
+4. **Test Cases**: generate only when explicitly requested. If information is incomplete, provide best-effort cases and clearly state assumptions or mark unknowns `Needs confirmation`.
 
 ## Global test-case rules
 
@@ -137,21 +102,6 @@ First identify the involved data types, then test only relevant formats across U
 ## Security and permissions
 
 Always consider role-based access, village/file scope, linked-client scope for Portal users, unauthorized access, expired or mismatched sessions/tokens, direct URL/API access, cross-tenant leakage, read-only versus edit permission, and UI/API permission mismatch.
-
-For healthcare, personal, and operationally sensitive data:
-
-- Use synthetic or de-identified data unless authorized test data is explicitly
-  provided for the approved environment.
-- Mask PHI, PII, contact details, addresses, identifiers, billing data, access
-  tokens, and credentials in Jira, screenshots, recordings, logs, reports,
-  exports, and QA handover material.
-- Never place secrets, session tokens, API keys, passwords, or unredacted client
-  data in repository files or test evidence.
-- Verify that UI, APIs, notifications, reports, exports, audit records, and logs
-  expose sensitive data only to the intended role, tenant, village, client,
-  device, and recipient.
-- Include cache, downloaded-file, notification-preview, background-app, and
-  device-loss exposure where relevant.
 
 ## Backend and API analysis
 

@@ -52,10 +52,10 @@ The official delivery-priority model is `Needs confirmation`. Do not treat
 severity and priority as interchangeable. Until product/engineering confirms
 priority, label any value as a QA recommendation:
 
-- **P0**: immediate response/release blocker
-- **P1**: fix before the affected release or urgently patch
-- **P2**: plan for an upcoming release
-- **P3**: backlog/cosmetic or low operational impact
+- **High**: immediate response/release blocker
+- **Medium**: fix before the affected release or urgently patch
+- **Low**: plan for an upcoming release
+- **Lowest**: backlog/cosmetic or low operational impact
 
 ## Test-case identifiers
 
