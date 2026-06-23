@@ -1,0 +1,4 @@
+interface:
+  display_name: "INS LifeGuardian Context Ingestion"
+  short_description: "Turn project evidence into verified QA context"
+  default_prompt: "Use $ins-lifeguardian-context-ingestion to review these project documents and create a feature QA context file."
