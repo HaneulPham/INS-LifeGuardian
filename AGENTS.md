@@ -59,6 +59,7 @@ Unless the user asks for another format, respond in this order:
 ## Global test-case rules
 
 - Make every case specific, observable, measurable, and verifiable.
+- Test-case Priority must use only `High`, `Medium`, `Low`, or `Lowest`.
 - Test-case titles must start with **"Verify"** and clearly describe the scenario, action, and expected outcome.
 - Include relevant happy, failure, edge, boundary, permission, integration, and regression paths.
 - For Web, Mobile, and Regression cases, group every expected/check column by test-step number. Write `Verify after step #X:` once for each applicable step, then display every check beneath it as a bullet point. For API cases, use `Verify after request:` and display every response, persistence, and integration check beneath it as a bullet point.

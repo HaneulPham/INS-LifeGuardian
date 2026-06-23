@@ -10,6 +10,8 @@ This context captures the intended correction in SMAR-2334 and the supplied Docu
 
 - SMAR-2334: Document Field History Platform Incorrect for SHM Client File API's, supplied as a ticket screenshot.
 - `BA-DocumentFieldHistory API.pdf`, a Confluence export describing LG Document Field History v2 properties and operations.
+- `DocumentHistoryPlatform` enum screenshot confirming supported values and user-facing descriptions.
+- Confirmed SMAR-2334 API test contract details for the SHM development dispatcher.
 - Repository `AGENTS.md`, including confirmed Document Change Log formatting rules.
 - Sources reviewed on 23/06/2026.
 
@@ -18,8 +20,9 @@ This context captures the intended correction in SMAR-2334 and the supplied Docu
 - SMAR-2334 expected results are treated as confirmed requirements for the ticket scope.
 - SMAR-2334 actual results are observed defect behavior for the SHM API old backend, not desired behavior.
 - The PDF is treated as the supplied API definition for `/lg/documentfieldhistory/v2`; current deployed schemas and behavior still require verification.
+- The supplied SHM test contract confirms the development dispatcher URL, `POST` method, `200 OK` success response, and supported `DocumentHistoryPlatform` values for this ticket.
 - The PDF's example tenant, UUIDs, people, and source names are execution-specific and must not be reused in test data.
-- The SHM `CreateClientFileRequest` and `UpdateClientFileRequest` endpoints, methods, response codes, and full schemas were not supplied and must not be guessed.
+- The full dispatcher envelope, Client File request schemas, authentication contract, and error responses were not supplied and must not be guessed.
 
 ## Feature purpose
 
@@ -50,7 +53,9 @@ The business value is reliable traceability: users reviewing Document Change Log
 - `EditedBy` on both `CreateClientFileRequest` and `UpdateClientFileRequest` must be nullable and use type `DocumentHistoryPlatform`.
 - When `EditedBy` is omitted, blank, or null, the effective history platform must default to `IPD`.
 - Before the fix, absent attribution was observed as `ControlPanel`, which SMAR-2334 identifies as incorrect.
-- Supported non-null `DocumentHistoryPlatform` values and serialization rules are `Needs confirmation`.
+- Supported non-null `DocumentHistoryPlatform` enum values are `ControlPanel`, `Portal`, `MobileApp`, `CarerApp`, and `IPD`.
+- Their user-facing descriptions are `Control Panel`, `Portal`, `Mobile App`, `Carer App`, and `IPD` respectively.
+- When a supported non-null value is supplied, create and update must preserve that value rather than replace it with the `IPD` default.
 
 ### Document Field History properties
 
@@ -96,6 +101,7 @@ Exact no-change, clear/remove, nested-record update, and invalid-request behavio
 
 - CP Document Change Log is the stated verification surface for create and update results.
 - The displayed Platform must represent the effective source platform. For an omitted, blank, or null `EditedBy` in these SHM requests, it must display `IPD` rather than `ControlPanel`.
+- Explicit values display using their user-facing descriptions: `Control Panel`, `Portal`, `Mobile App`, `Carer App`, or `IPD`.
 - Create history must include both Client and Client File fields that are applicable to the submitted request.
 - Medication must render as readable business text containing Name, Dosage, and Comment; raw JSON, object text, or an incomplete value is not acceptable.
 - Exact CP labels for every Client File field and the complete create-field inventory are `Needs confirmation`.
@@ -104,11 +110,17 @@ Exact no-change, clear/remove, nested-record update, and invalid-request behavio
 
 ### SHM Client File requests
 
+- Development endpoint: `https://telehealthdev.theinsgroup.com.au:4463/api/dispatcher`.
+- HTTP method: `POST` for both Client File create and update requests dispatched through this endpoint.
+- A successful valid create or update returns `200 OK`.
+- The successful response data must match the created or updated request data.
 - `CreateClientFileRequest.EditedBy`: nullable `DocumentHistoryPlatform`; defaults effectively to `IPD` when omitted, blank, or null.
 - `UpdateClientFileRequest.EditedBy`: nullable `DocumentHistoryPlatform`; defaults effectively to `IPD` when omitted, blank, or null.
+- The effective response/history attribution must be `IPD` for omitted, blank, or null `EditedBy`.
+- Explicit `ControlPanel`, `Portal`, `MobileApp`, `CarerApp`, and `IPD` values must be preserved for both request types.
 - Create must generate history for all applicable Client File fields, not only Client fields.
 - Create must generate Medication history in the confirmed readable Name, Dosage, and Comment format.
-- Exact endpoint URLs, HTTP methods, response codes, request field inventory, null-versus-empty-string deserialization, invalid enum errors, and transaction behavior are `Needs confirmation`.
+- The dispatcher envelope, exact request field inventory, response schema, invalid enum errors, and transaction behavior are `Needs confirmation`.
 
 ### LG Document Field History v2 retrieval
 
@@ -149,33 +161,32 @@ Exact no-change, clear/remove, nested-record update, and invalid-request behavio
 - A history-generation failure must not silently leave an untraceable client-file mutation. Whether the business transaction rolls back or records/retries the audit failure is `Needs confirmation`.
 - Tenant, client-file, updater, and platform attribution must not be taken from untrusted values without the backend authorization and validation defined by the current contract.
 - The `EditedBy` default must remain backward compatible for IPD callers that do not send the new property.
-- Explicit platform spoofing rules and whether callers may set `ControlPanel`, `Portal`, or other values are `Needs confirmation`.
+- Explicit supported platform values are accepted by the request contract; authorization or anti-spoofing rules governing which caller may claim each platform are `Needs confirmation`.
 
 ## Confirmed validation themes
 
 - Create with `EditedBy` omitted, explicit null, and any request representation treated as blank by the API defaults history Platform to `IPD`.
 - Update with the same attribution variants defaults history Platform to `IPD`.
-- Explicit supported non-null platform values persist accurately once the allowed enum set is confirmed.
+- Explicit `ControlPanel`, `Portal`, `MobileApp`, `CarerApp`, and `IPD` values persist accurately and render as their confirmed user-facing descriptions.
 - Create logs every applicable Client and Client File field with correct source field, source name, new value, and no unrelated or duplicate records.
 - Medication create history contains readable Name, Dosage, and Comment values and does not expose raw JSON or object serialization.
 - History is retrievable through v2 by the created/updated source and appears consistently in CP after refresh/reopen.
 - Existing callers that omit `EditedBy` continue to create or update client files while receiving the corrected `IPD` attribution.
-- Permission, token, tenant, client-file scope, invalid enum, null/empty handling, duplicate request, retry, and concurrent update behavior require contract-led coverage.
+- Permission, token, tenant, client-file scope, invalid enum, duplicate request, retry, and concurrent update behavior require contract-led coverage.
 
 ## Open questions and source conflicts
 
 ### Critical
 
-- What are the exact SHM Create Client File and Update Client File endpoint URLs, HTTP methods, authentication rules, success/error codes, and request/response schemas?
-- Does omitted, JSON `null`, and empty-string `EditedBy` all deserialize to the same default path? The ticket groups blank/null but does not define wire-level validation.
+- What are the exact dispatcher envelope, authentication rules, error codes, and Create/Update Client File request/response schemas?
 - What is the complete list and exact mapping of Client File fields that must be logged by `CreateClientFileRequest`?
-- Does `EditedBy` map directly to history `SrcPfm`, and which `DocumentHistoryPlatform` values are allowed for SHM callers?
+- Does `EditedBy` map directly to history `SrcPfm`?
 - If client-file persistence succeeds but history creation fails, must the transaction roll back, retry, queue recovery work, or raise an operational alert?
 
 ### Important
 
 - What exact separator, labels, blank-component handling, and order define the readable Medication format beyond Name, Dosage, and Comment?
-- Are explicit but unauthorized or semantically incorrect platform values rejected, ignored, or accepted?
+- Are supported but unauthorized or semantically incorrect platform values rejected, ignored, or accepted?
 - Are the PDF descriptions for `UpdUuid` and `UpdBy` reversed? Their declared types and samples suggest UUID versus display name respectively.
 - Is `SrcUuid` required for `/fields`, and is that response paginated or a plain string array?
 - What makes a POSTed history record a duplicate, and is batch creation atomic?
@@ -192,5 +203,5 @@ Exact no-change, clear/remove, nested-record update, and invalid-request behavio
 - Validate the SHM mutation, stored/retrieved history, and CP presentation as one chain.
 - Compare the exact submitted fields with generated records, including old/new values, source/subfield identity for nested data, updater, timestamp, tenant, client file, and platform.
 - Use neutral test data and never copy identifiers or people from the API document samples.
-- Do not write literal SHM API test cases until its endpoint contract is supplied or verified; mark missing contract values `Needs confirmation`.
+- Use the confirmed SHM development dispatcher URL, `POST` method, and `200 OK` success response in API cases; do not invent missing envelope fields, authentication details, schemas, or error responses.
 - Preserve the distinction between SMAR-2334 observed failures and the required post-fix behavior.
