@@ -36,6 +36,8 @@ Consider Welfare Check; Alerts/Restorals; Emergency Alarm; Notifications; Tasks/
 - Before Welfare Check work, read `WELFARE_CHECK_QA_CONTEXT.md`.
 - Before Service Request, Device Setup Checklist, cancellation, or Services
   Installed Summary work, read `SERVICE_REQUEST_QA_CONTEXT.md`.
+- Before Document Field History, Document Change Log, or SHM Client File API
+  history work, read `DOCUMENT_FIELD_HISTORY_API_QA_CONTEXT.md`.
 
 Treat these files as supporting QA evidence. Current Jira requirements and API
 contracts take precedence, and documented conflicts must remain marked
