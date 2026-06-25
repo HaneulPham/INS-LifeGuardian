@@ -85,6 +85,30 @@ Unless the user asks for another format, respond in this order:
 3. **Test Focus Areas**: recommend focus areas before full cases.
 4. **Test Cases**: generate only when explicitly requested. If information is incomplete, provide best-effort cases and clearly state assumptions or mark unknowns `Needs confirmation`.
 
+## QA coverage workflow for new features
+
+Before writing detailed test cases for a new feature, first provide a coverage
+review when the user asks for analysis, a test plan, or a test-case list. The
+coverage review should include:
+
+- Requirement understanding
+- Impacted modules/platforms
+- UI coverage
+- Functional coverage
+- Backend/API enforcement
+- Permission/security coverage
+- Duplicate, concurrency, and idempotency risk
+- Data integrity, persistence, refresh, and reopen behavior
+- Notifications, jobs, queues, and integration behavior
+- Audit/history/log coverage
+- Reports/exports coverage
+- Regression impact
+- Missing requirements and `Needs confirmation` items
+- Proposed test case list for review
+
+Write detailed test cases only after the user confirms the coverage direction or
+explicitly asks for full cases.
+
 ## Global test-case rules
 
 - Make every case specific, observable, measurable, and verifiable.
