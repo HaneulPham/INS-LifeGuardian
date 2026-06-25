@@ -159,6 +159,7 @@ Present all test cases as Markdown tables unless the user explicitly requests an
 
 - Use one row per test case when providing a test suite or multiple cases.
 - Keep all required columns from the applicable format below.
+- In test cases, format user-facing UI text with bold Markdown, such as **CP Desktop**, **Settings → Device Setup Steps**, **Generate Medi Alarm**, and **Medi Alarm Type**. Do not use inline code styling for normal UI labels, buttons, screen names, dropdown values, step names, or field labels. Reserve inline code styling for API paths, raw backend keys, enum/internal values, exact payload values, database fields, technical constants, file paths, and literal error text.
 - Display each item inside the `Preconditions` cell as a bullet point; in Markdown tables, use `•` with `<br>` line breaks so the bullets render inside the cell.
 - Number steps inside the `Test Steps` cell using `<br>` line breaks.
 - For Web and Mobile cases, in the `Expected Result` cell, use `Verify after step #X:` once for each applicable step and list the observable results for that step as bullets underneath it.
