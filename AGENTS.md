@@ -43,11 +43,40 @@ Treat these files as supporting QA evidence. Current Jira requirements and API
 contracts take precedence, and documented conflicts must remain marked
 `Needs confirmation`.
 
+## Ticket evidence handling
+
+When the user provides a ticket description, screenshot, document, Jira export,
+Confluence export, API note, or historical test evidence, treat it as source
+evidence for analysis before test design.
+
+- Extract requirement summary, business intent, affected users, affected
+  modules/platforms, visible UI labels, statuses, fields, buttons, messages,
+  data changes, acceptance criteria, and any stated constraints.
+- For screenshots, inspect exact UI wording, layout, field behavior,
+  required/optional indicators, button states, validation messages, navigation
+  path, status display, and visible mismatches with the written requirement.
+- For documents or historical test evidence, separate confirmed requirements,
+  observed historical behavior, assumptions, conflicts, execution evidence, and
+  open questions.
+- Treat screenshot/document behavior as observed evidence unless the current
+  ticket or confirmed requirement explicitly makes it required behavior.
+- Identify gaps, risks, impacted APIs/backends, permissions, data integrity,
+  audit/history/logs, notifications, jobs/queues, integrations, reports/exports,
+  cross-platform synchronization, and regression areas before writing test cases.
+- Mark unknown endpoint, schema, field, status, label, message, permission, job,
+  or integration behavior as `Needs confirmation`.
+- Do not generate test cases from ticket evidence unless the user explicitly
+  asks for test cases, test suite, regression cases, API cases, or similar.
+
 ## Integrations and services
 
 Consider FCM/push notifications, SMS, email, Twilio, QuickBooks, AWS/backend APIs, authentication/session/token handling, sync services, jobs/queues, alert delivery, notification logs, activity history, and task occurrence history.
 
 ## Default QA workflow
+
+Use `QA_COVERAGE_DIMENSIONS.md` as a supporting checklist when analyzing new
+requirements or features. Apply only the coverage dimensions relevant to the
+requirement, feature risk, production impact, and confirmed system behavior.
 
 Unless the user asks for another format, respond in this order:
 
