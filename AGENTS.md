@@ -36,16 +36,47 @@ Consider Welfare Check; Alerts/Restorals; Emergency Alarm; Notifications; Tasks/
 - Before Welfare Check work, read `WELFARE_CHECK_QA_CONTEXT.md`.
 - Before Service Request, Device Setup Checklist, cancellation, or Services
   Installed Summary work, read `SERVICE_REQUEST_QA_CONTEXT.md`.
+- Before Document Field History, Document Change Log, or SHM Client File API
+  history work, read `DOCUMENT_FIELD_HISTORY_API_QA_CONTEXT.md`.
 
 Treat these files as supporting QA evidence. Current Jira requirements and API
 contracts take precedence, and documented conflicts must remain marked
 `Needs confirmation`.
+
+## Ticket evidence handling
+
+When the user provides a ticket description, screenshot, document, Jira export,
+Confluence export, API note, or historical test evidence, treat it as source
+evidence for analysis before test design.
+
+- Extract requirement summary, business intent, affected users, affected
+  modules/platforms, visible UI labels, statuses, fields, buttons, messages,
+  data changes, acceptance criteria, and any stated constraints.
+- For screenshots, inspect exact UI wording, layout, field behavior,
+  required/optional indicators, button states, validation messages, navigation
+  path, status display, and visible mismatches with the written requirement.
+- For documents or historical test evidence, separate confirmed requirements,
+  observed historical behavior, assumptions, conflicts, execution evidence, and
+  open questions.
+- Treat screenshot/document behavior as observed evidence unless the current
+  ticket or confirmed requirement explicitly makes it required behavior.
+- Identify gaps, risks, impacted APIs/backends, permissions, data integrity,
+  audit/history/logs, notifications, jobs/queues, integrations, reports/exports,
+  cross-platform synchronization, and regression areas before writing test cases.
+- Mark unknown endpoint, schema, field, status, label, message, permission, job,
+  or integration behavior as `Needs confirmation`.
+- Do not generate test cases from ticket evidence unless the user explicitly
+  asks for test cases, test suite, regression cases, API cases, or similar.
 
 ## Integrations and services
 
 Consider FCM/push notifications, SMS, email, Twilio, QuickBooks, AWS/backend APIs, authentication/session/token handling, sync services, jobs/queues, alert delivery, notification logs, activity history, and task occurrence history.
 
 ## Default QA workflow
+
+Use `QA_COVERAGE_DIMENSIONS.md` as a supporting checklist when analyzing new
+requirements or features. Apply only the coverage dimensions relevant to the
+requirement, feature risk, production impact, and confirmed system behavior.
 
 Unless the user asks for another format, respond in this order:
 
@@ -54,9 +85,34 @@ Unless the user asks for another format, respond in this order:
 3. **Test Focus Areas**: recommend focus areas before full cases.
 4. **Test Cases**: generate only when explicitly requested. If information is incomplete, provide best-effort cases and clearly state assumptions or mark unknowns `Needs confirmation`.
 
+## QA coverage workflow for new features
+
+Before writing detailed test cases for a new feature, first provide a coverage
+review when the user asks for analysis, a test plan, or a test-case list. The
+coverage review should include:
+
+- Requirement understanding
+- Impacted modules/platforms
+- UI coverage
+- Functional coverage
+- Backend/API enforcement
+- Permission/security coverage
+- Duplicate, concurrency, and idempotency risk
+- Data integrity, persistence, refresh, and reopen behavior
+- Notifications, jobs, queues, and integration behavior
+- Audit/history/log coverage
+- Reports/exports coverage
+- Regression impact
+- Missing requirements and `Needs confirmation` items
+- Proposed test case list for review
+
+Write detailed test cases only after the user confirms the coverage direction or
+explicitly asks for full cases.
+
 ## Global test-case rules
 
 - Make every case specific, observable, measurable, and verifiable.
+- Test-case Priority must use only `High`, `Medium`, `Low`, or `Lowest`.
 - Test-case titles must start with **"Verify"** and clearly describe the scenario, action, and expected outcome.
 - Include relevant happy, failure, edge, boundary, permission, integration, and regression paths.
 - For Web, Mobile, and Regression cases, group every expected/check column by test-step number. Write `Verify after step #X:` once for each applicable step, then display every check beneath it as a bullet point. For API cases, use `Verify after request:` and display every response, persistence, and integration check beneath it as a bullet point.
@@ -127,6 +183,7 @@ Present all test cases as Markdown tables unless the user explicitly requests an
 
 - Use one row per test case when providing a test suite or multiple cases.
 - Keep all required columns from the applicable format below.
+- In test cases, format user-facing UI text with bold Markdown, such as **CP Desktop**, **Settings → Device Setup Steps**, **Generate Medi Alarm**, and **Medi Alarm Type**. Do not use inline code styling for normal UI labels, buttons, screen names, dropdown values, step names, or field labels. Reserve inline code styling for API paths, raw backend keys, enum/internal values, exact payload values, database fields, technical constants, file paths, and literal error text.
 - Display each item inside the `Preconditions` cell as a bullet point; in Markdown tables, use `•` with `<br>` line breaks so the bullets render inside the cell.
 - Number steps inside the `Test Steps` cell using `<br>` line breaks.
 - For Web and Mobile cases, in the `Expected Result` cell, use `Verify after step #X:` once for each applicable step and list the observable results for that step as bullets underneath it.
