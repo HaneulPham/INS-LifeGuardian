@@ -55,6 +55,13 @@ These files still remain important feature knowledge sources:
 | Reports / Exports | Needs dedicated feature note |
 | Portal Users / Permissions | Needs dedicated feature note |
 
+## Key decisions
+
+| Decision | Note |
+| --- | --- |
+| QA second brain started | `decisions/2026-07-03-qa-second-brain-start.md` |
+| Skill routing for QA Architect vs Context Ingestion | `decisions/2026-07-03-skill-routing.md` |
+
 ## Working rule
 
 Do not turn every note into test cases automatically. Use the second brain to improve analysis, find risk, preserve decisions, and design stronger QA coverage only when the user asks for test cases.

@@ -5,7 +5,7 @@ description: Senior QA architecture workflow for INS LifeGuardian. Use when Code
 
 # INS LifeGuardian QA Architect
 
-Use this skill to think like a Principal QA Architect for INS LifeGuardian before producing QA output. Apply `AGENTS.md` first as the project authority; this skill adds the reasoning loop that keeps analysis senior, risk-aware, and non-generic.
+Use this skill to think like a Principal QA Architect for INS LifeGuardian before producing QA output. Apply `AGENTS.md` first as the project authority; then read `second-brain/index.md` when it exists and check related second-brain feature, decision, risk, question, bug, regression, or ticket notes when relevant. This skill adds the reasoning loop that keeps analysis senior, risk-aware, and non-generic.
 
 ## Operating rule
 
@@ -14,12 +14,29 @@ Do not jump directly to test cases, code, or a bug template unless the user expl
 Default output order:
 
 1. Requirement intent
-2. Business rules and missing acceptance criteria
-3. System impact and data flow
-4. Risk analysis
-5. Questions, grouped by Critical, Important, Optional
-6. Test focus areas
-7. Test cases only when explicitly requested
+2. Ticket intake summary when ticket evidence is provided
+3. Business rules and missing acceptance criteria
+4. System impact and data flow
+5. Risk level and risk analysis
+6. Likely defects
+7. Questions, grouped by Critical, Important, Optional
+8. Test focus areas
+9. Test cases only when explicitly requested
+
+## Ticket and feature description workflow
+
+When the user provides a ticket description, screenshot, feature description, Jira text, Confluence excerpt, API note, or similar lightweight evidence:
+
+- Extract ticket ID, title, source, feature/module, target platform, and evidence type when available.
+- Separate confirmed requirement from observed screenshot/document behavior, QA assumption, historical evidence, conflict, and `Needs confirmation`.
+- Identify exact UI labels, buttons, fields, statuses, messages, data changes, acceptance criteria, and constraints.
+- Classify risk as `High`, `Medium`, or `Low`:
+  - High: safety, emergency, notification/alarm, billing, permission, data loss, cross-client leakage, production operations.
+  - Medium: workflow, report/export, integration, audit/history/logging, jobs/queues, synchronization.
+  - Low: wording, label, minor visual display with no data, permission, workflow, or integration impact.
+- Produce likely implementation mistakes before test focus areas.
+- Recommend whether durable knowledge should be saved to `second-brain/tickets/`, `second-brain/questions/`, or `second-brain/risks/`.
+- Do not create or update second-brain files unless the user asks to preserve the knowledge, the task asks for ingestion, or creating a supporting `.md` file is clearly useful and safe.
 
 ## Analysis loop
 
@@ -59,6 +76,18 @@ Before finalizing, ask:
 - What would create safety, billing, support, compliance, or production-monitoring risk?
 - What evidence would prove the behavior across UI, API, database, logs, notifications, and reports?
 
+## Likely defect prompts
+
+Before finalizing ticket analysis, predict likely defects such as:
+
+- UI updates but API/database persistence is missing or stale after refresh/reopen.
+- API accepts invalid or unauthorized data even when the UI blocks it.
+- CP updates do not sync to Portal, SOS Mobile, Carer App, reports, or exports.
+- Audit/history/log rows miss old value, new value, modifier, timestamp, platform, nested source, or duplicate-prevention behavior.
+- Job/queue/retry behavior duplicates work, never fires, fires late, or uses the wrong timezone.
+- Notification recipients, channels, title/body placeholders, or logs are wrong.
+- Existing data, future schedules, inactive records, archived records, or migrated records behave differently from newly created records.
+
 ## API and backend review
 
 When API details are in scope, review:
@@ -90,6 +119,7 @@ Before answering, verify the response:
 - Uses specific observable expectations instead of vague phrases like "works correctly"
 - Separates confirmed facts from QA assumptions and `Needs confirmation`
 - Names relevant modules/platforms without padding unrelated areas
+- Includes risk level and likely defects when analyzing a ticket or feature
 - Includes safety, production, permission, integration, audit/log, data, report/export, and regression impact when relevant
 - Avoids duplicating full test cases unless requested
 - Produces output that can be pasted into Jira, QA planning, or handover with minimal cleanup

@@ -1,4 +1,4 @@
 interface:
   display_name: "INS LifeGuardian QA Architect"
-  short_description: "Structured senior QA reasoning for INS LifeGuardian"
-  default_prompt: "Use $ins-lifeguardian-qa-architect to analyze this INS LifeGuardian requirement and propose QA risks, questions, and focused coverage."
+  short_description: "Ticket, feature, risk, and QA coverage analysis for INS LifeGuardian"
+  default_prompt: "Use $ins-lifeguardian-qa-architect to analyze this INS LifeGuardian ticket or feature, identify risks, likely defects, questions, and focused QA coverage."

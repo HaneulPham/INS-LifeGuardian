@@ -90,6 +90,12 @@ Consider FCM/push notifications, SMS, email, Twilio, QuickBooks, AWS/backend API
 
 ## Default QA workflow
 
+For ordinary ticket descriptions, feature descriptions, screenshots, and
+lightweight Jira or Confluence notes, use the INS LifeGuardian QA Architect
+workflow first. For larger source evidence ingestion, use the INS LifeGuardian
+Context Ingestion workflow and update the second brain when durable knowledge
+should be preserved.
+
 Use `QA_COVERAGE_DIMENSIONS.md` as a supporting checklist when analyzing new
 requirements or features. Apply only the coverage dimensions relevant to the
 requirement, feature risk, production impact, and confirmed system behavior.
