@@ -43,6 +43,22 @@ Treat these files as supporting QA evidence. Current Jira requirements and API
 contracts take precedence, and documented conflicts must remain marked
 `Needs confirmation`.
 
+## QA second brain
+
+Use `second-brain/index.md` as the entry point for durable QA memory before
+analyzing new tickets, screenshots, documents, risks, bugs, regression areas, or
+feature knowledge.
+
+- Treat second-brain files as supporting QA memory, not as the final source of
+  truth.
+- Current Jira requirements, confirmed BA decisions, verified API contracts, and
+  current product behavior take precedence over second-brain notes.
+- When second-brain notes conflict with current evidence, keep the conflict
+  visible and mark it `Needs confirmation`.
+- Store new ticket/document/screenshot learnings in the second brain when the
+  user asks to preserve durable project knowledge or when creating a new
+  supporting `.md` file is useful.
+
 ## Ticket evidence handling
 
 When the user provides a ticket description, screenshot, document, Jira export,
