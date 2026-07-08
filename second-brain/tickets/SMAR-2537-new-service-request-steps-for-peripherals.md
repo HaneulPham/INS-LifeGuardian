@@ -8,6 +8,8 @@ This note captures Group 1 test design for **Administration / Settings -> Device
 
 Group 3 **Listen for Alarm** runtime matching cases are saved separately in `SMAR-2537-group-3-listen-for-alarm.md` for readability.
 
+Group 4 **Permissions / Security / Access Control** cases are saved separately in `SMAR-2537-group-4-permissions-security-access-control.md`.
+
 ## Confirmed Scope
 
 - **PIR** is unsupported and must not expose **Generate Medi-Alarm** or **Listen for Alarm**.
