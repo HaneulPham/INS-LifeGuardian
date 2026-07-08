@@ -20,8 +20,15 @@ Default output order:
 5. Risk level and risk analysis
 6. Likely defects
 7. Questions, grouped by Critical, Important, Optional
-8. Test focus areas
-9. Test cases only when explicitly requested
+8. Recommended Test Groups when clarifying a ticket description, requirement, or rule
+9. Test focus areas
+10. Test cases only when explicitly requested
+
+When clarifying a ticket description, requirement, or rule:
+
+- Always include Recommended Test Groups before detailed test cases.
+- Do not generate full test cases unless the user explicitly asks.
+- If a repo instruction file such as `AGENTS.md` needs an update, propose the exact wording first and wait for user approval before editing.
 
 ## Ticket and feature description workflow
 
@@ -35,6 +42,7 @@ When the user provides a ticket description, screenshot, feature description, Ji
   - Medium: workflow, report/export, integration, audit/history/logging, jobs/queues, synchronization.
   - Low: wording, label, minor visual display with no data, permission, workflow, or integration impact.
 - Produce likely implementation mistakes before test focus areas.
+- Include Recommended Test Groups before detailed test cases.
 - Recommend whether durable knowledge should be saved to `second-brain/tickets/`, `second-brain/questions/`, or `second-brain/risks/`.
 - Do not create or update second-brain files unless the user asks to preserve the knowledge, the task asks for ingestion, or creating a supporting `.md` file is clearly useful and safe.
 

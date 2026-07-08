@@ -38,6 +38,8 @@ Consider Welfare Check; Alerts/Restorals; Emergency Alarm; Notifications; Tasks/
   Installed Summary work, read `SERVICE_REQUEST_QA_CONTEXT.md`.
 - Before Document Field History, Document Change Log, or SHM Client File API
   history work, read `DOCUMENT_FIELD_HISTORY_API_QA_CONTEXT.md`.
+- Before Care Plan Tasks General Task mobile create/edit/delete/My Day work,
+  read `CARE_PLAN_TASKS_GENERAL_TASK_MOBILE_QA_CONTEXT.md`.
 
 Treat these files as supporting QA evidence. Current Jira requirements and API
 contracts take precedence, and documented conflicts must remain marked
@@ -104,8 +106,11 @@ Unless the user asks for another format, respond in this order:
 
 1. **Requirement Analysis**: requirement summary; intent and user/business value; impacted modules/platforms; missing requirements/gaps; business/safety and regression risks; backend/API, data-integrity, permissions/security, integration, job/queue, audit/history/log, and report/export impact; assumptions.
 2. **Questions**: group as Critical, Important, and Optional.
-3. **Test Focus Areas**: recommend focus areas before full cases.
-4. **Test Cases**: generate only when explicitly requested. If information is incomplete, provide best-effort cases and clearly state assumptions or mark unknowns `Needs confirmation`.
+3. **Recommended Test Groups**: when clarifying a ticket description,
+   requirement, or rule, always include recommended test groups before any
+   detailed test cases.
+4. **Test Focus Areas**: recommend focus areas before full cases.
+5. **Test Cases**: generate only when explicitly requested. If information is incomplete, provide best-effort cases and clearly state assumptions or mark unknowns `Needs confirmation`.
 
 ## QA coverage workflow for new features
 
@@ -126,6 +131,7 @@ coverage review should include:
 - Reports/exports coverage
 - Regression impact
 - Missing requirements and `Needs confirmation` items
+- Recommended test groups for review
 - Proposed test case list for review
 
 Write detailed test cases only after the user confirms the coverage direction or
@@ -138,6 +144,7 @@ explicitly asks for full cases.
 - Test-case titles must start with **"Verify"** and clearly describe the scenario, action, and expected outcome.
 - Include relevant happy, failure, edge, boundary, permission, integration, and regression paths.
 - For Web, Mobile, and Regression cases, group every expected/check column by test-step number. Write `Verify after step #X:` once for each applicable step, then display every check beneath it as a bullet point. For API cases, use `Verify after request:` and display every response, persistence, and integration check beneath it as a bullet point.
+- In all test cases, bold every expected/check checkpoint label such as **Verify after step #3:**, **Verify after step #3-4:**, **Verify after request:**, and **Verify after step #7-8:** wherever they appear in Expected Result, Expected Integration, Expected Response, Check on CP, Check on Portal, and Integration Check columns.
 - Do not add generic checks unrelated to the scenario.
 - Do not invent backend keys, enums, messages, API behavior, or business rules.
 - Keep Preconditions concise; omit global login/build/environment setup unless scenario-specific. Display each precondition as a separate bullet point.
@@ -155,6 +162,20 @@ Use only relevant Expected Result subsections, such as Field mapping; Old Value/
 - Mark an unknown backend key as `Needs confirmation`.
 - Include Sub Field/Source Field Name checks only for nested records or child rows, such as Emergency Contacts, Village Contacts, Procedures, Medication, Billing Defaults rows, Notification rows, Checklist steps, Task schedules, Device/service-request process steps.
 - Do not add Sub Field checks to simple flat fields unless explicitly required.
+
+## Screenshot-to-history mapping workflow
+
+When the user asks to map a Client File screenshot to Document Field History or
+Document Change Log behavior, use a repeatable evidence-first workflow:
+
+- Keep the user's requested numbering and section title exactly, such as `1.5 Create/ Update/ Delete SmartMobile Registration`.
+- Separate visible UI items into editable fields, read-only/status fields, and action buttons before writing the mapping table.
+- For each editable field, provide create, update, and delete old/new value behavior when supported by the visible UI or known history rules.
+- For read-only/status fields, mark create/update/delete behavior `Needs confirmation` unless a supplied requirement, API contract, or verified product behavior proves the status is audited.
+- For action buttons such as Delete, do not treat the button label as a document field unless confirmed. Describe the delete operation as creating `~DELETED~` history rows for each tracked field.
+- Use `Needs confirmation` for inferred backend behavior, unknown field mappings, unknown boolean display values, required-field clearing behavior, and any status generated by jobs, devices, or integrations.
+- Preserve the standard history attribution rules: Modified By = current user, File/Group = file name, Platform = Control Panel unless another source platform is confirmed, Date = created/updated/deleted time, and Sub Field is blank for flat fields.
+- Prefer user-facing values in history, such as Yes/No for checkboxes, and mark the exact display format `Needs confirmation` if not verified.
 
 ## Formatting intelligence
 
