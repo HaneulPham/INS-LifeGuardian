@@ -143,6 +143,33 @@ explicitly asks for full cases.
 - Test-case Priority must use only `High`, `Medium`, `Low`, or `Lowest`.
 - Test-case titles must start with **"Verify"** and clearly describe the scenario, action, and expected outcome.
 - Include relevant happy, failure, edge, boundary, permission, integration, and regression paths.
+- When the user provides a preferred or corrected test-case sample, analyze its
+  structure and reuse that style for the same feature/ticket unless it conflicts
+  with confirmed requirements.
+- Before writing detailed test cases, summarize cases by business workflow group
+  and wait for the user's confirmation when they ask for a summary first.
+- Group detailed test cases by the actual product path and action, for example
+  `CP Web → Raptor DVA Submissions → Export Invoice XML`, not only by generic
+  coverage type.
+- State the group scope before the table, including explicit in-scope and
+  out-of-scope behavior such as `Export Invoice XML only` or `Validation is out
+  of scope`.
+- Use concrete sample values from the ticket or agreed QA setup wherever
+  possible, such as dates, statuses, invoice names, XML fields, and item types.
+  If values are unknown, use `Needs confirmation` instead of a vague placeholder.
+- Do not create artificial coverage that conflicts with the product model. For
+  example, if multiple items in one invoice share the same Rental Start Date,
+  cover multiple selected invoices instead of inventing different line-level
+  Rental Start Dates inside the same invoice.
+- Keep source-data checks separate from export/transformation checks. If a
+  change is export-only, verify the exported artifact and also verify the source
+  UI/database value remains unchanged after refresh or reopen.
+- For batch exports, verify each exported invoice/item is calculated
+  independently and that one record's dates, identifiers, or values do not
+  overwrite another record's exported values.
+- For scope exclusions, add focused regression cases proving excluded item types,
+  validations, UI columns, or source records keep existing behavior instead of
+  mixing them into the main happy-path case.
 - For Web, Mobile, and Regression cases, group every expected/check column by test-step number. Write `Verify after step #X:` once for each applicable step, then display every check beneath it as a bullet point. For API cases, use `Verify after request:` and display every response, persistence, and integration check beneath it as a bullet point.
 - In all test cases, bold every expected/check checkpoint label such as **Verify after step #3:**, **Verify after step #3-4:**, **Verify after request:**, and **Verify after step #7-8:** wherever they appear in Expected Result, Expected Integration, Expected Response, Check on CP, Check on Portal, and Integration Check columns.
 - Do not add generic checks unrelated to the scenario.
@@ -239,6 +266,17 @@ Present all test cases as Markdown tables unless the user explicitly requests an
 
 **Web**  
 `TC ID | Priority | Feature | Test Area | Title | Preconditions | Test Steps | Expected Result | Expected Integration | Browser/Device | Accessibility Check | Notes`
+
+For CP Web export/report cases, prefer a group heading before the table:
+
+```text
+## Group N — CP Web → [Screen] → [Action]
+
+Scope: [exact in-scope behavior]. [explicit out-of-scope behavior].
+```
+
+In the table, make `Test Area` match the real path and action, such as
+`CP Web → Raptor DVA Submissions → Export Invoice XML`.
 
 **Mobile**  
 `TC ID | Priority | Feature | Test Area | Title | Preconditions | Test Steps | Expected Result | Expected Integration | Device/OS | Network | Notes`

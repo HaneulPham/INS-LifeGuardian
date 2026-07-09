@@ -29,6 +29,10 @@ When clarifying a ticket description, requirement, or rule:
 - Always include Recommended Test Groups before detailed test cases.
 - Do not generate full test cases unless the user explicitly asks.
 - If a repo instruction file such as `AGENTS.md` needs an update, propose the exact wording first and wait for user approval before editing.
+- If the user provides a corrected or preferred test-case sample, treat it as the
+  target style for that ticket/module. Extract the structure, scope wording,
+  scenario granularity, concrete values, and exclusions before drafting more
+  cases.
 
 ## Ticket and feature description workflow
 
@@ -45,6 +49,32 @@ When the user provides a ticket description, screenshot, feature description, Ji
 - Include Recommended Test Groups before detailed test cases.
 - Recommend whether durable knowledge should be saved to `second-brain/tickets/`, `second-brain/questions/`, or `second-brain/risks/`.
 - Do not create or update second-brain files unless the user asks to preserve the knowledge, the task asks for ingestion, or creating a supporting `.md` file is clearly useful and safe.
+
+## Test-case drafting calibration
+
+When the user asks for test cases after ticket analysis:
+
+- First summarize proposed cases by business workflow group when the user asks
+  for a summary, then wait for confirmation before writing detailed tables.
+- Use group headings based on the real product path and action, such as
+  `CP Web -> Raptor DVA Submissions -> Export Invoice XML`.
+- State scope before each detailed group table, including out-of-scope behavior
+  from the ticket or user clarifications.
+- Prefer concrete QA data values over abstract descriptions. Use supplied dates,
+  statuses, field names, XML nodes, invoice types, and screen labels.
+- Keep the scenario granularity aligned to the real product model. Do not invent
+  line-level, state-level, or mixed-record variations if the user has clarified
+  that the product cannot behave that way.
+- Separate source-data behavior from export, report, notification, or integration
+  transformations. For export-only changes, include cases proving source UI and
+  database values remain unchanged after export and refresh/reopen.
+- For batch export or bulk action behavior, verify each selected record is
+  calculated independently and no selected record is missing, duplicated, or
+  exported with another record's values.
+- For excluded behavior, write narrow regression cases proving it remains
+  unchanged instead of combining it with the primary happy path.
+- Keep Expected Result focused on observable UI/file/API output and Expected
+  Integration focused on backend/export service/source-data side effects.
 
 ## Analysis loop
 
