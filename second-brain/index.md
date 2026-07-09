@@ -38,6 +38,7 @@ These files still remain important feature knowledge sources:
 - `../SERVICE_REQUEST_QA_CONTEXT.md`
 - `../DOCUMENT_FIELD_HISTORY_API_QA_CONTEXT.md`
 - `../NEW_SERVICE_REQUEST_STEPS_FOR_PERIPHERALS_QA_CONTEXT.md`
+- `../CARE_PLAN_TASKS_GENERAL_TASK_MOBILE_QA_CONTEXT.md`
 - `../QA_COVERAGE_DIMENSIONS.md`
 - `../INS_QA_ANALYSIS_FRAMEWORK.md`
 
@@ -49,6 +50,7 @@ These files still remain important feature knowledge sources:
 | Service Request / Device Setup Checklist | `../SERVICE_REQUEST_QA_CONTEXT.md` |
 | New Service Request Steps for Peripherals | `../NEW_SERVICE_REQUEST_STEPS_FOR_PERIPHERALS_QA_CONTEXT.md` |
 | Document Field History / Document Change Log API | `../DOCUMENT_FIELD_HISTORY_API_QA_CONTEXT.md` |
+| Care Plan Tasks - General Task Mobile | `../CARE_PLAN_TASKS_GENERAL_TASK_MOBILE_QA_CONTEXT.md`; `features/care-plan-tasks-general-task-mobile.md` |
 | Billing | Needs dedicated feature note |
 | Emergency Alarm | Needs dedicated feature note |
 | Health Data / Charts | Needs dedicated feature note |

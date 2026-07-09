@@ -291,7 +291,7 @@ public class HealthDataGeneratorAll {
             observation.put("effectivePeriod", effectivePeriod);
         }
 
-        observation.put("issued", start.plusSeconds(5).toString());
+        observation.put("issued", start.toString());
 
         Map<String, Object> valueQuantity = object();
         valueQuantity.put("value", value);
@@ -329,7 +329,7 @@ public class HealthDataGeneratorAll {
         effectivePeriod.put("start", start.toString());
         effectivePeriod.put("end", start.plusSeconds(durationSeconds).toString());
         observation.put("effectivePeriod", effectivePeriod);
-        observation.put("issued", start.plusSeconds(durationSeconds + 5).toString());
+        observation.put("issued", start.toString());
 
         List<Object> components = new ArrayList<>();
         Map<String, Object> sampled = object();
@@ -356,7 +356,7 @@ public class HealthDataGeneratorAll {
         Map<String, Object> observation = baseObservation(input);
         observation.put("code", code(null, null, "HKQuantityTypeIdentifierAppleWalkingSteadiness", "Apple Walking Steadiness"));
         observation.put("effectivePeriod", Map.of("start", start.toString(), "end", end.toString()));
-        observation.put("issued", end.plusSeconds(5).toString());
+        observation.put("issued", start.toString());
         observation.put("valueQuantity", Map.of("value", value, "unit", "%", "system", "http://unitsofmeasure.org", "code", "%"));
         observation.put("component", List.of(Map.of(
                 "code", code(null, null, "HKAppleWalkingSteadiness.Classification", "Walking Steadiness Classification"),
@@ -385,7 +385,7 @@ public class HealthDataGeneratorAll {
             observation.put("category", List.of(category("activity")));
             observation.put("code", code(null, null, "HKCategoryTypeIdentifierSleepAnalysis", "Sleep Analysis"));
             observation.put("effectivePeriod", Map.of("start", start.toString(), "end", end.toString()));
-            observation.put("issued", end.plusSeconds(5).toString());
+            observation.put("issued", start.toString());
             observation.put("valueString", "asleep");
             observations.add(observation);
         }

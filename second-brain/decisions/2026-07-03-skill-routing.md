@@ -19,3 +19,8 @@ The project already has a QA Architect skill that covers the intended ticket-ana
 - Treat second-brain notes as supporting memory, not the final source of truth.
 - Do not write test cases unless the user explicitly asks.
 - Keep unknowns marked as `Needs confirmation`.
+- For Client File screenshots that need Document Field History mapping, apply the
+  `Screenshot-to-history mapping workflow` in `AGENTS.md`: separate editable
+  fields, read-only/status fields, and action buttons; keep the requested
+  numbering; use old/new value rules for tracked fields; and avoid treating
+  action buttons as audited document fields unless confirmed.
