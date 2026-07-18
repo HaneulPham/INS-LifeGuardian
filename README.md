@@ -1,65 +1,251 @@
 # INS LifeGuardian QA Workspace
 
-This repository contains QA guidance and feature knowledge for INS LifeGuardian,
-a healthcare, safety-monitoring, emergency-response, and client-support platform.
+This repository contains reusable QA instructions, product knowledge, requirement analysis, test cases, regression coverage, and confirmed decisions for INS LifeGuardian.
 
-## How to use this repository
+INS LifeGuardian is a healthcare, safety-monitoring, emergency-response, and client-support platform. QA analysis must consider client safety, security, data integrity, integrations, notifications, background processing, and cross-platform behaviour.
 
-1. Read `AGENTS.md` before analyzing requirements or performing project work.
-2. Complete requirement and risk analysis before creating test cases.
-3. Generate test cases only when explicitly requested.
-4. Mark unknown or unverified details as `Needs confirmation` rather than
-   inventing requirements, API contracts, or system behavior.
+## Repository Purpose
 
-## Feature context
+This workspace helps Codex and QA team members:
 
-- `WELFARE_CHECK_QA_CONTEXT.md` — Welfare Check requirements, behavior, risks,
-  and supporting QA evidence.
-- `SERVICE_REQUEST_QA_CONTEXT.md` — Service Request, Device Setup Checklist,
-  cancellation, and Services Installed Summary knowledge.
-- `DOCUMENT_FIELD_HISTORY_API_QA_CONTEXT.md` — Document Field History,
-  Document Change Log, and SHM Client File API history knowledge.
-- `NEW_SERVICE_REQUEST_STEPS_FOR_PERIPHERALS_QA_CONTEXT.md` — supporting QA
-  context for new Service Request steps for peripherals.
+* Analyse Jira tickets and requirements before writing test cases.
+* Identify missing requirements, assumptions, conflicts, risks, and regression impact.
+* Create practical UI, mobile, API, and regression test cases.
+* Reuse confirmed product behaviour across related tickets.
+* Prevent duplicate or conflicting test coverage.
+* Maintain durable QA knowledge in the QA Second Brain.
 
-Current Jira requirements and verified API contracts take precedence over the
-supporting context files. Any conflicts must remain visible and be marked
-`Needs confirmation` until resolved.
+## How to Use This Repository
 
-## QA second brain
+1. Read `AGENTS.md` before performing INS LifeGuardian QA work.
+2. Use the appropriate skill under `.agents/skills/`.
+3. Review the relevant QA Second Brain files under `qa-knowledge/`.
+4. Complete requirement, risk, integration, and regression analysis before generating detailed test cases.
+5. Generate detailed test cases only when explicitly requested.
+6. Write one test-case group at a time and wait for review before continuing.
+7. Run the QA validator after creating or updating stored test cases.
+8. Update the QA Second Brain only through the approved QA librarian workflow.
 
-- `second-brain/index.md` — entry point for durable QA memory.
-- `second-brain/tickets/` — ticket-specific analysis notes.
-- `second-brain/features/` — durable feature knowledge by module.
-- `second-brain/decisions/` — confirmed QA/business working decisions.
-- `second-brain/questions/` — open and resolved QA questions.
-- `second-brain/risks/` — repeated risk and likely defect patterns.
-- `second-brain/bugs/` — bug-writing guidance and recurring bug patterns.
-- `second-brain/regression/` — regression maps and release coverage notes.
-- `second-brain/templates/` — reusable ticket, bug, test design, and regression
-  templates.
+## Evidence Priority
 
-Second-brain notes are supporting QA memory only. Current Jira requirements,
-confirmed BA decisions, verified API contracts, and current product behavior
-take priority.
+Use evidence in this order when determining expected behaviour:
 
-## Codex skills
+1. Current Jira ticket description and acceptance criteria
+2. Confirmed Jira comments, decisions, screenshots, and attachments
+3. Linked Confluence and API documentation
+4. Relevant implementation, configuration, schemas, and automated tests
+5. Related tickets and parent epics
+6. Verified current product behaviour
+7. Existing QA Second Brain knowledge
+8. QA assumptions
 
-- `.agents/skills/ins-lifeguardian-qa-architect/` — use for ordinary ticket,
-  feature, screenshot, requirement, risk, regression, and QA coverage analysis.
-- `.agents/skills/ins-lifeguardian-context-ingestion/` — use for larger source
-  evidence ingestion from PDFs, Jira/Confluence exports, screenshots,
-  spreadsheets, API collections, and historical test evidence.
+Do not present assumptions as confirmed requirements.
 
-## QA coverage
+When sources conflict, record the conflict and request clarification rather than silently selecting one behaviour.
 
-Analysis may include CP Desktop and Web, Portal Web, SOS Mobile, Carer App,
-backend APIs, background jobs and queues, notifications, reports and exports,
-audit/history/logs, integrations, permissions, cross-platform synchronization,
-and data integrity.
+## Supported Knowledge Statuses
 
-## Repository safety
+Use only these Source Status values:
 
-Do not commit credentials, access tokens, production client information, or
-temporary document renders. Generated evidence under `tmp/` and operating-system
-metadata such as `.DS_Store` are excluded from Git.
+* `Confirmed`
+* `QA Assumption`
+* `Open Question`
+* `Out of Scope`
+* `Deprecated`
+* `Conflict`
+
+Definitions are maintained in:
+
+`qa-knowledge/status-glossary.md`
+
+Do not use unsupported statuses such as `Needs confirmation`.
+
+## QA Second Brain
+
+The QA Second Brain is located under:
+
+`qa-knowledge/`
+
+It stores reusable INS LifeGuardian QA knowledge.
+
+### Main Files
+
+* `qa-knowledge/index.md` — entry point and usage guidance
+* `qa-knowledge/config.yml` — QA knowledge automation settings
+* `qa-knowledge/status-glossary.md` — supported Source Status definitions
+* `qa-knowledge/ticket-index.md` — ticket-to-knowledge file mapping
+
+### Product Knowledge
+
+* `qa-knowledge/product/product-map.md` — platform, module, and integration overview
+* `qa-knowledge/product/modules/` — reusable knowledge by product module
+
+### Requirement Knowledge
+
+* `qa-knowledge/requirements/SMAR/` — SMAR ticket requirement analysis
+* `qa-knowledge/requirements/MA/` — MA ticket requirement analysis
+
+### Test Case Knowledge
+
+* `qa-knowledge/test-cases/SMAR/` — approved SMAR test cases
+* `qa-knowledge/test-cases/MA/` — approved MA test cases
+
+### Regression and Decisions
+
+* `qa-knowledge/regression/regression-map.md` — reusable regression impact and coverage
+* `qa-knowledge/decisions/decision-log.md` — confirmed BA, Dev, QA, and product decisions
+
+### Templates
+
+* `qa-knowledge/templates/requirement-template.md`
+* `qa-knowledge/templates/test-case-template.md`
+* `qa-knowledge/templates/weekly-cleanup-report-template.md`
+
+The QA Second Brain is a reusable supporting knowledge base. Current Jira requirements, confirmed decisions, verified API contracts, current implementation evidence, and verified product behaviour take precedence.
+
+## Codex Skills
+
+### INS LifeGuardian QA Analyst
+
+Location:
+
+`.agents/skills/ins-lifeguardian-qa-analyst/`
+
+Use this skill for:
+
+* Jira and requirement review
+* Requirement-gap analysis
+* Risk and regression analysis
+* API analysis
+* UI, mobile, API, and regression test cases
+* Bug reports
+* QA feedback review
+
+### INS LifeGuardian QA Librarian
+
+Location:
+
+`.agents/skills/ins-lifeguardian-qa-librarian/`
+
+Use this skill for:
+
+* Saving approved requirements
+* Saving approved test cases
+* Updating product knowledge
+* Updating confirmed decisions
+* Updating regression coverage
+* Detecting duplicate or conflicting QA knowledge
+* Running QA knowledge cleanup
+
+## Standard QA Workflow
+
+For requirement, Jira, BA, Dev, screenshot, or API review:
+
+1. Requirement Analysis
+2. Scope
+3. Missing Requirements and Gaps
+4. Risk Analysis
+5. Backend and Integration Impact
+6. Required Validations
+7. Questions grouped as Critical, Important, and Optional
+8. Proposed Test Case Coverage
+
+Do not generate detailed test cases unless the user explicitly requests a group.
+
+When detailed cases are requested:
+
+1. Check existing requirements and test cases.
+2. Avoid duplicate coverage.
+3. Write only the requested group.
+4. Stop and wait for review.
+5. Continue only after the user says `next`, `next group`, or `go ahead`.
+
+## INS LifeGuardian Coverage
+
+QA analysis may include:
+
+### Platforms
+
+* CP Desktop
+* CP Web
+* Portal Web
+* Mobile SOS iOS and Android
+* Mobile Carer iOS and Android
+* Backend APIs
+* Background services and jobs
+
+### Modules
+
+* Welfare Check
+* Alerts and Restorals
+* Emergency Alarm
+* Notifications
+* Tasks and Care Plan Tasks
+* Device Setup and Checklist
+* Service Requests and Work Orders
+* Vital Signs and Thresholds
+* Billing
+* Reports
+* Chat
+* Roles and Permissions
+* Assets and Devices
+* Client File and Village inheritance
+* Document Change Log
+
+### Integrations
+
+* FCM and push notifications
+* SMS
+* Email
+* Twilio
+* QuickBooks
+* AWS and backend APIs
+* Authentication and authorization
+* Jobs and queues
+* Alert delivery
+* Notification logs
+* Audit and operational logs
+
+## Test Case Validation
+
+After creating or updating test cases under `qa-knowledge/test-cases/`, run:
+
+```bash
+python3 scripts/validate_qa_test_cases.py
+```
+
+Do not treat stored test cases as approved when validation fails.
+
+## QA Second Brain Approval
+
+When the reviewed analysis and cases are ready to store, use:
+
+```text
+Approve and Update the QA Second Brain for ticket <Ticket ID>
+```
+
+Codex will apply the behaviour defined in:
+
+* `AGENTS.md`
+* `.agents/skills/ins-lifeguardian-qa-librarian/SKILL.md`
+* `qa-knowledge/config.yml`
+
+## Repository Safety
+
+Do not commit:
+
+* API keys
+* Passwords
+* Access or refresh tokens
+* Certificates or private keys
+* Production client information
+* Personal health information
+* Unredacted logs containing sensitive data
+* `.env` files
+* Temporary exports or renders
+* `.DS_Store`
+* `__MACOSX/`
+* Repository ZIP archives
+* `.git/` content inside shared archives
+
+Before sharing this repository, remove Git internals, operating-system metadata, secrets, production information, and temporary files.
