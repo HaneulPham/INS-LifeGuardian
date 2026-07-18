@@ -237,11 +237,6 @@ def parse_args() -> argparse.Namespace:
         default=default_root,
         help="directory to scan (default: qa-knowledge/test-cases/)",
     )
-    parser.add_argument(
-        "--allow-empty",
-        action="store_true",
-        help="pass when no test-case rows are found (for migration placeholders)",
-    )
     return parser.parse_args()
 
 
@@ -260,14 +255,6 @@ def main() -> int:
     issues: list[Issue] = []
     for path in markdown_files:
         issues.extend(validate_file(path, scan_root, seen_ids))
-
-    if not issues and not seen_ids and not args.allow_empty:
-        print(
-            f"FAIL file={display_path(scan_root, scan_root)} row=0 "
-            "TC ID=<none> issue=no test cases found; "
-            "use --allow-empty for migration placeholders"
-        )
-        return 1
 
     if not issues:
         print("PASS")

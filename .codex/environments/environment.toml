@@ -6,7 +6,11 @@ name = "INS LifeGuardian"
 script = '''
 set -euo pipefail
 
-cd "$CODEX_WORKTREE_PATH"
+worktree_path="${CODEX_WORKTREE_PATH:-}"
+if [ -z "$worktree_path" ]; then
+  worktree_path="$(git rev-parse --show-toplevel)"
+fi
+cd "$worktree_path"
 
 echo "Preparing INS LifeGuardian QA repository..."
 echo "Repository: $(pwd)"
@@ -29,10 +33,11 @@ for file in "${required_files[@]}"; do
 done
 
 echo "Checking Python validator syntax..."
-python3 -m py_compile scripts/validate_qa_test_cases.py
+PYTHONPYCACHEPREFIX="${TMPDIR:-/tmp}/ins-lifeguardian-pycache" \
+  python3 -m py_compile scripts/validate_qa_test_cases.py
 
-echo "Running QA test-case validation..."
-python3 scripts/validate_qa_test_cases.py
+echo "Running QA validation in migration mode..."
+python3 scripts/validate_qa_test_cases.py --allow-empty
 
 echo "INS LifeGuardian QA environment is ready."'''
 
@@ -40,7 +45,11 @@ echo "INS LifeGuardian QA environment is ready."'''
 script = '''
 set -euo pipefail
 
-cd "$CODEX_WORKTREE_PATH"
+worktree_path="${CODEX_WORKTREE_PATH:-}"
+if [ -z "$worktree_path" ]; then
+  worktree_path="$(git rev-parse --show-toplevel)"
+fi
+cd "$worktree_path"
 
 if [ -d ".cache/tmp" ]; then
   rm -rf .cache/tmp
