@@ -75,88 +75,6 @@ Consider integrations/services:
 - Alert delivery
 - Notification logs
 
-## Evidence Acquisition Gate
-
-Do not begin the Requirement Summary until the available evidence has been inspected or the unavailable evidence has been explicitly recorded.
-
-### Evidence order
-
-Use this order:
-
-1. Current Jira ticket description and acceptance criteria.
-2. Confirmed ticket comments, decisions, changelog/history, screenshots, and attachments.
-3. Linked Confluence pages, API contracts, architecture notes, and technical documentation.
-4. Parent epic and directly related tickets.
-5. Relevant source code, `serverless.yml`, infrastructure configuration, handlers, contracts, schemas, automated tests, and generated deployment artifacts.
-6. Verified current product behaviour and QA execution evidence.
-7. Relevant files under `qa-knowledge/`.
-8. Clearly labelled QA assumptions.
-
-### Jira or ticket workflow
-
-When a Jira URL or ticket key is available and the required connector/tool is available:
-
-1. Fetch the complete ticket, not only the summary.
-2. Read acceptance criteria, comments, relevant history, screenshots, and attachments.
-3. Inspect the parent epic and directly related tickets when they affect intent, security, migration, or compatibility.
-4. Open linked Confluence/API documentation.
-5. Compare the ticket with repository evidence and QA Second Brain knowledge.
-
-If Jira, Confluence, attachments, or private documents cannot be accessed, state this under **Could Not Verify**. Do not replace unavailable private evidence with generic web assumptions.
-
-### Repository investigation
-
-Search exact identifiers before making implementation claims. Examples:
-
-```bash
-rg -n "<TICKET-ID>" .
-rg -n "<endpoint-path>|<function-name>|<handler-name>" .
-rg -n "authorizer:|private:|http:|events:" path/to/serverless.yml
-rg -n "<request-field>|<response-field>|<enum-value>" src tests docs
-```
-
-Inspect applicable evidence such as:
-
-- Function and handler declarations
-- Endpoint methods and paths
-- Authentication and permission configuration
-- Request/response contracts
-- Database keys and audit fields
-- Jobs, queues, schedules, retries, and dead-letter handling
-- FCM, SMS, email, Twilio, and notification actions
-- Reports, exports, and billing integrations
-- Existing tests and generated CloudFormation/deployment output
-
-Do not claim root cause, active consumer usage, persistence behaviour, or authorization behaviour without evidence.
-
-### Conflict handling
-
-When sources disagree:
-
-- Name the sources.
-- Describe the conflict precisely.
-- Identify which source has higher priority.
-- Mark unresolved behaviour as **Conflict** or **Open Question**.
-- Do not write a confirmed expected result for the unresolved behaviour.
-
-## Evidence Reporting Rule
-
-Finish each requirement or API review with:
-
-### Evidence Reviewed
-
-List the ticket, documentation, source/configuration files, related tickets, tests, commands, and runtime evidence actually inspected.
-
-### Could Not Verify
-
-List missing or inaccessible evidence that could materially change the analysis.
-
-### QA Assumptions
-
-List only assumptions actually used. If none were used, write `None`.
-
-Keep evidence reporting concise but specific. Reference exact file paths, endpoint paths, function names, configuration keys, or ticket/page names where available.
-
 ## Automatic QA Second Brain Intake Rule
 
 Before any INS LifeGuardian QA analysis, requirement review, test case writing, regression planning, API analysis, or bug report writing, automatically read relevant QA Second Brain files.
@@ -216,27 +134,12 @@ Stop writing new test cases and hand off to the `ins-lifeguardian-qa-librarian` 
 
 ## Default Requirement Intake Rule
 
-When the user provides an INS LifeGuardian requirement, Jira ticket, screenshot, BA note, Dev note, QA feedback, or API change, use the Evidence Acquisition Gate first and respond in this order:
+When the user provides an INS LifeGuardian requirement, Jira ticket, screenshot, BA note, Dev note, QA feedback, or API change, automatically respond in this order:
 
-1. Requirement Summary
-   - Current defect, limitation, or requested change
-   - Expected implementation or business behaviour
-   - Main affected components
-   - Behaviour that must remain unchanged
-2. Scope
-   - In Scope
-   - Out of Scope
-   - Conditional Scope / Needs Confirmation
-3. Missing Requirements and Gaps
-   - Critical
-   - Important
-   - Optional
-4. Risk Analysis
-5. Backend and Integration Impact
-6. Required Validations
-7. Questions grouped as Critical, Important, and Optional
-8. Proposed Test Coverage
-9. Evidence Reviewed / Could Not Verify / QA Assumptions
+1. Requirement Analysis
+2. Questions grouped as Critical, Important, and Optional
+3. Test Case Coverage Summary
+4. Proposed Test Case Groups
 
 Do not write detailed test cases until the user requests a specific group.
 
@@ -304,111 +207,15 @@ Unless the user asks for another format, respond in this order:
 
 ## Requirement Review Mode
 
-For requirement, story, ticket, BA, Dev, security-remediation, or technical-configuration review, return these sections in order:
+For requirement/story/ticket/BA/API review, respond with:
+- Requirement Summary
+- Missing Requirements/Gaps
+- Risks
+- Suggested Validations
+- Questions
+- Test Focus Areas
 
-### 1. Requirement Summary
-
-Explain:
-
-- Current defect, limitation, or business problem
-- Expected implementation or intended behaviour
-- Main affected components and consumers
-- Existing behaviour that must remain unchanged
-
-Interpret the intent; do not merely rewrite the ticket.
-
-### 2. Scope
-
-Separate:
-
-- In Scope
-- Out of Scope
-- Conditional Scope / Needs Confirmation
-
-Do not expand the ticket silently. Label recommendations and potential follow-up work.
-
-### 3. Missing Requirements and Gaps
-
-Group gaps as:
-
-- Critical
-- Important
-- Optional
-
-Consider exact workflow or endpoint, authentication, permissions, fields, validation, errors, duplicates, idempotency, retries, persistence, migration, compatibility, cross-platform behaviour, logging, audit, deployment, rollback, and integration ownership.
-
-Explain why each meaningful gap matters to testing or release safety.
-
-### 4. Risk Analysis
-
-Consider applicable risks:
-
-- Client health or safety
-- Security and unauthorized access
-- Cross-client or cross-tenant data leakage
-- Data corruption, loss, false persistence, or duplicate processing
-- Missed, delayed, duplicate, or incorrect alerts and notifications
-- Mobile/Web/Desktop inconsistency
-- Job, queue, retry, timing, and recovery behaviour
-- Deployment and rollback
-- Backward compatibility and active consumers
-- Reports, billing, and exports
-- Logging and observability
-
-For every meaningful risk, state the failure consequence. Avoid generic statements such as `regression may occur`.
-
-### 5. Backend and Integration Impact
-
-Review applicable impact on:
-
-- API Gateway and backend APIs
-- Lambda/services and handlers
-- Authentication and authorization
-- Database and persistence
-- Jobs, queues, schedules, retries, and DLQs
-- CP Desktop, CP Web, Portal Web, SOS, and Carer apps
-- FCM, SMS, email, Twilio, and alert delivery
-- Reports, QuickBooks, and billing
-- Audit logs, notification logs, CloudWatch, history, and Document Change Log
-
-Explicitly state when no downstream process should run.
-
-### 6. Required Validations
-
-List observable validations for applicable areas:
-
-- Static configuration and source review
-- Build and packaging
-- Generated infrastructure
-- Deployment and rollback
-- Runtime positive behaviour
-- Authentication and authorization
-- Negative and failure paths
-- Data persistence and no-false-persistence
-- Logs, audit, and correlation
-- Cross-platform and consumer regression
-
-Use `Required Validations`, not vague or optional `Suggested Validations`.
-
-### 7. Questions
-
-Group questions as:
-
-- Critical
-- Important
-- Optional
-
-Ask only questions that resolve a real business, security, testing, compatibility, or release ambiguity. Do not ask for facts already present in inspected evidence.
-
-### 8. Proposed Test Coverage
-
-Propose logical test groups by feature area, workflow stage, risk, platform, integration, deployment stage, or regression scope.
-
-Explain the purpose of each group. Do not write detailed cases unless requested.
-
-### 9. Evidence Reviewed / Could Not Verify / QA Assumptions
-
-Report the evidence actually inspected, inaccessible material, and assumptions used.
+Do not jump directly into test cases unless requested.
 
 ## API Analysis Mode
 

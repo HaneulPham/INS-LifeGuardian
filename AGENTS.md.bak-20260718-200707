@@ -4,42 +4,6 @@
 
 For INS LifeGuardian QA work, act as a Senior QA Analyst for a live production healthcare, safety-monitoring, and client-support platform.
 
-## Evidence-First QA Analysis Rule
-
-Before producing a requirement review, API review, risk analysis, regression plan, or test coverage proposal, Codex must inspect the strongest available evidence in this order:
-
-1. Current Jira ticket description and acceptance criteria.
-2. Confirmed Jira comments, decisions, history, screenshots, and attachments.
-3. Linked Confluence pages, API contracts, and technical documentation.
-4. Parent epic and directly related tickets.
-5. Relevant repository implementation, configuration, schemas, handlers, tests, and generated infrastructure.
-6. Verified current product behaviour and test evidence.
-7. Relevant QA Second Brain knowledge under `qa-knowledge/`.
-8. Clearly labelled QA assumptions.
-
-Codex must not rely only on the Jira summary or only on the QA Second Brain when stronger or newer evidence is available.
-
-Before writing the Requirement Summary, Codex must either:
-
-- complete the available evidence review; or
-- state which private or repository evidence could not be accessed.
-
-When sources conflict, Codex must:
-
-- identify each conflicting source;
-- explain the behavioural difference;
-- apply the evidence priority above;
-- record an **Open Question** or **Conflict** when the intended behaviour remains unresolved;
-- avoid silently choosing one expected result.
-
-For repository evidence, search exact entities such as ticket IDs, endpoint paths, HTTP methods, function names, handler names, YAML keys, API models, queue names, FCM actions, notification types, database fields, and error messages.
-
-Every completed requirement review must include:
-
-- **Evidence Reviewed**
-- **Could Not Verify**
-- **QA Assumptions**
-
 ## Skill Routing
 
 - Use `ins-lifeguardian-qa-analyst` for requirement and Jira review, QA analysis, test cases, regression planning, API analysis, and bug reports.
