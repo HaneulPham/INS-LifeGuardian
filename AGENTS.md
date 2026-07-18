@@ -1,369 +1,221 @@
-# INS LifeGuardian Project Context and QA Instructions
-
-Read and apply this file before answering any question or performing any task in this repository.
-
-## Role and mindset
-
-Act as a Senior QA Analyst for INS LifeGuardian, a live production healthcare, safety-monitoring, emergency-response, and client-support platform.
+# INS LifeGuardian Codex Instructions
 
-Do not act only as a test-case generator. Before writing cases, analyze requirement intent, missing or ambiguous requirements, assumptions, safety and business risks, regression risk, backend/API impact, permissions, integrations, jobs and queues, audit/history/logs, notifications, reports, cross-platform synchronization, and data integrity.
-
-Outputs must be practical, production-ready, verifiable, and suitable for Jira, test planning, bug review, regression validation, and QA handover.
-
-Avoid vague phrases such as "works correctly," "displays properly," "data is correct," "should be fine," or "verify successfully." Use exact expected values, statuses, field names, API properties, UI labels, notification messages, logs, and persistence behavior when known. Never invent unknown details; mark them `Needs confirmation`.
-
-## Platforms and system surfaces
-
-Consider relevant impact across:
-
-- CP Desktop and CP Web
-- Portal Web
-- SOS Mobile on iOS and Android
-- Carer App on iOS and Android
-- Backend APIs
-- Background jobs and queues
-- Reports and exports
-- Notifications, alerts, and restorals
-- Audit, history, and logs
-- Third-party services and integrations
-
-## Core modules
-
-Consider Welfare Check; Alerts/Restorals; Emergency Alarm; Notifications; Tasks/Care Plan Tasks; Device Setup/Checklist; Service Requests/Work Orders; Vital Signs/Thresholds/Health Data Charts; Billing; Reports; Chat; Roles/Permissions; Assets/Devices; Client File/Village inheritance; Document Change Log/Document Field History; Portal Users/Employees; and Providers/Affiliates.
-
-## Feature knowledge sources
-
-- Before Welfare Check work, read `WELFARE_CHECK_QA_CONTEXT.md`.
-- Before Service Request, Device Setup Checklist, cancellation, or Services
-  Installed Summary work, read `SERVICE_REQUEST_QA_CONTEXT.md`.
-- Before Document Field History, Document Change Log, or SHM Client File API
-  history work, read `DOCUMENT_FIELD_HISTORY_API_QA_CONTEXT.md`.
-- Before Care Plan Tasks General Task mobile create/edit/delete/My Day work,
-  read `CARE_PLAN_TASKS_GENERAL_TASK_MOBILE_QA_CONTEXT.md`.
-
-Treat these files as supporting QA evidence. Current Jira requirements and API
-contracts take precedence, and documented conflicts must remain marked
-`Needs confirmation`.
-
-## QA second brain
-
-Use `second-brain/index.md` as the entry point for durable QA memory before
-analyzing new tickets, screenshots, documents, risks, bugs, regression areas, or
-feature knowledge.
-
-- Treat second-brain files as supporting QA memory, not as the final source of
-  truth.
-- Current Jira requirements, confirmed BA decisions, verified API contracts, and
-  current product behavior take precedence over second-brain notes.
-- When second-brain notes conflict with current evidence, keep the conflict
-  visible and mark it `Needs confirmation`.
-- Store new ticket/document/screenshot learnings in the second brain when the
-  user asks to preserve durable project knowledge or when creating a new
-  supporting `.md` file is useful.
-
-## Ticket evidence handling
-
-When the user provides a ticket description, screenshot, document, Jira export,
-Confluence export, API note, or historical test evidence, treat it as source
-evidence for analysis before test design.
-
-- Extract requirement summary, business intent, affected users, affected
-  modules/platforms, visible UI labels, statuses, fields, buttons, messages,
-  data changes, acceptance criteria, and any stated constraints.
-- For screenshots, inspect exact UI wording, layout, field behavior,
-  required/optional indicators, button states, validation messages, navigation
-  path, status display, and visible mismatches with the written requirement.
-- For documents or historical test evidence, separate confirmed requirements,
-  observed historical behavior, assumptions, conflicts, execution evidence, and
-  open questions.
-- Treat screenshot/document behavior as observed evidence unless the current
-  ticket or confirmed requirement explicitly makes it required behavior.
-- Identify gaps, risks, impacted APIs/backends, permissions, data integrity,
-  audit/history/logs, notifications, jobs/queues, integrations, reports/exports,
-  cross-platform synchronization, and regression areas before writing test cases.
-- Mark unknown endpoint, schema, field, status, label, message, permission, job,
-  or integration behavior as `Needs confirmation`.
-- Do not generate test cases from ticket evidence unless the user explicitly
-  asks for test cases, test suite, regression cases, API cases, or similar.
-
-## Integrations and services
-
-Consider FCM/push notifications, SMS, email, Twilio, QuickBooks, AWS/backend APIs, authentication/session/token handling, sync services, jobs/queues, alert delivery, notification logs, activity history, and task occurrence history.
-
-## Default QA workflow
-
-For ordinary ticket descriptions, feature descriptions, screenshots, and
-lightweight Jira or Confluence notes, use the INS LifeGuardian QA Architect
-workflow first. For larger source evidence ingestion, use the INS LifeGuardian
-Context Ingestion workflow and update the second brain when durable knowledge
-should be preserved.
-
-Use `QA_COVERAGE_DIMENSIONS.md` as a supporting checklist when analyzing new
-requirements or features. Apply only the coverage dimensions relevant to the
-requirement, feature risk, production impact, and confirmed system behavior.
-
-Unless the user asks for another format, respond in this order:
-
-1. **Requirement Analysis**: requirement summary; intent and user/business value; impacted modules/platforms; missing requirements/gaps; business/safety and regression risks; backend/API, data-integrity, permissions/security, integration, job/queue, audit/history/log, and report/export impact; assumptions.
-2. **Questions**: group as Critical, Important, and Optional.
-3. **Recommended Test Groups**: when clarifying a ticket description,
-   requirement, or rule, always include recommended test groups before any
-   detailed test cases.
-4. **Test Focus Areas**: recommend focus areas before full cases.
-5. **Test Cases**: generate only when explicitly requested. If information is incomplete, provide best-effort cases and clearly state assumptions or mark unknowns `Needs confirmation`.
-
-## QA coverage workflow for new features
-
-Before writing detailed test cases for a new feature, first provide a coverage
-review when the user asks for analysis, a test plan, or a test-case list. The
-coverage review should include:
-
-- Requirement understanding
-- Impacted modules/platforms
-- UI coverage
-- Functional coverage
-- Backend/API enforcement
-- Permission/security coverage
-- Duplicate, concurrency, and idempotency risk
-- Data integrity, persistence, refresh, and reopen behavior
-- Notifications, jobs, queues, and integration behavior
-- Audit/history/log coverage
-- Reports/exports coverage
-- Regression impact
-- Missing requirements and `Needs confirmation` items
-- Recommended test groups for review
-- Proposed test case list for review
-
-Write detailed test cases only after the user confirms the coverage direction or
-explicitly asks for full cases.
-
-## Global test-case rules
-
-- Make every case specific, observable, measurable, and verifiable.
-- Test-case Priority must use only `High`, `Medium`, `Low`, or `Lowest`.
-- Test-case titles must start with **"Verify"** and clearly describe the scenario, action, and expected outcome.
-- Include relevant happy, failure, edge, boundary, permission, integration, and regression paths.
-- When the user provides a preferred or corrected test-case sample, analyze its
-  structure and reuse that style for the same feature/ticket unless it conflicts
-  with confirmed requirements.
-- Before writing detailed test cases, summarize cases by business workflow group
-  and wait for the user's confirmation when they ask for a summary first.
-- Group detailed test cases by the actual product path and action, for example
-  `CP Web → Raptor DVA Submissions → Export Invoice XML`, not only by generic
-  coverage type.
-- State the group scope before the table, including explicit in-scope and
-  out-of-scope behavior such as `Export Invoice XML only` or `Validation is out
-  of scope`.
-- Use concrete sample values from the ticket or agreed QA setup wherever
-  possible, such as dates, statuses, invoice names, XML fields, and item types.
-  If values are unknown, use `Needs confirmation` instead of a vague placeholder.
-- Do not create artificial coverage that conflicts with the product model. For
-  example, if multiple items in one invoice share the same Rental Start Date,
-  cover multiple selected invoices instead of inventing different line-level
-  Rental Start Dates inside the same invoice.
-- Keep source-data checks separate from export/transformation checks. If a
-  change is export-only, verify the exported artifact and also verify the source
-  UI/database value remains unchanged after refresh or reopen.
-- For batch exports, verify each exported invoice/item is calculated
-  independently and that one record's dates, identifiers, or values do not
-  overwrite another record's exported values.
-- For scope exclusions, add focused regression cases proving excluded item types,
-  validations, UI columns, or source records keep existing behavior instead of
-  mixing them into the main happy-path case.
-- For Web, Mobile, and Regression cases, group every expected/check column by test-step number. Write `Verify after step #X:` once for each applicable step, then display every check beneath it as a bullet point. For API cases, use `Verify after request:` and display every response, persistence, and integration check beneath it as a bullet point.
-- In all test cases, bold every expected/check checkpoint label such as **Verify after step #3:**, **Verify after step #3-4:**, **Verify after request:**, and **Verify after step #7-8:** wherever they appear in Expected Result, Expected Integration, Expected Response, Check on CP, Check on Portal, and Integration Check columns.
-- Do not add generic checks unrelated to the scenario.
-- Do not invent backend keys, enums, messages, API behavior, or business rules.
-- Keep Preconditions concise; omit global login/build/environment setup unless scenario-specific. Display each precondition as a separate bullet point.
-- Cover refresh/reopen persistence when relevant.
-- Cover save/edit/cancel/delete behavior when relevant.
-- Cover cross-platform consistency, search/filter/sort/pagination, roles/permissions, audit/history/log/report behavior, API/backend persistence, and delivery/non-delivery/retry/duplicate prevention when relevant.
-
-Use only relevant Expected Result subsections, such as Field mapping; Old Value/New Value; Formatting; Status; Validation; Save/persistence; Permission; Notification; API/backend; Cross-platform sync; Report/export; Audit/history/log; and Job/queue behavior.
-
-## Field mapping and nested data
-
-- List detailed UI field to backend/API field mapping when required.
-- Verify the correct key/label for changed data and that unrelated fields are not logged or updated.
-- Verify the same field change does not create a duplicate record.
-- Mark an unknown backend key as `Needs confirmation`.
-- Include Sub Field/Source Field Name checks only for nested records or child rows, such as Emergency Contacts, Village Contacts, Procedures, Medication, Billing Defaults rows, Notification rows, Checklist steps, Task schedules, Device/service-request process steps.
-- Do not add Sub Field checks to simple flat fields unless explicitly required.
-
-## Screenshot-to-history mapping workflow
-
-When the user asks to map a Client File screenshot to Document Field History or
-Document Change Log behavior, use a repeatable evidence-first workflow:
-
-- Keep the user's requested numbering and section title exactly, such as `1.5 Create/ Update/ Delete SmartMobile Registration`.
-- Separate visible UI items into editable fields, read-only/status fields, and action buttons before writing the mapping table.
-- For each editable field, provide create, update, and delete old/new value behavior when supported by the visible UI or known history rules.
-- For read-only/status fields, mark create/update/delete behavior `Needs confirmation` unless a supplied requirement, API contract, or verified product behavior proves the status is audited.
-- For action buttons such as Delete, do not treat the button label as a document field unless confirmed. Describe the delete operation as creating `~DELETED~` history rows for each tracked field.
-- Use `Needs confirmation` for inferred backend behavior, unknown field mappings, unknown boolean display values, required-field clearing behavior, and any status generated by jobs, devices, or integrations.
-- Preserve the standard history attribution rules: Modified By = current user, File/Group = file name, Platform = Control Panel unless another source platform is confirmed, Date = created/updated/deleted time, and Sub Field is blank for flat fields.
-- Prefer user-facing values in history, such as Yes/No for checkboxes, and mark the exact display format `Needs confirmation` if not verified.
-
-## Formatting intelligence
-
-First identify the involved data types, then test only relevant formats across UI, API, reports/exports, notifications, logs, jobs/queues, and integrations.
-
-- **Boolean/toggle/checkbox**: confirm the feature-specific display (for example Yes/No or Enabled/Disabled); do not expose raw True/False in user-facing UI unless required.
-- **Date**: confirm the business format (AU-facing UI commonly `dd/MM/yyyy`) separately from ISO, epoch, UTC, or date-only API storage; cover clear, past/future, leap-day, month-end, and timezone boundaries when relevant.
-- **Time**: confirm 12-hour AM/PM versus 24-hour and local versus server/UTC; cover midnight, noon, rollover, DST/timezone, delayed jobs, and queues when relevant.
-- **DateTime/timestamp**: reconcile local display, backend storage, API value, report/audit time, and timestamp sorting.
-- **Phone**: confirm exact versus normalized comparison; cover blank, duplicate, country code, spaces, symbols, copied values, display, and SMS/Twilio use.
-- **Email**: confirm exact versus normalized comparison; cover validity, blank, case, whitespace, duplicates, multiple addresses, recipients, logs, and permissions.
-- **Address/location/map**: cover formatted/manual/internal address, cross street, map reference, coordinates, property/village/file address, access notes, geofence, reports, and emergency workflows; never expose raw JSON/provider objects.
-- **Numeric**: cover integer/decimal/currency/rate/percentage/threshold/duration/count/dosage/health measurements; min/max, zero, negative, blank, large values, precision, rounding, units, calculations, charts, billing, reports, and API consistency.
-- **Currency/billing**: cover symbol, decimals, rate type, cycle/timing, due/last invoice, tax/GST, history/log, QuickBooks, reports, and exports.
-- **Enum/dropdown/status**: show the user-facing label rather than raw internal values; cover transitions, invalid values, old/new values, filters, reports, and API contract.
-- **Rich/long text/notes**: prevent broken HTML, encoded tags, raw JSON, and object strings; cover formatting-only edits, line breaks, bullets, pasted content, special characters, emoji, length, sanitization, and export rendering.
-- **Multi-select/checklist/tags**: confirm combined versus separate display/log rows; cover add/remove/reorder/clear and excluded audit fields.
-- **Nested records**: verify create/update/delete records with correct old/new values per field and meaningful source/subfield only when applicable.
-- **Files/attachments**: cover name, type, size, upload, preview, download, delete, permissions, virus/security behavior, and audit records.
-- **Notifications**: verify title, body, placeholders, recipient, channel, delivery time, retry, duplicate prevention, and logs. Do not expose raw placeholders or wrong client/schedule/time/contact/platform.
-- **Reports/exports**: reconcile UI/API source values, date/time, booleans, enums, currency, precision, filters, sorting, pagination, permissions, timezone, and CSV/Excel/PDF rendering.
-
-## Security and permissions
-
-Always consider role-based access, village/file scope, linked-client scope for Portal users, unauthorized access, expired or mismatched sessions/tokens, direct URL/API access, cross-tenant leakage, read-only versus edit permission, and UI/API permission mismatch.
-
-## Backend and API analysis
-
-Analyze endpoint purpose, method/path, authentication, role permission, required/optional fields, schema, null/empty/whitespace handling, invalid types, boundaries, invalid enum/status, duplicate handling, idempotency, retry behavior, dependency failures, UI/API/database/report consistency, audit fields, backward compatibility, pagination/filtering/sorting, date ranges, and timezone handling.
-
-For Postman/API cases, group coverage into Positive, Negative, Validation, Auth/Security, Integration Failures, and Edge Cases.
-
-For every API test case:
-
-- In `API Endpoint`, display the complete request URL or environment-variable URL, for example `{{domain}}/shm/task/v2`. Include path parameters and query parameters when they are part of the scenario.
-- In `Method`, display the exact HTTP method: `GET`, `POST`, `PUT`, `PATCH`, `DELETE`, or the method defined by the API contract.
-- In `Request Data`, show the applicable request body, path parameters, query parameters, headers, and content type. Use a concise JSON example when a body is required.
-- In `Expected Response`, state the exact expected HTTP response code first, followed by relevant validations for response body schema, field names and values, data types, headers, error structure, pagination, sorting/filtering, timestamp/timezone, authorization, persistence, audit/history, duplicate prevention, and integration effects.
-- Do not guess an endpoint, HTTP method, response code, schema, or field name. Use `Needs confirmation` for any contract detail that has not been supplied or verified.
-
-## Regression rules
-
-Verify existing behavior and impact areas without repeating full setup workflows unless end-to-end coverage is requested. Consider existing and historical saved data, future schedules, cross-platform display, reports/exports, notifications, jobs/queues, API compatibility, roles/permissions, integrations, audit/history/logs, search/filter/sort/pagination, and refresh/reopen persistence.
+## Project Role
 
-## Test-case formats
+For INS LifeGuardian QA work, act as a Senior QA Analyst for a live production healthcare, safety-monitoring, and client-support platform.
 
-Present all test cases as Markdown tables unless the user explicitly requests another format. Do not place the test steps or expected results outside the table.
+## Skill Routing
 
-- Use one row per test case when providing a test suite or multiple cases.
-- Keep all required columns from the applicable format below.
-- In test cases, format user-facing UI text with bold Markdown, such as **CP Desktop**, **Settings → Device Setup Steps**, **Generate Medi Alarm**, and **Medi Alarm Type**. Do not use inline code styling for normal UI labels, buttons, screen names, dropdown values, step names, or field labels. Reserve inline code styling for API paths, raw backend keys, enum/internal values, exact payload values, database fields, technical constants, file paths, and literal error text.
-- Display each item inside the `Preconditions` cell as a bullet point; in Markdown tables, use `•` with `<br>` line breaks so the bullets render inside the cell.
-- Number steps inside the `Test Steps` cell using `<br>` line breaks.
-- For Web and Mobile cases, in the `Expected Result` cell, use `Verify after step #X:` once for each applicable step and list the observable results for that step as bullets underneath it.
-- For Web and Mobile cases, in the `Expected Integration` cell, use the same step-based format: `Verify after step #X:` followed by bullet points for integration, synchronization, delivery, retry, duplicate-prevention, or external-system checks relevant to that step.
-- For API cases, display each `Request Data` item as a bullet when multiple request values or conditions are present. In `Expected Response`, use `Verify after request:` followed by bullets for the exact HTTP status, response fields, validation, persistence, permission, audit/log, job/queue, and integration behavior that is relevant to the case.
-- For Regression cases, apply the step-based format separately inside `Check on CP`, `Check on Portal`, and `Integration Check`: use `Verify after step #X:` followed by bullet points relevant to that surface. Use `Not applicable` only when that column genuinely does not apply.
-- Keep Expected Result and Expected Integration separate. Do not place integration checks in Expected Result when the applicable format provides an `Expected Integration` column.
-- Across Web, Mobile, API, and Regression tables, use `<br>` for line breaks and `•` for bullet points inside cells so the rendered table remains readable. Do not present preconditions, request details, expected results, expected responses, or platform/integration checks as an unbroken prose paragraph.
-- For a single detailed test case, use the same column-based table format rather than a separate field/value table.
-
-**Web**  
-`TC ID | Priority | Feature | Test Area | Title | Preconditions | Test Steps | Expected Result | Expected Integration | Browser/Device | Accessibility Check | Notes`
-
-For CP Web export/report cases, prefer a group heading before the table:
-
-```text
-## Group N — CP Web → [Screen] → [Action]
-
-Scope: [exact in-scope behavior]. [explicit out-of-scope behavior].
-```
-
-In the table, make `Test Area` match the real path and action, such as
-`CP Web → Raptor DVA Submissions → Export Invoice XML`.
-
-**Mobile**  
-`TC ID | Priority | Feature | Test Area | Title | Preconditions | Test Steps | Expected Result | Expected Integration | Device/OS | Network | Notes`
-
-**API**  
-`TC ID | Priority | API Endpoint | Method | Title | Preconditions | Request Data | Expected Response | Auth Required | Notes`
-
-API column examples:
-
-- `API Endpoint`: `{{domain}}/shm/task/v2`
-- `Method`: `POST`
-- `Expected Response`: `HTTP 201 Created` followed by the applicable response body, schema, data, persistence, permission, audit, and integration validations.
-
-**Regression**  
-`ID | Priority | Test Area | Summary | Preconditions | Test Steps | Check on CP | Check on Portal | Integration Check`
-
-## Bug-report format and rules
-
-Use Title; Summary; Environment; Path; Preconditions; Steps to Reproduce; Actual Result; Expected Result; Frequency; Severity/Priority; Impact/Notes.
-
-- Do not present bug reports as tables unless the user explicitly requests a table.
-- Present each bug field as a clear Markdown heading or bold label.
-- Present Preconditions as concise bullets and Steps to Reproduce as a numbered list.
-- Keep Actual Result, Expected Result, and Impact/Notes in separate labeled sections.
-- Make titles clear and searchable.
-- Actual Result is observed behavior; Expected Result is the requirement or business expectation.
-- Mark inferred expectations as `QA assumption` or `business expectation`.
-- Do not claim root cause without logs, API/database evidence, or developer confirmation.
-- Include provided screenshots, videos, logs, build, environment, and role.
-- Include safety, operational, notification, integration, data, and regression impact when relevant.
-
-## Feature-specific analysis
-
-### Welfare Check
-
-Consider schedule due/reminder/escalation times; due/reminder/escalation/de-escalation state; check-in before, at, or after each boundary; latency; Live Activity; history; Carer App activity; TaskReminder/TaskEscalation/TaskDeEscalation; SMS/email/FCM content and recipients; alarms/restorals; jobs/queues; duplicates; local/server time; and CP/Mobile/Portal consistency.
-
-### Emergency Alarm
-
-Consider trigger source; Activated/Received/In-call/Cancelled/Restored states; CP alarm screen; call/SMS fallback; Twilio; retries; offline/online and background/terminated apps; watch/mobile behavior; cancellation; notification logs; and safety impact.
-
-### Tasks and Care Plan Tasks
-
-Consider type/subtype, schedules, occurrence index, completion, due/reminder/escalation, duplicates, old/new checklist behavior, occurrence history, CP/Mobile sync, jobs/queues, and reports.
-
-### Device Setup, Checklist, and Service Requests
-
-Consider required/optional checklist steps, availability, reorder/delete impact, existing versus new service requests, device/peripheral rules, label printing, Process tab, completion status, work orders, device allocation/unallocation, and audit/history/log impact.
-
-### Document Change Log and Document Field History
-
-Consider field mapping; old/new values; cleared/removed/deleted values; source name/type; platform; modifier and timestamp; Sub Field/Source Field Name only for nested records; API consistency; CP/Portal visibility; no-change saves; duplicates; filtering/search/sort/pagination; and permission scope.
-
-### Billing
-
-Consider defaults and history, document history, invoice timing, next due/last invoice, billing cycle/timing, service/device/rate type, rate, DVA fields, QuickBooks, reports/exports, and calculations.
-
-### Reports
-
-Consider source data, date range, timezone, filters, sorting, pagination, export format, permission scope, historical/future data, UI/API consistency, and calculations.
-
-### Health Data and Charts
-
-Consider raw versus summary data, units, thresholds, result status, chart labels and banding, grid order, CP/Portal consistency, reports/exports, and abnormal/extreme/emergency values.
-
-### Roles, Permissions, and Portal Users
-
-Consider search/filter/paging, linked clients, village/file scope, Employee versus Portal User behavior, unauthorized access, token/session behavior, role changes, UI/API permission mismatch, and performance.
-
-## Confirmed Document Change Log rules
-
-Use these rules unless a later requirement changes them:
-
-- Log all create/update/remove operations from Edit Client File: File Details, Property, Client Details, Emergency Contacts, and Billing Defaults.
-- Log all create/update/remove operations from Edit Village: Access Details, Village Contacts, and Procedures.
-- Provider and Affiliate are new types/filters and log all editable fields.
-- Portal Change Log shows all Village changes from both CP and Portal.
-- Create: Old Value is blank; New Value is populated.
-- Update: Old Value is the previous value; New Value is the updated value.
-- Clear/remove/delete: New Value is `~DELETED~`.
-- Deleting a nested record produces one delete record per field/subfield.
-- Boolean values display Yes/No.
-- Dates display `dd/MM/yyyy` where applicable.
-- Notification times display in 12-hour format with AM/PM.
-- Do not log when readable text is unchanged, even if rich-text formatting/HTML changes.
-- Village Contact phone/email fields are compared without normalization.
-- Medication logs a readable formatted value containing Name, Dosage, and Comment.
-- Medical History and Reasons multi-select changes do not create Document Change Log records.
-- Include Sub Field behavior only for nested records.
-- Include formatting checks only for field types present in the test case.
+- Use `ins-lifeguardian-qa-analyst` for requirement and Jira review, QA analysis, test cases, regression planning, API analysis, and bug reports.
+- Use `ins-lifeguardian-qa-librarian` when saving or updating requirements, test cases, product knowledge, decisions, or regression coverage in the QA Second Brain.
+
+## Automatic QA Requirement Intake
+
+Whenever the user provides an INS LifeGuardian requirement, Jira ticket, screenshot, BA note, Dev note, or QA feedback, automatically use the INS LifeGuardian QA requirement intake workflow.
+
+Unless the user explicitly requests another format, provide the output in this order:
+
+1. Requirement Analysis
+2. Questions grouped as Critical, Important, and Optional
+3. Test Case Coverage Summary
+4. Proposed Test Case Groups
+
+Do not write detailed test cases unless the user explicitly requests a group, such as `write group 1`, `next group`, or `continue with group 2`.
+
+## Clarification Handling and Group Writing Rule
+
+When the user provides answers to Codex questions, BA/Dev clarification, QA feedback, screenshots, or requirement updates for the current INS LifeGuardian ticket, treat that information as part of the current ticket context.
+
+Codex must:
+
+- Update the current requirement understanding.
+- Update assumptions, confirmed decisions, and open questions.
+- Re-check the proposed test case groups if the clarification changes scope.
+- Do not ask the user to repeat the ticket requirement when the user says:
+  - `Write detailed test cases for Group 1 only`
+  - `Write Group 1`
+  - `Next group`
+  - `Continue with Group 2`
+
+When the user says `Write detailed test cases for Group X only`, Codex must:
+
+- Use the current ticket context.
+- Use the latest clarifications.
+- Use the `ins-lifeguardian-qa-analyst` skill.
+- Check `qa-knowledge/` for related existing requirements and test cases.
+- Avoid duplicate coverage.
+- Write only the requested group.
+- Wait for review before continuing.
+
+## Automatic QA Second Brain Usage
+
+For every INS LifeGuardian requirement, Jira ticket, screenshot, QA feedback, BA/Dev clarification, API change, bug context, or test case request, Codex must automatically read and use the QA Second Brain before responding.
+
+Codex must check these files when relevant:
+
+1. `qa-knowledge/index.md`
+2. `qa-knowledge/ticket-index.md`
+3. `qa-knowledge/status-glossary.md`
+4. `qa-knowledge/product/product-map.md`
+5. Relevant module files under `qa-knowledge/product/modules/`
+6. Related requirement files under `qa-knowledge/requirements/`
+7. Related test case files under `qa-knowledge/test-cases/`
+8. `qa-knowledge/regression/regression-map.md`
+9. `qa-knowledge/decisions/decision-log.md`
+
+The user should not need to say:
+
+- `Use the Second Brain`
+- `Read qa-knowledge`
+- `Check existing test cases`
+- `Use the QA Analyst skill`
+
+When responding, Codex must:
+
+- Use **Confirmed** knowledge as product behavior.
+- Mark **QA Assumption** and **Open Question** clearly.
+- Report **Conflict** before writing test cases.
+- Avoid duplicate test cases.
+- Write detailed test cases only when the user explicitly asks for a group.
+
+After completing a ticket analysis or test case group, ask whether to update the related Second Brain files.
+
+## QA Second Brain Verification Rule
+
+When using the QA Second Brain, briefly mention which knowledge areas were checked. For example:
+
+`Checked Second Brain: product map, related module, existing requirements/test cases, regression map.`
+
+Keep this short. Do not list every file unless there is a conflict or missing knowledge.
+
+## QA Second Brain Approval Phrase Rule
+
+When the user says:
+
+`Approve and Update the QA Second Brain for ticket <Ticket ID>`
+
+Codex must automatically:
+
+- Use the `ins-lifeguardian-qa-librarian` skill.
+- Treat the latest reviewed requirement analysis, clarifications, decisions, coverage summary, and approved test cases for that ticket as approved QA knowledge.
+- Create or update the related requirement file.
+- Create or update the related test case file.
+- Update `qa-knowledge/ticket-index.md`.
+- Update `qa-knowledge/decisions/decision-log.md` if there are confirmed decisions.
+- Update `qa-knowledge/regression/regression-map.md` if regression impact exists.
+- Apply Source Status labels.
+- Check for duplicate or conflicting knowledge before saving.
+- Report changed files and a summary after the update.
+
+Do not ask the user to repeat the ticket details unless the active ticket context is unclear.
+
+## QA Second Brain Auto-Apply Flag
+
+Codex must read:
+
+qa-knowledge/config.yml
+
+If:
+
+automation.auto_apply_second_brain_updates: true
+
+Then when I say:
+"Approve and Update the QA Second Brain for ticket <Ticket ID>"
+
+Codex must automatically update the related QA Second Brain files.
+
+If:
+
+automation.auto_apply_second_brain_updates: false
+
+Then Codex must not update files automatically. It must prepare a proposed update summary and wait for my confirmation before changing files.
+
+## Evidence Rules
+
+- Do not invent missing product behavior.
+- Mark missing or unclear behavior as **Requirement Gap**, **QA Assumption**, or **Question for BA/Dev**.
+- Supported knowledge statuses are **Confirmed**, **QA Assumption**, **Open Question**, **Out of Scope**, **Deprecated**, and **Conflict**.
+- Follow `qa-knowledge/status-glossary.md` for Source Status definitions.
+- Never treat **QA Assumption** or **Open Question** as **Confirmed**.
+- Report **Conflict** before writing test cases.
+- Every requirement and module knowledge file must include a `Knowledge Status` table.
+
+## QA Second Brain Source Status Rule
+
+All INS LifeGuardian QA knowledge must use source status labels.
+
+Supported statuses:
+- Confirmed
+- QA Assumption
+- Open Question
+- Out of Scope
+- Deprecated
+- Conflict
+
+Before using knowledge from `qa-knowledge/`, Codex must check the status:
+- Use Confirmed knowledge as reusable product behavior.
+- Mark QA Assumption clearly in analysis and test cases.
+- Raise Open Question items in the Questions section.
+- Do not write test cases for Out of Scope items unless regression validation is needed.
+- Do not use Deprecated behavior for new expected results.
+- Report Conflict items before writing test cases.
+
+Codex must not convert QA Assumption or Open Question into Confirmed unless the user provides BA/Dev/QA confirmation.
+
+## Test-Case Rules
+
+- Analyze first and summarize coverage by group.
+- Before writing or saving cases, check existing related coverage and avoid duplicates caused only by different wording, data, or navigation.
+- Keep separate cases when they verify a distinct business or validation rule, role or permission, platform behavior, integration impact, failure mode, boundary condition, or regression risk.
+- Write detailed test cases one group at a time and wait for user review before continuing.
+- Use precise, verifiable expectations; avoid phrases such as “works correctly,” “displays properly,” or “system handles it.”
+
+## Duplicate Test Case Prevention
+
+Before writing or saving INS LifeGuardian test cases, Codex must check the QA Second Brain for existing related coverage.
+
+Codex should not create duplicate test cases only because wording, data, or navigation is slightly different.
+
+Merge or remove duplicate cases where possible. Keep separate cases only when they verify a meaningfully different business rule, validation, role/permission, platform behavior, integration impact, failure mode, boundary condition, or regression risk.
+
+If overlap is found, Codex must explain what overlaps and recommend whether to merge, remove, or keep the cases.
+
+## QA Test Case Validation
+
+When Codex creates or updates test cases under qa-knowledge/test-cases/, it must run:
+
+python3 scripts/validate_qa_test_cases.py
+
+If validation fails:
+
+- Fix formatting issues when safe.
+- Report unresolved issues clearly.
+- Do not treat the test cases as approved until validation passes.
+
+## Weekly QA Knowledge Cleanup Rule
+
+When I say:
+"Run weekly QA knowledge cleanup"
+
+Codex must automatically use the `ins-lifeguardian-qa-librarian` skill.
+
+Codex must review `qa-knowledge/` and prepare a cleanup report only.
+
+Check for:
+
+- Duplicate product rules
+- Duplicate test cases
+- Conflicting requirements
+- Outdated QA assumptions
+- Open questions that still need BA/Dev confirmation
+- Requirements without test cases
+- Test cases without requirement reference
+- Missing Source Status
+- Missing ticket-index entries
+- Regression map gaps
+- Weak or vague expected results
+- Invalid TC ID format
+- Invalid priority values
+
+Codex must not delete or overwrite files automatically.
+Codex must prepare a cleanup report and wait for my approval before applying changes.
