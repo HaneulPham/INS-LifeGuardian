@@ -1,6 +1,10 @@
 # INS LifeGuardian QA Second Brain Index
 
-This folder is the source of truth for INS LifeGuardian QA knowledge.
+This folder is the durable supporting knowledge base for INS LifeGuardian QA.
+
+Current Jira requirements, confirmed Jira comments, approved Confluence/API documentation, verified implementation evidence, and confirmed product behaviour take precedence over stored Second Brain knowledge.
+
+When sources conflict, Codex must record the conflict and request clarification instead of silently selecting one behaviour.
 
 ## How Codex should use this knowledge
 
