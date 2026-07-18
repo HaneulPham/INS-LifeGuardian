@@ -4,14 +4,44 @@ name = "INS LifeGuardian"
 
 [setup]
 script = '''
+set -euo pipefail
+
 cd "$CODEX_WORKTREE_PATH"
-pip install -r requirements.txt
-npm install
-./run/setup.sh
-'''
+
+echo "Preparing INS LifeGuardian QA repository..."
+echo "Repository: $(pwd)"
+echo "Python: $(python3 --version)"
+
+required_files=(
+  "AGENTS.md"
+  "qa-knowledge/index.md"
+  "qa-knowledge/config.yml"
+  "scripts/validate_qa_test_cases.py"
+)
+
+for file in "${required_files[@]}"; do
+  if [ ! -f "$file" ]; then
+    echo "ERROR: Required repository file is missing: $file"
+    exit 1
+  fi
+
+  echo "FOUND: $file"
+done
+
+echo "Checking Python validator syntax..."
+python3 -m py_compile scripts/validate_qa_test_cases.py
+
+echo "Running QA test-case validation..."
+python3 scripts/validate_qa_test_cases.py
+
+echo "INS LifeGuardian QA environment is ready."'''
 
 [cleanup]
 script = '''
-docker compose down --remove-orphans
-rm -rf .cache/tmp
-'''
+set -euo pipefail
+
+cd "$CODEX_WORKTREE_PATH"
+
+if [ -d ".cache/tmp" ]; then
+  rm -rf .cache/tmp
+fi'''
