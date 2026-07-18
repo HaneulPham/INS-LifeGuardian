@@ -1,2 +1,9 @@
 [sandbox_workspace_write]
 network_access = true
+
+[mcp_servers.atlassian]
+command = "npx"
+args = [
+  "-y",
+  "mcp-atlassian"
+]

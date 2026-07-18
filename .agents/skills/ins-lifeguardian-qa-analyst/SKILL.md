@@ -304,111 +304,288 @@ Unless the user asks for another format, respond in this order:
 
 ## Requirement Review Mode
 
-For requirement, story, ticket, BA, Dev, security-remediation, or technical-configuration review, return these sections in order:
+Use this mode for Jira tickets, stories, requirements, BA reviews, backend changes, configuration changes, API changes, and technical remediation work.
+
+Do not generate detailed test cases unless the user explicitly requests them.
+
+Return the following sections in this exact order.
 
 ### 1. Requirement Summary
 
 Explain:
 
-- Current defect, limitation, or business problem
-- Expected implementation or intended behaviour
-- Main affected components and consumers
-- Existing behaviour that must remain unchanged
+- The business and technical intent.
+- The current behaviour or defect.
+- The expected behaviour or implementation.
+- The primary affected components, platforms, APIs, or services.
+- Existing behaviour that must remain unchanged.
 
-Interpret the intent; do not merely rewrite the ticket.
+Do not merely rewrite the Jira description. Interpret what the change means for the product and QA.
 
 ### 2. Scope
 
-Separate:
+Separate the scope into:
 
-- In Scope
-- Out of Scope
-- Conditional Scope / Needs Confirmation
+#### In Scope
 
-Do not expand the ticket silently. Label recommendations and potential follow-up work.
+List behaviour directly required by the ticket.
+
+#### Out of Scope
+
+List related behaviour that should not be changed or tested as part of this ticket unless regression validation is required.
+
+#### Conditional Scope / Needs Confirmation
+
+List behaviour that may belong to the ticket but cannot be confirmed from available evidence.
+
+Do not silently expand the ticket scope.
 
 ### 3. Missing Requirements and Gaps
 
 Group gaps as:
 
-- Critical
-- Important
-- Optional
+#### Critical
 
-Consider exact workflow or endpoint, authentication, permissions, fields, validation, errors, duplicates, idempotency, retries, persistence, migration, compatibility, cross-platform behaviour, logging, audit, deployment, rollback, and integration ownership.
+Requirements that must be resolved before development, deployment, or reliable QA execution.
 
-Explain why each meaningful gap matters to testing or release safety.
+#### Important
+
+Requirements that materially affect test coverage, compatibility, failure handling, permissions, integrations, or regression.
+
+#### Optional
+
+Clarifications that improve completeness but do not block core implementation or validation.
+
+For every gap:
+
+- State exactly what is missing or ambiguous.
+- Explain why it matters.
+- Describe the testing, business, safety, security, or release impact.
+- Do not repeat the same gap in multiple sections.
+
+Consider:
+
+- Exact workflow, endpoint, or configuration.
+- Authentication and authorization.
+- Required and optional fields.
+- Null, empty, whitespace, invalid type, and boundary handling.
+- Status codes and error messages.
+- Duplicate prevention and idempotency.
+- Retry, timeout, and dependency failure.
+- Persistence and false-persistence prevention.
+- Existing data and migration.
+- Backward compatibility.
+- Consumer compatibility.
+- Cross-platform behaviour.
+- Logging, audit, and observability.
+- Deployment and rollback.
 
 ### 4. Risk Analysis
 
-Consider applicable risks:
+Analyse only meaningful risks supported by the requirement or implementation context.
 
-- Client health or safety
-- Security and unauthorized access
-- Cross-client or cross-tenant data leakage
-- Data corruption, loss, false persistence, or duplicate processing
-- Missed, delayed, duplicate, or incorrect alerts and notifications
-- Mobile/Web/Desktop inconsistency
-- Job, queue, retry, timing, and recovery behaviour
-- Deployment and rollback
-- Backward compatibility and active consumers
-- Reports, billing, and exports
-- Logging and observability
+Consider:
 
-For every meaningful risk, state the failure consequence. Avoid generic statements such as `regression may occur`.
+- Client safety and healthcare impact.
+- Security and unauthorized access.
+- Cross-client, cross-file, or cross-tenant data exposure.
+- Data corruption, data loss, or false persistence.
+- Missed, duplicated, delayed, or incorrect alerts and notifications.
+- Backward compatibility.
+- Mobile, Web, Desktop, and backend inconsistency.
+- API Gateway, Lambda, service, database, or deployment failure.
+- Jobs, queues, retries, timing, and scheduled processing.
+- Billing, report, or export impact.
+- Logging and observability gaps.
+
+For each risk:
+
+- Give it a clear risk name.
+- Use only High, Medium, Low, or Lowest when a priority is useful.
+- Explain the failure consequence.
+- State the affected system or consumer.
+- Avoid generic statements such as “there may be regression.”
 
 ### 5. Backend and Integration Impact
 
-Review applicable impact on:
+Describe the expected impact for every applicable area:
 
-- API Gateway and backend APIs
-- Lambda/services and handlers
-- Authentication and authorization
-- Database and persistence
-- Jobs, queues, schedules, retries, and DLQs
-- CP Desktop, CP Web, Portal Web, SOS, and Carer apps
-- FCM, SMS, email, Twilio, and alert delivery
-- Reports, QuickBooks, and billing
-- Audit logs, notification logs, CloudWatch, history, and Document Change Log
+- API Gateway and routing.
+- Backend services and Lambda functions.
+- Authentication, authorizers, OAuth, HMAC, or API keys.
+- Request and response contracts.
+- Database and persistence.
+- Jobs, queues, scheduled processes, and retries.
+- CP Desktop.
+- CP Web.
+- Portal Web.
+- Mobile SOS iOS and Android.
+- Mobile Carer iOS and Android.
+- FCM and push notifications.
+- SMS, email, and Twilio.
+- QuickBooks and billing.
+- Reports and exports.
+- Audit logs.
+- Notification logs.
+- CloudWatch or operational logs.
+- Document Change Log.
 
-Explicitly state when no downstream process should run.
+Explicitly state when an integration should not be triggered.
+
+Do not invent an integration impact when no evidence supports it.
 
 ### 6. Required Validations
 
-List observable validations for applicable areas:
+List observable and executable validations.
 
-- Static configuration and source review
-- Build and packaging
-- Generated infrastructure
-- Deployment and rollback
-- Runtime positive behaviour
-- Authentication and authorization
-- Negative and failure paths
-- Data persistence and no-false-persistence
-- Logs, audit, and correlation
-- Cross-platform and consumer regression
+Group them where applicable into:
 
-Use `Required Validations`, not vague or optional `Suggested Validations`.
+#### Static and Configuration Validation
+
+Examples:
+
+- Configuration declarations.
+- Routes and methods.
+- Handler references.
+- Permissions and authorizers.
+- Environment variables.
+- Duplicate or obsolete resources.
+
+#### Build and Packaging Validation
+
+Examples:
+
+- Compilation.
+- Dependency resolution.
+- Serverless validation.
+- Generated infrastructure.
+- Missing handler detection.
+
+#### Deployment Validation
+
+Examples:
+
+- CloudFormation deployment.
+- API Gateway resources.
+- Lambda integrations.
+- Permissions.
+- Rollback and cleanup.
+
+#### Runtime Functional Validation
+
+Examples:
+
+- Positive requests or workflows.
+- Negative validation.
+- Authentication and permission behaviour.
+- Existing behaviour regression.
+- Cross-platform consistency.
+
+#### Data-Integrity Validation
+
+Examples:
+
+- Correct persistence.
+- No false persistence.
+- No partial update.
+- No duplicate record.
+- No unintended delete.
+- Unchanged audit fields when no mutation should occur.
+
+#### Integration and Observability Validation
+
+Examples:
+
+- Downstream calls.
+- No unintended FCM, SMS, email, Twilio, billing, queue, or job activity.
+- API Gateway, authorizer, Lambda, and application logs.
+- Request and correlation identifiers.
+- No sensitive data in responses or logs.
+
+Use “Required Validations,” not “Suggested Validations.”
 
 ### 7. Questions
 
 Group questions as:
 
-- Critical
-- Important
-- Optional
+#### Critical
 
-Ask only questions that resolve a real business, security, testing, compatibility, or release ambiguity. Do not ask for facts already present in inspected evidence.
+Questions that block implementation understanding, security validation, or reliable QA execution.
+
+#### Important
+
+Questions that materially affect coverage or expected results.
+
+#### Optional
+
+Questions that improve completeness but do not block core testing.
+
+Questions must:
+
+- Resolve a real requirement, safety, security, data, integration, or release ambiguity.
+- Be specific and answerable.
+- Not ask for information already available in the ticket, documentation, repository, or conversation.
+- Not repeat a gap without turning it into a concrete decision request.
 
 ### 8. Proposed Test Coverage
 
-Propose logical test groups by feature area, workflow stage, risk, platform, integration, deployment stage, or regression scope.
+Propose test groups only.
 
-Explain the purpose of each group. Do not write detailed cases unless requested.
+For each group, explain:
 
-### 9. Evidence Reviewed / Could Not Verify / QA Assumptions
+- The feature or technical area covered.
+- The main verification objective.
+- The risk or regression reason for the group.
+- Relevant platform, API, integration, job, notification, or audit coverage.
 
-Report the evidence actually inspected, inaccessible material, and assumptions used.
+Organize groups by:
+
+- Feature area.
+- Workflow stage.
+- Risk and impact.
+- Platform.
+- Integration.
+- Regression scope.
+
+Do not write detailed test cases in Requirement Review Mode.
+
+Detailed cases are generated only when the user requests a specific group.
+
+### 9. Evidence and Assumptions
+
+End every review with:
+
+#### Evidence Reviewed
+
+List the ticket content, comments, history, attachments, linked documentation, related tickets, source files, configurations, schemas, tests, logs, or commands actually inspected.
+
+#### Could Not Verify
+
+List evidence that was unavailable, inaccessible, missing, or incomplete.
+
+#### QA Assumptions
+
+List every assumption used to complete the analysis.
+
+#### Source Conflicts
+
+List conflicts between Jira, Confluence, implementation, tests, QA knowledge, or observed behaviour.
+
+Do not include a conflict section when no conflict was found.
+
+### Requirement Review Quality Rules
+
+- Reference exact endpoint paths, HTTP methods, function names, handler names, fields, configuration keys, messages, and platforms when evidence is available.
+- Separate confirmed requirements from observations and assumptions.
+- Do not claim root cause without code, logs, API evidence, database evidence, or developer confirmation.
+- Do not assume an endpoint or function is unused only because its handler is missing.
+- Do not assume an HTTP status when the gateway or API contract does not define it.
+- State what must remain unchanged.
+- Avoid vague wording such as “works correctly,” “displays properly,” “system handles it,” or “API fails appropriately.”
+- Apply API Analysis Mode in addition to this contract when the ticket affects an API.
+- Apply regression analysis to directly and indirectly impacted modules.
+- Stop before detailed test cases unless explicitly requested.
+
 
 ## API Analysis Mode
 
