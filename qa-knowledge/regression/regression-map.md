@@ -14,7 +14,7 @@ This file stores reusable regression coverage and impact relationships across IN
 | Module / Feature | Impacted Platforms | Core Regression Flows | Backend / API Impact | Integration Impact | Notifications / Jobs | Related Tickets | Source Status | Last Verified | Notes |
 |---|---|---|---|---|---|---|---|---|---|
 | Care Plan Tasks | CP Desktop, CP Web, Mobile SOS, Mobile Carer | Create, edit, delete, occurrence check-in, cross-platform refresh | Task and Task Occurrence APIs | CP/Mobile synchronization | FCM TaskUpdated, TaskDeleted, TaskDue, TaskReminder, TaskEscalation | MA-2136 | Confirmed | 2026-07-18 | Extend when additional task behaviour is approved |
-| Service Requests | CP Desktop | Create, edit, process steps, device assignment | Service Request backend APIs | Client File and device records | No notification should be triggered by setup-only changes unless configured | SMAR-2651, SMAR-2652 | Confirmed | 2026-07-18 | Add more detailed dependency coverage as tickets are approved |
+| Service Requests | CP Desktop | Create, edit, process steps, device assignment; Device Setup add, delete, reorder, save, and false-persistence validation | Service Request backend APIs; independent SMAR-2652 API enforcement is an Open Question | Client File and device records | No notification should be triggered by setup-only changes unless configured | SMAR-2651, SMAR-2652 | Confirmed | 2026-07-20 | SMAR-2652 approved coverage confirms configuration-level dependency behavior; runtime processing is not included in its 11 approved cases |
 
 ## Cross-Module Regression Relationships
 
