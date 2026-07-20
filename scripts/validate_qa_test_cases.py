@@ -28,10 +28,30 @@ SCHEMAS = {
     "Regression": REGRESSION_COLUMNS,
 }
 ALLOWED_PRIORITIES = ("High", "Medium", "Low", "Lowest")
+ALLOWED_HTTP_METHODS = {"GET", "POST", "PUT", "PATCH", "DELETE"}
+VAGUE_PHRASES = (
+    "works correctly",
+    "works as expected",
+    "displays properly",
+    "handled correctly",
+    "successful",
+    "success",
+    "system handles it",
+    "behaves appropriately",
+)
+BROAD_TEST_AREAS = {"general", "testing", "feature", "cp web", "cp desktop", "mobile", "web", "api"}
+GENERIC_TITLES = {"create", "update", "delete", "verify", "test", "regression"}
+NEGATIVE_RESPONSE_TERMS = (
+    "error", "validation", "invalid", "unauthorized", "forbidden",
+    "not found", "bad request", "conflict", "message", "fail", "reject",
+)
 TC_ID_PATTERN = re.compile(r"^(?:SMAR|MA)-\d+-G\d+-\d{2}$")
 NUMBERED_STEP_PATTERN = re.compile(r"(?:^|\n|<br\s*/?>)\s*1[.)]\s+\S", re.I)
 STEP_NUMBER_PATTERN = re.compile(r"(?:^|\n|<br\s*/?>)\s*(\d+)[.)]\s+\S", re.I)
 VERIFY_REFERENCE_PATTERN = re.compile(r"\*\*Verify after step\s+#?(\d+)\s*:?\*\*", re.I)
+GROUP_HEADING_PATTERN = re.compile(r"^##\s+Group\s+(\d+)\b", re.I)
+HTTP_STATUS_PATTERN = re.compile(r"\b([1-5]\d{2})\b")
+NAVIGATION_PATTERN = re.compile(r"\b(?:go to|navigate|open|launch|sign in|log in)\b", re.I)
 
 
 @dataclass(frozen=True)
@@ -73,6 +93,27 @@ def is_separator_row(line: str) -> bool:
 
 def normalize_header(value: str) -> str:
     return " ".join(value.replace("`", "").replace("**", "").split()).casefold()
+
+
+def normalize_title(value: str) -> str:
+    """Normalize case and punctuation for potential duplicate-title detection."""
+    return " ".join(re.sub(r"[^a-z0-9]+", " ", value.casefold()).split())
+
+
+def vague_phrase(value: str) -> str | None:
+    normalized = normalize_title(value)
+    return next(
+        (
+            phrase
+            for phrase in VAGUE_PHRASES
+            if re.search(rf"\b{re.escape(phrase)}\b", normalized)
+        ),
+        None,
+    )
+
+
+def step_numbers(value: str) -> list[int]:
+    return [int(number) for number in STEP_NUMBER_PATTERN.findall(value)]
 
 
 def is_table_row(line: str) -> bool:
@@ -137,13 +178,13 @@ def validate_step_references(
     expected_fields: list[tuple[str, str]],
 ) -> list[Issue]:
     issues: list[Issue] = []
-    step_numbers = {int(value) for value in STEP_NUMBER_PATTERN.findall(test_steps)}
+    available_steps = set(step_numbers(test_steps))
     for label, content in expected_fields:
         references = {int(value) for value in VERIFY_REFERENCE_PATTERN.findall(content)}
         if not references:
             issues.append(Issue(shown_path, row, tc_id, f"{label} must contain a '**Verify after step #N:**' marker"))
             continue
-        missing = sorted(references - step_numbers)
+        missing = sorted(references - available_steps)
         if missing:
             issues.append(Issue(shown_path, row, tc_id, f"{label} references missing step(s): {', '.join(map(str, missing))}"))
     return issues
@@ -153,12 +194,18 @@ def validate_file(
     path: Path,
     scan_root: Path,
     seen_ids: dict[str, tuple[Path, int]],
+    seen_titles: dict[str, tuple[Path, int, str]] | None = None,
 ) -> tuple[list[Issue], int]:
     issues: list[Issue] = []
     rows_found = 0
     lines = path.read_text(encoding="utf-8").splitlines()
+    title_registry = seen_titles if seen_titles is not None else {}
+    current_group: int | None = None
     index = 0
     while index + 1 < len(lines):
+        group_match = GROUP_HEADING_PATTERN.match(lines[index].strip())
+        if group_match:
+            current_group = int(group_match.group(1))
         if not is_table_row(lines[index]) or not is_separator_row(lines[index + 1]):
             index += 1
             continue
@@ -176,6 +223,7 @@ def validate_file(
             issues.append(Issue(shown_path, index + 1, "<table>", f"{schema} table missing required columns: {', '.join(missing)}"))
 
         row_index = index + 2
+        case_position = 0
         while row_index < len(lines) and is_table_row(lines[row_index]):
             if is_separator_row(lines[row_index]):
                 row_index += 1
@@ -185,6 +233,7 @@ def validate_file(
                 row_index += 1
                 continue
             rows_found += 1
+            case_position += 1
             if len(cells) < len(headers):
                 cells.extend([""] * (len(headers) - len(cells)))
 
@@ -201,6 +250,8 @@ def validate_file(
                 file_ticket = path.stem if re.fullmatch(r"(?:SMAR|MA)-\d+", path.stem) else None
                 if file_ticket and not tc_id.startswith(f"{file_ticket}-"):
                     issues.append(Issue(shown_path, source_row, tc_id, f"TC ID prefix must match file ticket {file_ticket}"))
+                if current_group is not None and f"-G{current_group}-" not in tc_id:
+                    issues.append(Issue(shown_path, source_row, tc_id, f"TC ID group must match Group {current_group}"))
                 if tc_id in seen_ids:
                     first_file, first_row = seen_ids[tc_id]
                     issues.append(Issue(shown_path, source_row, tc_id, f"duplicate TC ID; first found in {first_file} row {first_row}"))
@@ -216,15 +267,59 @@ def validate_file(
                     issues.append(Issue(shown_path, source_row, tc_id, f"{column} must not be empty"))
 
             if schema in {"UI/Mobile", "Regression"}:
+                test_area = normalize_title(value("Test Area"))
+                if test_area in BROAD_TEST_AREAS:
+                    issues.append(Issue(shown_path, source_row, tc_id, f"Test Area {value('Test Area')!r} is too broad; use a specific module and feature"))
+
+            title_column = "Summary" if schema == "Regression" else "Title"
+            title = value(title_column)
+            normalized_title = normalize_title(title)
+            if normalized_title in GENERIC_TITLES or len(normalized_title.split()) < 2:
+                issues.append(Issue(shown_path, source_row, tc_id, f"{title_column} is too vague; describe the specific behaviour being verified"))
+            vague = vague_phrase(title)
+            if vague:
+                issues.append(Issue(shown_path, source_row, tc_id, f"{title_column} contains vague phrase {vague!r}"))
+            if normalized_title:
+                if normalized_title in title_registry:
+                    first_file, first_row, first_id = title_registry[normalized_title]
+                    issues.append(Issue(shown_path, source_row, tc_id, f"potential duplicate title; first found for {first_id} in {first_file} row {first_row}"))
+                else:
+                    title_registry[normalized_title] = (shown_path, source_row, tc_id)
+
+            if schema in {"UI/Mobile", "Regression"}:
                 test_steps = value("Test Steps")
                 if not NUMBERED_STEP_PATTERN.search(test_steps):
                     issues.append(Issue(shown_path, source_row, tc_id, "Test Steps must use numbered steps beginning with 1"))
+                numbers = step_numbers(test_steps)
+                if numbers and numbers != list(range(1, len(numbers) + 1)):
+                    issues.append(Issue(shown_path, source_row, tc_id, "Test Steps must use a complete, non-duplicated sequence beginning with 1"))
+                if schema == "UI/Mobile" and case_position == 1 and (
+                    len(numbers) < 2 or not NAVIGATION_PATTERN.search(test_steps)
+                ):
+                    issues.append(Issue(shown_path, source_row, tc_id, "first case in a group must include a full navigation flow with at least two numbered steps"))
                 expected = (
                     [("Expected Result", value("Expected Result")), ("Expected Integration", value("Expected Integration"))]
                     if schema == "UI/Mobile"
                     else [("Check on CP", value("Check on CP")), ("Check on Portal", value("Check on Portal")), ("Integration Check", value("Integration Check"))]
                 )
                 issues.extend(validate_step_references(shown_path, source_row, tc_id, test_steps, expected))
+                for label, content in expected:
+                    vague = vague_phrase(content)
+                    if vague:
+                        issues.append(Issue(shown_path, source_row, tc_id, f"{label} contains vague phrase {vague!r}"))
+            elif schema == "API":
+                method = value("Method").upper()
+                if method not in ALLOWED_HTTP_METHODS:
+                    issues.append(Issue(shown_path, source_row, tc_id, f"invalid HTTP method {value('Method')!r}; allowed: {', '.join(sorted(ALLOWED_HTTP_METHODS))}"))
+                response = value("Expected Response")
+                statuses = [int(status) for status in HTTP_STATUS_PATTERN.findall(response)]
+                if not statuses:
+                    issues.append(Issue(shown_path, source_row, tc_id, "Expected Response must include an HTTP status code"))
+                if any(status >= 400 for status in statuses) and not any(term in response.casefold() for term in NEGATIVE_RESPONSE_TERMS):
+                    issues.append(Issue(shown_path, source_row, tc_id, "negative Expected Response must describe an error or validation expectation"))
+                vague = vague_phrase(response)
+                if vague:
+                    issues.append(Issue(shown_path, source_row, tc_id, f"Expected Response contains vague phrase {vague!r}"))
             row_index += 1
         index = row_index
     return issues, rows_found
@@ -245,10 +340,11 @@ def main() -> int:
         print(f"FAIL file={scan_root} row=0 TC ID=<none> issue=test-case directory does not exist")
         return 1
     seen_ids: dict[str, tuple[Path, int]] = {}
+    seen_titles: dict[str, tuple[Path, int, str]] = {}
     issues: list[Issue] = []
     rows_found = 0
     for path in sorted(scan_root.rglob("*.md")):
-        file_issues, file_rows = validate_file(path, scan_root, seen_ids)
+        file_issues, file_rows = validate_file(path, scan_root, seen_ids, seen_titles)
         issues.extend(file_issues)
         rows_found += file_rows
     if not issues and rows_found == 0 and not args.allow_empty:

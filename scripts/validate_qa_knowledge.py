@@ -14,6 +14,16 @@ from validate_qa_test_cases import is_separator_row, is_table_row, normalize_hea
 
 KNOWLEDGE_STATUS_COLUMNS = ("Knowledge Item", "Source Status", "Source / Evidence", "Last Updated", "Notes")
 ALLOWED_SOURCE_STATUSES = {"confirmed", "qa assumption", "open question", "out of scope", "deprecated", "conflict"}
+ALLOWED_TICKET_STATUSES = {
+    "pending migration",
+    "in analysis",
+    "test design in progress",
+    "pending review",
+    "approved",
+    "completed",
+    "deprecated",
+}
+TICKET_PATTERN = re.compile(r"^(?:SMAR|MA)-\d+$")
 MIGRATION_PLACEHOLDER_PATTERN = re.compile(
     r"\b(?:pending migration|migration pending)\b|\bhas not yet been (?:fully )?(?:migrated|copied)\b|\bhave not yet been (?:fully )?(?:migrated|copied)\b",
     re.I,
@@ -100,6 +110,9 @@ def validate_ticket_index(project_root: Path) -> list[Issue]:
     regression_path = project_root / "qa-knowledge/regression/regression-map.md"
     decision_text = decision_path.read_text(encoding="utf-8") if decision_path.is_file() else ""
     regression_text = regression_path.read_text(encoding="utf-8") if regression_path.is_file() else ""
+    seen_tickets: dict[str, int] = {}
+    indexed_requirements: set[Path] = set()
+    indexed_test_cases: set[Path] = set()
     for row_number, cells in rows:
         def value(column: str) -> str:
             position = header_map[normalize_header(column)]
@@ -107,10 +120,30 @@ def validate_ticket_index(project_root: Path) -> list[Issue]:
         ticket = value("Ticket") or "<missing>"
         requirement = project_root / "qa-knowledge" / value("Requirement File")
         test_cases = project_root / "qa-knowledge" / value("Test Case File")
+        status = value("Status").casefold()
+        if not TICKET_PATTERN.fullmatch(ticket):
+            issues.append(Issue(shown_index, row_number, ticket, "invalid ticket ID format"))
+        elif ticket in seen_tickets:
+            issues.append(Issue(shown_index, row_number, ticket, f"duplicate ticket row; first found at row {seen_tickets[ticket]}"))
+        else:
+            seen_tickets[ticket] = row_number
+        if status not in ALLOWED_TICKET_STATUSES:
+            issues.append(Issue(shown_index, row_number, ticket, f"unsupported ticket status {value('Status')!r}"))
+        if requirement.stem != ticket:
+            issues.append(Issue(shown_index, row_number, ticket, "requirement filename must match ticket ID"))
+        if test_cases.stem != ticket:
+            issues.append(Issue(shown_index, row_number, ticket, "test-case filename must match ticket ID"))
+        indexed_requirements.add(requirement.resolve())
+        indexed_test_cases.add(test_cases.resolve())
         for label, path in (("requirement", requirement), ("test-case", test_cases)):
             if not path.is_file():
                 issues.append(Issue(shown_index, row_number, ticket, f"indexed {label} file does not exist: {path.relative_to(project_root)}"))
-        if value("Status").casefold() != "completed" or not requirement.is_file() or not test_cases.is_file():
+            else:
+                file_lines = path.read_text(encoding="utf-8").splitlines()
+                heading = file_lines[0] if file_lines else ""
+                if re.match(rf"^#\s+{re.escape(ticket)}\b", heading) is None:
+                    issues.append(Issue(path.relative_to(project_root), 1, ticket, f"{label} heading must begin with the ticket ID"))
+        if status != "completed" or not requirement.is_file() or not test_cases.is_file():
             continue
         requirement_text = requirement.read_text(encoding="utf-8")
         test_text = test_cases.read_text(encoding="utf-8")
@@ -120,8 +153,8 @@ def validate_ticket_index(project_root: Path) -> list[Issue]:
         ids = test_case_ids(test_cases)
         if not ids:
             issues.append(Issue(test_cases.relative_to(project_root), 0, ticket, "Completed ticket has no approved test-case rows"))
-        elif not any(tc_id.startswith(f"{ticket}-") for tc_id in ids):
-            issues.append(Issue(test_cases.relative_to(project_root), 0, ticket, "Completed ticket has no test-case rows using its ticket ID"))
+        elif any(not tc_id.startswith(f"{ticket}-") for tc_id in ids):
+            issues.append(Issue(test_cases.relative_to(project_root), 0, ticket, "Completed ticket contains a test-case row using an incorrect ticket ID"))
         if not re.search(r"^##\s+Group\s+\d+\b", test_text, re.M):
             issues.append(Issue(test_cases.relative_to(project_root), 0, ticket, "Completed ticket has no stored approved test-case group"))
         for section, log_text, log_name in (("Confirmed Decisions", decision_text, "decision log"), ("Regression Risk", regression_text, "regression map")):
@@ -130,6 +163,12 @@ def validate_ticket_index(project_root: Path) -> list[Issue]:
                 issues.append(Issue(requirement.relative_to(project_root), 0, ticket, f"Completed requirement is missing ## {section}; use None when not applicable"))
             elif section_applies(content) and ticket not in log_text:
                 issues.append(Issue(requirement.relative_to(project_root), 0, ticket, f"{section} applies but {ticket} is absent from the {log_name}"))
+    for path in sorted((project_root / "qa-knowledge/requirements").rglob("*.md")):
+        if path.resolve() not in indexed_requirements:
+            issues.append(Issue(path.relative_to(project_root), 0, path.stem, "requirement file has no ticket-index entry"))
+    for path in sorted((project_root / "qa-knowledge/test-cases").rglob("*.md")):
+        if path.resolve() not in indexed_test_cases:
+            issues.append(Issue(path.relative_to(project_root), 0, path.stem, "test-case file has no ticket-index entry"))
     return issues
 
 

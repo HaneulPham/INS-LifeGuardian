@@ -41,6 +41,8 @@ python3 scripts/second_brain_preflight.py \
 
 Use `--migration` only when the user explicitly requests migration and the approved source requirement/case content is available. A normal approval must stop on migration placeholders.
 
+For a new ticket whose target files do not exist, run the same command with `--create-ticket`. This mode requires sanitized proposed content, rejects an existing target or ticket-index row, verifies the base directories and approved templates, and remains read-only. Without `--create-ticket`, missing targets must fail.
+
 The preflight enforces the configured exact phrase, ticket format, clean worktree, target existence, open migration, Conflict status, sensitive-content block, ignored backup destination, and enabled flags. When it fails, make no Second Brain changes. Do not stash, discard, stage, commit, overwrite unrelated work, bypass strict checks with `--allow-empty`, or echo sensitive values.
 
 ## Safe update transaction
@@ -49,16 +51,17 @@ After preflight passes:
 
 1. Respect `update_ticket_index`, `update_regression_map`, and `update_decision_log`; a false flag prohibits that target.
 2. If `create_backup` is true, create a timestamped backup under the configured ignored directory, preserving relative paths.
-3. Update only the approved requirement, test cases, applicable module knowledge, and enabled index/log targets.
-4. Apply Source Status labels and re-check duplicates/conflicts.
-5. If enabled, run strict validation:
+3. For `--create-ticket`, safely create the ticket-family subdirectories when absent, instantiate requirement and test-case files from `qa-knowledge/templates/`, replace template ticket placeholders, and add exactly one ticket-index row.
+4. Update only the approved requirement, test cases, applicable module knowledge, and enabled index/log targets.
+5. Apply Source Status labels and re-check duplicates/conflicts.
+6. If enabled, run strict validation:
 
 ```bash
 python3 scripts/validate_qa_test_cases.py
 python3 scripts/validate_qa_knowledge.py
 ```
 
-6. If either validator fails, restore the backup and report the failure. Do not mark the update approved or complete.
+7. If either validator fails, restore the backup and report the failure. Do not mark the update approved or complete.
 
 ## Ticket completion gate
 

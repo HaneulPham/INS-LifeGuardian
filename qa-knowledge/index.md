@@ -68,7 +68,7 @@ A ticket may be marked `Completed` in `ticket-index.md` only when:
 - The requirement contains the standard `Knowledge Status` table.
 - Confirmed decisions and regression impacts are recorded in their logs when applicable; use `None` in the corresponding requirement section when no log update applies.
 
-`scripts/validate_qa_test_cases.py` enforces this gate for every ticket indexed as `Completed`.
+`scripts/validate_qa_knowledge.py` enforces this gate for every ticket indexed as `Completed`; `scripts/validate_qa_test_cases.py` validates the stored case rows.
 
 ## Regression Knowledge
 

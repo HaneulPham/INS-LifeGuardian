@@ -33,7 +33,7 @@ It reports status and tool count without printing credential values or returned 
 
 ## Unavailable Jira or Confluence
 
-The MCP server is configured with `required = true`. A new Codex session must fail initialization visibly when the server cannot start; it must not silently continue as though private Jira or Confluence evidence were available.
+The MCP server is configured with `required = false` so repository review, validator maintenance, and supplied-evidence QA work remain available offline. Jira remains the highest-priority source when a ticket key is present.
 
 When Jira or Confluence is unavailable during QA analysis:
 

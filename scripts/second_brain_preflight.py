@@ -102,12 +102,20 @@ def inspect_sensitive_text(paths: list[Path]) -> list[str]:
     return issues
 
 
+def ticket_is_indexed(root: Path, ticket: str) -> bool:
+    index_path = root / "qa-knowledge/ticket-index.md"
+    if not index_path.is_file():
+        return False
+    return re.search(rf"^\|\s*{re.escape(ticket)}\s*\|", index_path.read_text(encoding="utf-8"), re.M) is not None
+
+
 def evaluate(
     root: Path,
     approval_phrase: str,
     ticket: str,
     proposed_files: list[Path],
     migration: bool,
+    create_ticket: bool = False,
 ) -> list[str]:
     config_path = root / "qa-knowledge/config.yml"
     if not config_path.is_file():
@@ -125,9 +133,32 @@ def evaluate(
         issues.append("exact approval phrase is missing or does not match the ticket")
 
     requirement, test_cases = ticket_paths(root, ticket)
-    for path in (requirement, test_cases):
-        if not path.is_file():
-            issues.append(f"target file does not exist: {path.relative_to(root)}")
+    if create_ticket:
+        if migration:
+            issues.append("--create-ticket and --migration cannot be used together")
+        if not proposed_files:
+            issues.append("--create-ticket requires at least one proposed content file")
+        if ticket_is_indexed(root, ticket):
+            issues.append("ticket already exists in qa-knowledge/ticket-index.md")
+        for path in (requirement, test_cases):
+            if path.exists():
+                issues.append(f"new-ticket target already exists: {path.relative_to(root)}")
+        for directory in (
+            root / "qa-knowledge/requirements",
+            root / "qa-knowledge/test-cases",
+        ):
+            if not directory.is_dir():
+                issues.append(f"new-ticket base directory does not exist: {directory.relative_to(root)}")
+        for template in (
+            root / "qa-knowledge/templates/requirement-template.md",
+            root / "qa-knowledge/templates/test-case-template.md",
+        ):
+            if not template.is_file():
+                issues.append(f"approved creation template does not exist: {template.relative_to(root)}")
+    else:
+        for path in (requirement, test_cases):
+            if not path.is_file():
+                issues.append(f"target file does not exist: {path.relative_to(root)}")
 
     if settings.get("require_clean_worktree"):
         status = run_git(root, "status", "--porcelain")
@@ -169,13 +200,21 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument("--ticket", required=True)
     parser.add_argument("--proposed-file", action="append", type=Path, default=[])
     parser.add_argument("--migration", action="store_true", help="allow known placeholders only for an explicit, evidence-backed migration")
+    parser.add_argument("--create-ticket", action="store_true", help="preflight creation of a new ticket from approved templates")
     parser.add_argument("--project-root", type=Path, default=Path(__file__).resolve().parent.parent)
     return parser.parse_args()
 
 
 def main() -> int:
     args = parse_args()
-    issues = evaluate(args.project_root.resolve(), args.approval_phrase, args.ticket, args.proposed_file, args.migration)
+    issues = evaluate(
+        args.project_root.resolve(),
+        args.approval_phrase,
+        args.ticket,
+        args.proposed_file,
+        args.migration,
+        args.create_ticket,
+    )
     if not issues:
         print(f"PASS ticket={args.ticket}")
         return 0

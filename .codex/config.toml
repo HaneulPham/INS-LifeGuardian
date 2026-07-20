@@ -12,7 +12,7 @@ args = [
 env_vars = ["ATLASSIAN_EMAIL", "ATLASSIAN_API_TOKEN"]
 startup_timeout_sec = 30
 tool_timeout_sec = 60
-required = true
+required = false
 
 [mcp_servers.atlassian.env]
 ATLASSIAN_BASE_URL = "https://theinsgroup.atlassian.net"

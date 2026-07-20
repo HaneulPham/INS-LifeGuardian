@@ -14,6 +14,23 @@ import second_brain_preflight as preflight  # noqa: E402
 
 
 class PreflightTests(unittest.TestCase):
+    def initialize_git(self, root: Path):
+        commands = (
+            ("git", "init"),
+            ("git", "config", "user.email", "qa@example.invalid"),
+            ("git", "config", "user.name", "QA Test"),
+            ("git", "add", "."),
+            ("git", "commit", "-m", "test fixture"),
+        )
+        for command in commands:
+            subprocess.run(command, cwd=root, check=True, capture_output=True, text=True)
+
+    def write_config(self, root: Path):
+        flags = "\n".join(f"  {key}: true" for key in sorted(preflight.BOOLEAN_KEYS))
+        (root / "qa-knowledge").mkdir(parents=True, exist_ok=True)
+        (root / "qa-knowledge/config.yml").write_text(f"automation:\n{flags}\n  backup_directory: .backups\n", encoding="utf-8")
+        (root / ".gitignore").write_text(".backups/\n", encoding="utf-8")
+
     def test_config_requires_boolean_flags(self):
         with tempfile.TemporaryDirectory() as directory:
             path = Path(directory) / "config.yml"
@@ -48,20 +65,53 @@ class PreflightTests(unittest.TestCase):
             test_cases.write_text("# Approved cases\n", encoding="utf-8")
             proposal = root / "proposal.md"
             proposal.write_text("Sanitized approved content\n", encoding="utf-8")
-            flags = "\n".join(f"  {key}: true" for key in sorted(preflight.BOOLEAN_KEYS))
-            (root / "qa-knowledge/config.yml").write_text(f"automation:\n{flags}\n  backup_directory: .backups\n", encoding="utf-8")
-            (root / ".gitignore").write_text(".backups/\n", encoding="utf-8")
-            commands = (
-                ("git", "init"),
-                ("git", "config", "user.email", "qa@example.invalid"),
-                ("git", "config", "user.name", "QA Test"),
-                ("git", "add", "."),
-                ("git", "commit", "-m", "test fixture"),
-            )
-            for command in commands:
-                subprocess.run(command, cwd=root, check=True, capture_output=True, text=True)
+            self.write_config(root)
+            self.initialize_git(root)
             phrase = "Approve and Update the QA Second Brain for ticket SMAR-100"
             self.assertEqual([], preflight.evaluate(root, phrase, "SMAR-100", [proposal], migration=False))
+
+    def test_create_ticket_mode_accepts_new_ticket_with_templates(self):
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            for relative in (
+                "qa-knowledge/requirements",
+                "qa-knowledge/test-cases",
+                "qa-knowledge/templates",
+            ):
+                (root / relative).mkdir(parents=True, exist_ok=True)
+            (root / "qa-knowledge/templates/requirement-template.md").write_text("# <Ticket ID>\n", encoding="utf-8")
+            (root / "qa-knowledge/templates/test-case-template.md").write_text("# <Ticket ID>\n", encoding="utf-8")
+            (root / "qa-knowledge/ticket-index.md").write_text("| Ticket |\n|---|\n", encoding="utf-8")
+            proposal = root / "proposal.md"
+            proposal.write_text("Sanitized approved content\n", encoding="utf-8")
+            self.write_config(root)
+            self.initialize_git(root)
+            phrase = "Approve and Update the QA Second Brain for ticket SMAR-3000"
+            issues = preflight.evaluate(root, phrase, "SMAR-3000", [proposal], migration=False, create_ticket=True)
+            self.assertEqual([], issues)
+            requirement, test_cases = preflight.ticket_paths(root, "SMAR-3000")
+            self.assertFalse(requirement.exists())
+            self.assertFalse(test_cases.exists())
+
+    def test_create_ticket_mode_rejects_existing_index_entry(self):
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            for relative in (
+                "qa-knowledge/requirements",
+                "qa-knowledge/test-cases",
+                "qa-knowledge/templates",
+            ):
+                (root / relative).mkdir(parents=True, exist_ok=True)
+            (root / "qa-knowledge/templates/requirement-template.md").write_text("template\n", encoding="utf-8")
+            (root / "qa-knowledge/templates/test-case-template.md").write_text("template\n", encoding="utf-8")
+            (root / "qa-knowledge/ticket-index.md").write_text("| Ticket |\n|---|\n| SMAR-3000 |\n", encoding="utf-8")
+            proposal = root / "proposal.md"
+            proposal.write_text("Sanitized approved content\n", encoding="utf-8")
+            self.write_config(root)
+            self.initialize_git(root)
+            phrase = "Approve and Update the QA Second Brain for ticket SMAR-3000"
+            issues = preflight.evaluate(root, phrase, "SMAR-3000", [proposal], migration=False, create_ticket=True)
+            self.assertTrue(any("already exists" in issue for issue in issues))
 
 
 if __name__ == "__main__":

@@ -21,6 +21,7 @@ required_files=(
   "qa-knowledge/index.md"
   "qa-knowledge/config.yml"
   "scripts/validate_qa_test_cases.py"
+  "scripts/validate_qa_knowledge.py"
 )
 
 for file in "${required_files[@]}"; do
@@ -34,10 +35,24 @@ done
 
 echo "Checking Python validator syntax..."
 PYTHONPYCACHEPREFIX="${TMPDIR:-/tmp}/ins-lifeguardian-pycache" \
-  python3 -m py_compile scripts/validate_qa_test_cases.py
+  python3 -m py_compile scripts/*.py
 
-echo "Running QA validation in migration mode..."
-python3 scripts/validate_qa_test_cases.py --allow-empty
+echo "Running QA knowledge validation..."
+python3 scripts/validate_qa_knowledge.py
+
+if [ "${QA_MIGRATION_MODE:-false}" = "true" ]; then
+  echo "Running QA validation in explicit migration mode..."
+  python3 scripts/validate_qa_test_cases.py --allow-empty
+else
+  echo "Running strict QA validation..."
+  python3 scripts/validate_qa_test_cases.py
+fi
+
+if [ -n "${ATLASSIAN_EMAIL:-}" ] && [ -n "${ATLASSIAN_API_TOKEN:-}" ]; then
+  python3 scripts/check_atlassian_mcp.py
+else
+  echo "WARNING: Atlassian credentials are not configured; Jira evidence must be reported under Could Not Verify."
+fi
 
 echo "INS LifeGuardian QA environment is ready."'''
 

@@ -25,6 +25,8 @@ Steps must be numbered and reproducible. Give the first case in a group the full
 
 Expected fields must be detailed, observable, and tied to existing step numbers using `**Verify after step #N:**`. Cover exact UI/API/database state and relevant integrations, including an explicit “no integration triggered” expectation when appropriate.
 
+Group headings and `G<Group>` IDs must agree. Test Area must identify a module and feature rather than a broad platform label. Titles, summaries, expected fields, and responses must avoid vague wording. Number steps consecutively without gaps or duplicates; the first UI/Mobile case in a group must include the full navigation flow. API cases use GET, POST, PUT, PATCH, or DELETE and state an HTTP status; negative responses also describe the observable error or validation result. Normalize titles to identify potential duplicates.
+
 After creating or updating stored cases, run both:
 
 ```bash

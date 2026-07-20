@@ -65,6 +65,7 @@ When the user says exactly `Approve and Update the QA Second Brain for ticket <T
 - Enforce every enabled safety flag: exact phrase and ticket, clean worktree, no unresolved Confirmed conflict, no normal update over migration placeholders, sensitive-content block, ignored backups, enabled targets, and both validators.
 - Stop without changes when a gate fails. Do not stash, discard, stage, commit, or overwrite unrelated work to satisfy it.
 - Create backups only after stop checks pass; restore them if post-update validation fails.
+- Use preflight `--create-ticket` only for a genuinely new approved ticket. After it passes, create both files from the approved templates, add one index row, and require strict post-write validation.
 
 An explicit migration additionally requires approved source requirements and cases. Never invent missing rows.
 
