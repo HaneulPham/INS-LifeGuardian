@@ -15,6 +15,17 @@ This workspace helps Codex and QA team members:
 * Prevent duplicate or conflicting test coverage.
 * Maintain durable QA knowledge in the QA Second Brain.
 
+## Codex Behaviour Standard
+
+The repository now uses an approved detailed-case pattern based on SMAR-2633. The behaviour architecture and evaluation workflow are documented in `docs/codex-qa-behavior.md`. Manual model-behaviour checks are available in `qa-evals/codex-behavior-evals.md`.
+
+Detailed case generation must use:
+
+- `.agents/skills/ins-lifeguardian-qa-analyst/references/test-case-style.md`
+- `.agents/skills/ins-lifeguardian-qa-analyst/references/test-case-quality-gate.md`
+- `.agents/skills/ins-lifeguardian-qa-analyst/references/examples/SMAR-2633-approved-test-case-pattern.md`
+- `.agents/skills/ins-lifeguardian-qa-analyst/references/reviewer-feedback.md` for Rovo/BA/Dev/user feedback
+
 ## How to Use This Repository
 
 1. Read `AGENTS.md` before performing INS LifeGuardian QA work.

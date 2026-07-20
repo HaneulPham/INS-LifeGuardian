@@ -14,9 +14,10 @@ Read `references/project-scope.md` for every task, then select all references th
 | Task | Required reference |
 |---|---|
 | Potential requirement evidence without a more specific output request | `references/requirement-intake.md` plus other applicable references below |
-| Jira, requirement, BA/Dev note, screenshot, QA feedback, configuration or remediation review | `references/requirement-review.md` |
+| Jira, requirement, BA/Dev note, screenshot, configuration or remediation review | `references/requirement-review.md` |
+| Reviewer, Rovo, BA, developer, or user feedback on existing analysis/cases | `references/reviewer-feedback.md` plus the reference for the affected output |
 | Endpoint, contract, authentication, backend service or integration change | `references/api-analysis.md` plus `references/requirement-review.md` |
-| Test coverage proposal or detailed cases | `references/test-case-style.md` |
+| Test coverage proposal or detailed cases | `references/test-case-style.md`, `references/test-case-quality-gate.md`, and `references/examples/SMAR-2633-approved-test-case-pattern.md` |
 | Direct or indirect regression impact | `references/regression-analysis.md` |
 | Bug report or defect triage | `references/bug-report-style.md` |
 | Approved SMAR-2650 review-pattern example | `references/examples/SMAR-2650-approved-review-pattern.md` |
@@ -105,6 +106,13 @@ When the user requests a formal review or another explicit QA output, use the ev
 5. Evidence Reviewed, Could Not Verify, and QA Assumptions
 
 Use the more detailed contract in `references/requirement-review.md` for formal reviews. Do not write detailed cases until the user explicitly requests a group. When they request `Write Group X`, `Next group`, or equivalent, use the active ticket and latest clarifications, check existing coverage for duplicates, write only that group, and wait for review.
+
+
+## Detailed test-case output gate
+
+Before producing a requested group, read the full test-case style, quality gate, and approved SMAR-2633 pattern. Use the active ticket’s latest confirmed decisions and approved case ledger. Titles must be plain text beginning with `Verify `. Output only the requested group, preserve approved IDs, and stop for review after the group.
+
+Do not write an executable case for an unresolved expected outcome. Explain and defer it. Do not blindly accept reviewer feedback: classify it, check duplication and scope, and wait for confirmation when it changes business behaviour.
 
 ## Conflict and assumption rules
 

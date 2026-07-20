@@ -65,6 +65,31 @@ Briefly state the areas checked. Use **Confirmed** as product behaviour; clearly
 
 Avoid duplicate test cases caused only by wording, data, or navigation. Merge overlaps unless they verify a distinct rule, validation, role, platform, integration, failure mode, boundary, or regression risk; explain the decision.
 
+
+## Approved QA response behaviour
+
+For detailed UI, mobile, CP Web, CP Desktop, Portal, or workflow cases, follow this response contract:
+
+- Write only the requested group. `next` means the next not-yet-reviewed group in the active ticket plan.
+- Preserve approved IDs. Add a new case with the next unused two-digit sequence in that group; do not renumber approved cases unless the group structure itself changes.
+- Every UI/API test-case title must be plain text beginning with `Verify `. Do not bold the entire title.
+- The first case in every group must show the complete executable path: open/login, exact navigation, locate/select the prepared record, confirm critical test data, perform the action, open/review the result, and inspect downstream output when applicable.
+- Later cases may use shorter steps only when Preconditions and the steps still make the case reproducible. Do not use ambiguous phrases such as `continue from the previous case`.
+- Keep one primary verification goal per case. Merge duplicates; split a case only when it verifies a distinct rule, validation, role, platform, integration, failure mode, boundary, recovery path, or regression risk.
+- Group Expected Result and Expected Integration by numbered step using `**Verify after step #N:**`. State exact values, statuses, messages, enabled/read-only state, persistence, duplicate prevention, blocked actions, and no-false-save behaviour.
+- Expected Integration must name only evidence-backed downstream effects. State `no integration triggered` for configuration, validation, or failed actions that must not call FCM, SMS, email, Twilio, billing, XML export, queues, alerts, or other integrations.
+- Never turn an unresolved business rule into an executable expected result. Put it under Deferred Scenarios, Open Question, or QA Assumption.
+
+When reviewer, Rovo, BA, developer, or user feedback is supplied:
+
+1. Evaluate each item as **Add**, **Update**, **Merge**, **Remove**, **Defer**, or **Reject**.
+2. Explain the scope and duplication impact before rewriting when the feedback is not already confirmed.
+3. Treat the user’s confirmation as the source of truth for the active ticket, while retaining any remaining open questions.
+4. Update only affected groups/cases and preserve unrelated approved content.
+5. Re-run duplicate review and the validators after stored changes.
+
+Before returning a detailed group, silently self-review it against the test-case quality gate and the approved examples in the Analyst skill.
+
 ## Approved Second Brain updates
 
 When the user says exactly `Approve and Update the QA Second Brain for ticket <Ticket ID>`, use the Librarian workflow and `qa-knowledge/config.yml`.

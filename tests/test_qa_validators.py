@@ -22,10 +22,10 @@ REGRESSION_HEADER = "| ID | Priority | Test Area | Summary | Preconditions | Tes
 def ui_row(
     tc_id: str = "SMAR-100-G1-01",
     priority: str = "High",
-    expected_step: int = 2,
+    expected_step: int = 3,
     test_area: str = "Service Requests > Type",
-    title: str = "Select Billing service request type",
-    steps: str = "1. Open Service Requests<br>2. Select Create",
+    title: str = "Verify Billing service request type is selectable",
+    steps: str = "1. Log in to CP Web<br>2. Navigate to Service Requests<br>3. Select Create",
     expected_result: str | None = None,
     expected_integration: str | None = None,
 ) -> str:
@@ -46,13 +46,13 @@ class TestCaseValidatorTests(unittest.TestCase):
         return "\n".join((f"## Group {group}", "", UI_HEADER, SEPARATOR, *rows))
 
     def test_valid_ui_table_with_escaped_pipe_and_br_steps(self):
-        row = ui_row(title="Select Billing \\| manual service request type")
+        row = ui_row(title="Verify Billing \\| manual service request type is selectable")
         issues, count = self.validate("SMAR-100.md", self.ui_table(row))
         self.assertEqual([], issues)
         self.assertEqual(1, count)
 
     def test_valid_api_table(self):
-        row = "| SMAR-100-G2-01 | Medium | /tasks | POST | Create care plan task | Authenticated | `{}` | 201 response contains the created task identifier | None |"
+        row = "| SMAR-100-G2-01 | Medium | /tasks | POST | Verify care plan task is created | Authenticated | `{}` | 201 response contains the created task identifier | None |"
         issues, _ = self.validate("SMAR-100.md", "\n".join(("## Group 2", "", API_HEADER, SEPARATOR, row)))
         self.assertEqual([], issues)
 
@@ -79,7 +79,7 @@ class TestCaseValidatorTests(unittest.TestCase):
         self.assertTrue(any("group must match Group 1" in issue.message for issue in issues))
 
     def test_missing_step_reference_is_rejected(self):
-        issues, _ = self.validate("SMAR-100.md", self.ui_table(ui_row(expected_step=3)))
+        issues, _ = self.validate("SMAR-100.md", self.ui_table(ui_row(expected_step=4)))
         self.assertTrue(any("references missing step" in issue.message for issue in issues))
 
     def test_missing_step_number_is_rejected(self):
@@ -127,23 +127,41 @@ class TestCaseValidatorTests(unittest.TestCase):
         issues, _ = self.validate("SMAR-100.md", self.ui_table(first, second))
         self.assertTrue(any("potential duplicate title" in issue.message for issue in issues))
 
+    def test_ui_title_must_begin_with_verify(self):
+        issues, _ = self.validate("SMAR-100.md", self.ui_table(ui_row(title="Billing service request type is selectable")))
+        self.assertTrue(any("Title must begin with 'Verify '" in issue.message for issue in issues))
+
+    def test_api_title_must_begin_with_verify(self):
+        row = "| SMAR-100-G2-01 | Medium | /tasks | POST | Care plan task is created | Authenticated | `{}` | 201 response contains the created task identifier | None |"
+        issues, _ = self.validate("SMAR-100.md", "\n".join(("## Group 2", "", API_HEADER, SEPARATOR, row)))
+        self.assertTrue(any("Title must begin with 'Verify '" in issue.message for issue in issues))
+
+    def test_fully_bold_title_is_rejected(self):
+        issues, _ = self.validate("SMAR-100.md", self.ui_table(ui_row(title="**Verify Billing is selectable**")))
+        self.assertTrue(any("do not bold the entire title" in issue.message for issue in issues))
+
+    def test_steps_must_not_depend_on_previous_case(self):
+        row = ui_row(steps="1. Continue from the previous case<br>2. Navigate to Service Requests<br>3. Select Create")
+        issues, _ = self.validate("SMAR-100.md", self.ui_table(row))
+        self.assertTrue(any("independently reproducible" in issue.message for issue in issues))
+
     def test_invalid_api_method_is_rejected(self):
-        row = "| SMAR-100-G2-01 | High | /tasks | BANANA | Create care plan task | Authenticated | `{}` | 200 response contains task data | None |"
+        row = "| SMAR-100-G2-01 | High | /tasks | BANANA | Verify care plan task is created | Authenticated | `{}` | 200 response contains task data | None |"
         issues, _ = self.validate("SMAR-100.md", "\n".join(("## Group 2", "", API_HEADER, SEPARATOR, row)))
         self.assertTrue(any("invalid HTTP method" in issue.message for issue in issues))
 
     def test_api_response_without_status_code_is_rejected(self):
-        row = "| SMAR-100-G2-01 | High | /tasks | POST | Create care plan task | Authenticated | `{}` | response contains task data | None |"
+        row = "| SMAR-100-G2-01 | High | /tasks | POST | Verify care plan task is created | Authenticated | `{}` | response contains task data | None |"
         issues, _ = self.validate("SMAR-100.md", "\n".join(("## Group 2", "", API_HEADER, SEPARATOR, row)))
         self.assertTrue(any("must include an HTTP status code" in issue.message for issue in issues))
 
     def test_vague_api_response_is_rejected(self):
-        row = "| SMAR-100-G2-01 | High | /tasks | POST | Create care plan task | Authenticated | `{}` | 200 success | None |"
+        row = "| SMAR-100-G2-01 | High | /tasks | POST | Verify care plan task is created | Authenticated | `{}` | 200 success | None |"
         issues, _ = self.validate("SMAR-100.md", "\n".join(("## Group 2", "", API_HEADER, SEPARATOR, row)))
         self.assertTrue(any("Expected Response contains vague phrase" in issue.message for issue in issues))
 
     def test_negative_api_response_requires_error_expectation(self):
-        row = "| SMAR-100-G2-01 | High | /tasks | POST | Reject invalid task request | Authenticated | `{}` | 400 response | None |"
+        row = "| SMAR-100-G2-01 | High | /tasks | POST | Verify invalid task request is rejected | Authenticated | `{}` | 400 response | None |"
         issues, _ = self.validate("SMAR-100.md", "\n".join(("## Group 2", "", API_HEADER, SEPARATOR, row)))
         self.assertTrue(any("negative Expected Response" in issue.message for issue in issues))
 

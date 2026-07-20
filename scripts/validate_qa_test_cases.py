@@ -51,7 +51,11 @@ STEP_NUMBER_PATTERN = re.compile(r"(?:^|\n|<br\s*/?>)\s*(\d+)[.)]\s+\S", re.I)
 VERIFY_REFERENCE_PATTERN = re.compile(r"\*\*Verify after step\s+#?(\d+)\s*:?\*\*", re.I)
 GROUP_HEADING_PATTERN = re.compile(r"^##\s+Group\s+(\d+)\b", re.I)
 HTTP_STATUS_PATTERN = re.compile(r"\b([1-5]\d{2})\b")
-NAVIGATION_PATTERN = re.compile(r"\b(?:go to|navigate|open|launch|sign in|log in)\b", re.I)
+ENTRY_PATTERN = re.compile(r"\b(?:open|launch|sign in|log in)\b", re.I)
+PATH_NAVIGATION_PATTERN = re.compile(r"\b(?:go to|navigate)\b", re.I)
+TARGET_PATTERN = re.compile(r"\b(?:locate|select|find|open)\b", re.I)
+DEPENDENT_CASE_PATTERN = re.compile(r"\b(?:continue from|same as above|previous case|prior case|from tc[- ]?\d+)\b", re.I)
+FULL_BOLD_PATTERN = re.compile(r"^\s*\*\*.+\*\*\s*$", re.S)
 
 
 @dataclass(frozen=True)
@@ -276,6 +280,11 @@ def validate_file(
             normalized_title = normalize_title(title)
             if normalized_title in GENERIC_TITLES or len(normalized_title.split()) < 2:
                 issues.append(Issue(shown_path, source_row, tc_id, f"{title_column} is too vague; describe the specific behaviour being verified"))
+            if schema in {"UI/Mobile", "API"}:
+                if not title.casefold().startswith("verify "):
+                    issues.append(Issue(shown_path, source_row, tc_id, "Title must begin with 'Verify '"))
+                if FULL_BOLD_PATTERN.fullmatch(title):
+                    issues.append(Issue(shown_path, source_row, tc_id, "Title must be plain text; do not bold the entire title"))
             vague = vague_phrase(title)
             if vague:
                 issues.append(Issue(shown_path, source_row, tc_id, f"{title_column} contains vague phrase {vague!r}"))
@@ -293,10 +302,15 @@ def validate_file(
                 numbers = step_numbers(test_steps)
                 if numbers and numbers != list(range(1, len(numbers) + 1)):
                     issues.append(Issue(shown_path, source_row, tc_id, "Test Steps must use a complete, non-duplicated sequence beginning with 1"))
+                if DEPENDENT_CASE_PATTERN.search(test_steps):
+                    issues.append(Issue(shown_path, source_row, tc_id, "Test Steps must be independently reproducible and must not depend on another test case"))
                 if schema == "UI/Mobile" and case_position == 1 and (
-                    len(numbers) < 2 or not NAVIGATION_PATTERN.search(test_steps)
+                    len(numbers) < 3
+                    or not ENTRY_PATTERN.search(test_steps)
+                    or not PATH_NAVIGATION_PATTERN.search(test_steps)
+                    or not TARGET_PATTERN.search(test_steps)
                 ):
-                    issues.append(Issue(shown_path, source_row, tc_id, "first case in a group must include a full navigation flow with at least two numbered steps"))
+                    issues.append(Issue(shown_path, source_row, tc_id, "first case in a group must include a full navigation flow with open/login, exact navigation, and record selection"))
                 expected = (
                     [("Expected Result", value("Expected Result")), ("Expected Integration", value("Expected Integration"))]
                     if schema == "UI/Mobile"
