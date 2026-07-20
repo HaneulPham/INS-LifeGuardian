@@ -15,6 +15,6 @@ Do not treat **QA Assumption** or **Open Question** as **Confirmed**. Report **C
 
 Every requirement and module knowledge file must include a `Knowledge Status` table:
 
-| Knowledge Item | Source Status | Source / Evidence | Notes |
-|---|---|---|---|
-| <item or section> | <supported status> | <ticket, decision, evidence, or observation> | <context> |
+| Knowledge Item | Source Status | Source / Evidence | Last Updated | Notes |
+|---|---|---|---|---|
+| <item or section> | <supported status> | <ticket, decision, evidence, or observation> | <YYYY-MM-DD> | <context> |

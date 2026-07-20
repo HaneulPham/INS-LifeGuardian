@@ -4,6 +4,15 @@ network_access = true
 [mcp_servers.atlassian]
 command = "npx"
 args = [
+  "--cache",
+  ".cache/npm-mcp",
   "-y",
-  "mcp-atlassian"
+  "mcp-atlassian@2.0.1"
 ]
+env_vars = ["ATLASSIAN_EMAIL", "ATLASSIAN_API_TOKEN"]
+startup_timeout_sec = 30
+tool_timeout_sec = 60
+required = true
+
+[mcp_servers.atlassian.env]
+ATLASSIAN_BASE_URL = "https://theinsgroup.atlassian.net"

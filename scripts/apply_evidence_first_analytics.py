@@ -157,7 +157,7 @@ When the user provides an INS LifeGuardian requirement, Jira ticket, screenshot,
 2. Scope
    - In Scope
    - Out of Scope
-   - Conditional Scope / Needs Confirmation
+   - Conditional Scope / Open Questions
 3. Missing Requirements and Gaps
    - Critical
    - Important
@@ -194,7 +194,7 @@ Separate:
 
 - In Scope
 - Out of Scope
-- Conditional Scope / Needs Confirmation
+- Conditional Scope / Open Questions
 
 Do not expand the ticket silently. Label recommendations and potential follow-up work.
 

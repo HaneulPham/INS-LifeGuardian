@@ -56,6 +56,20 @@ If behavior is missing, mark it as:
 - SMAR test cases: `qa-knowledge/test-cases/SMAR/`
 - MA test cases: `qa-knowledge/test-cases/MA/`
 
+## Ticket Completion Gate
+
+A ticket may be marked `Completed` in `ticket-index.md` only when:
+
+- Its requirement file is not marked as migration pending.
+- All approved test-case groups are stored as actual test-case rows.
+- Strict test-case validation passes without `--allow-empty`.
+- Neither the requirement nor test-case file contains a migration placeholder.
+- The ticket index references existing requirement and test-case files.
+- The requirement contains the standard `Knowledge Status` table.
+- Confirmed decisions and regression impacts are recorded in their logs when applicable; use `None` in the corresponding requirement section when no log update applies.
+
+`scripts/validate_qa_test_cases.py` enforces this gate for every ticket indexed as `Completed`.
+
 ## Regression Knowledge
 
 - Regression map: `qa-knowledge/regression/regression-map.md`

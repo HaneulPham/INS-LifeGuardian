@@ -206,15 +206,30 @@ QA analysis may include:
 * Notification logs
 * Audit and operational logs
 
-## Test Case Validation
+## QA Validation
 
-After creating or updating test cases under `qa-knowledge/test-cases/`, run:
+After changing test cases or Second Brain knowledge, run:
 
 ```bash
 python3 scripts/validate_qa_test_cases.py
+python3 scripts/validate_qa_knowledge.py
+python3 -m unittest discover -s tests -p "test_*.py"
 ```
 
-Do not treat stored test cases as approved when validation fails.
+Strict test-case validation intentionally fails while all stored case files are migration placeholders. During the temporary migration period only, opt in explicitly:
+
+```bash
+QA_MIGRATION_MODE=true
+if [ "${QA_MIGRATION_MODE:-false}" = "true" ]; then
+  python3 scripts/validate_qa_test_cases.py --allow-empty
+else
+  python3 scripts/validate_qa_test_cases.py
+fi
+```
+
+Remove migration mode after approved cases have been stored. Do not treat stored cases or knowledge as approved when validation fails.
+
+The test-case validator supports UI/Mobile, API, and Regression matrices. The knowledge validator covers Knowledge Status, ticket-index references, migration/completion gates, and decision/regression log requirements.
 
 ## QA Second Brain Approval
 
@@ -229,6 +244,8 @@ Codex will apply the behaviour defined in:
 * `AGENTS.md`
 * `.agents/skills/ins-lifeguardian-qa-librarian/SKILL.md`
 * `qa-knowledge/config.yml`
+
+Before an automatic write, the Librarian runs `scripts/second_brain_preflight.py`. It enforces the configured approval, ticket, clean-worktree, migration, conflict, sensitive-content, backup-ignore, and target-file gates.
 
 ## Repository Safety
 
@@ -248,4 +265,11 @@ Do not commit:
 * Repository ZIP archives
 * `.git/` content inside shared archives
 
-Before sharing this repository, remove Git internals, operating-system metadata, secrets, production information, and temporary files.
+Before sharing this repository, remove Git internals, operating-system metadata, secrets, production information, and temporary files. Create release archives from committed content:
+
+```bash
+git archive --format=zip --output=INS-LifeGuardian-clean.zip HEAD
+unzip -l INS-LifeGuardian-clean.zip | grep -E '(^|/)(\.git|__MACOSX|\.DS_Store|\.cache|\.backups)'
+```
+
+The verification command should return no matches.

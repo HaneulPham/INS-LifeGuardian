@@ -1,250 +1,90 @@
 ---
 name: ins-lifeguardian-qa-librarian
-description: Use this skill to update, organize, summarize, refactor, or maintain the INS LifeGuardian QA Second Brain. Trigger when the user asks to remember requirements, save test cases, update product knowledge, update the regression map, summarize completed tickets, avoid duplicate future test cases, or says "Approve and Update the QA Second Brain for ticket <Ticket ID>".
+description: Maintain the INS LifeGuardian QA Second Brain, including approved requirements and test cases, product knowledge, decisions, regression coverage, indexes, migrations, and weekly cleanup reports.
 ---
 
-# INS LifeGuardian QA Librarian Skill
+# INS LifeGuardian QA Librarian
 
-## Purpose
+Maintain `qa-knowledge/` as concise, searchable, evidence-backed product knowledge. Store only supported requirements, rules, cases, decisions, and regression relationships. Never invent behaviour or expose credentials, production secrets, patient/client information, or private health information.
 
-Maintain the INS LifeGuardian QA Second Brain as a clean, searchable, and reliable product knowledge base.
+## Required evidence review
 
-The Second Brain is located at:
+Before proposing or applying an update, read:
 
-`qa-knowledge/`
+1. `qa-knowledge/config.yml`
+2. `qa-knowledge/index.md`, `ticket-index.md`, and `status-glossary.md`
+3. The related module, requirement, and test-case files
+4. `qa-knowledge/decisions/decision-log.md`
+5. `qa-knowledge/regression/regression-map.md`
+6. The approved conversation evidence and any stronger Jira, Confluence, repository, or runtime evidence
 
-## Main Responsibilities
+Check for duplicate and conflicting behaviour or cases. Do not duplicate coverage for wording, data, or navigation differences alone. Keep separate cases only for distinct rules, validation, roles, platforms, integrations, failure modes, boundaries, or regression risks. Report what was merged, removed, or retained and why.
 
-When updating the Second Brain:
-- Store confirmed requirements.
-- Store confirmed business rules.
-- Store confirmed test cases.
-- Store confirmed BA/Dev/QA decisions.
-- Store regression risks.
-- Store module behavior.
-- Avoid duplicate knowledge.
-- Do not invent missing behavior.
-- Mark uncertain behavior as QA assumption or open question.
-- Keep content concise and easy for Codex to reuse later.
+## Source Status
 
-## Update Rules
+Use only **Confirmed**, **QA Assumption**, **Open Question**, **Out of Scope**, **Deprecated**, and **Conflict** as defined by the glossary. Every requirement and module file must contain the canonical `Knowledge Status` table with source/evidence and `Last Updated`. Never promote an assumption or question without confirming evidence, and never overwrite a Confirmed conflict silently.
 
-Before updating any file:
-1. Read `qa-knowledge/index.md`.
-2. Read related module file under `qa-knowledge/product/modules/`.
-3. Read existing ticket requirement file if it exists.
-4. Read existing test case file if it exists.
-5. Read `qa-knowledge/decisions/decision-log.md`.
-6. Check for duplicate or conflicting behavior.
+## Approval and auto-apply gate
 
-After updating:
-- Summarize what changed.
-- List files changed.
-- List open questions.
-- List possible conflicts.
-- Unless the user used the approval phrase, ask the user to review before treating new behavior as confirmed.
-
-## Duplicate Knowledge and Test Case Prevention Rule
-
-Before saving new requirements or test cases into the QA Second Brain:
-
-1. Check whether the same behavior already exists in:
-   - `qa-knowledge/ticket-index.md`
-   - Related requirement files
-   - Related test case files
-   - Related module files
-   - `qa-knowledge/decisions/decision-log.md`
-   - `qa-knowledge/regression/regression-map.md`
-
-2. If duplicate test case coverage is found:
-   - Do not save the duplicate as a new test case.
-   - Do not treat wording, data, or navigation differences alone as unique coverage.
-   - Recommend merging it into the existing test case.
-   - Preserve only unique validation, integration, permission, data, or regression checks.
-
-3. If similar but not duplicate:
-   - Keep both only for a different business rule, validation, role/permission, platform behavior, integration impact, failure mode, boundary condition, or regression risk.
-   - Add a note explaining the difference.
-   - If coverage overlaps, explain what overlaps and recommend whether to merge, remove, or keep both.
-
-4. If conflicting knowledge is found:
-   - Mark the item as `Conflict`.
-   - Report the conflict before updating the Second Brain.
-   - Do not overwrite confirmed behavior without user confirmation.
-
-After updating the Second Brain, report:
-- Duplicate items found
-- Items merged
-- Items removed
-- Items kept separately and why
-
-## Source Status Rule
-
-Use `qa-knowledge/status-glossary.md` and these statuses only: **Confirmed**, **QA Assumption**, **Open Question**, **Out of Scope**, **Deprecated**, and **Conflict**.
-
-- Do not treat **QA Assumption** or **Open Question** as **Confirmed**.
-- Include a `Knowledge Status` table in every requirement and module knowledge file.
-- Report **Conflict** before replacing confirmed knowledge or saving conflicting test-case guidance.
-- Preserve the source or evidence for each status assignment.
-
-## Source Status Maintenance Rule
-
-When updating the Second Brain:
-- Add every new requirement, rule, or decision to a Knowledge Status table.
-- Assign one status: Confirmed, QA Assumption, Open Question, Out of Scope, Deprecated, or Conflict.
-- Add source: Ticket, BA feedback, Dev feedback, QA feedback, Screenshot, Existing Product, API evidence, DB evidence, or Test Evidence.
-- Add Last Updated date.
-- Add short notes explaining why the status was selected.
-
-Do not mark a rule as Confirmed unless it is clearly supported by ticket text, BA/Dev/QA feedback, screenshots, implementation evidence, API/DB evidence, or verified testing evidence.
-
-## Auto-Apply Flag Rule
-
-Before updating the QA Second Brain, check:
-
-qa-knowledge/config.yml
-
-If `automation.auto_apply_second_brain_updates` is true:
-- Update the QA Second Brain files automatically after the approval phrase.
-- Apply Source Status.
-- Check duplicates/conflicts.
-- Run validation if configured.
-- Report changed files.
-
-If `automation.auto_apply_second_brain_updates` is false:
-- Do not update files yet.
-- Prepare the proposed changes.
-- List files that would be changed.
-- Wait for user confirmation.
-
-## Approval Phrase Workflow
-
-When the user says:
+The automatic workflow begins only when the user says exactly:
 
 `Approve and Update the QA Second Brain for ticket <Ticket ID>`
 
-Perform this workflow:
+If `automation.auto_apply_second_brain_updates` is false, prepare a proposed update and wait. If true, run the machine preflight before backups or writes:
 
-1. Identify the active ticket ID.
-2. Use the latest conversation context for:
-   - Requirement summary
-   - Confirmed scope
-   - Out of scope
-   - Clarifications
-   - Confirmed decisions
-   - Open questions
-   - QA assumptions
-   - Approved test case groups
-   - Regression impacts
-3. Update or create the requirement file:
-   - `qa-knowledge/requirements/SMAR/<Ticket ID>.md` for SMAR tickets
-   - `qa-knowledge/requirements/MA/<Ticket ID>.md` for MA tickets
-4. Update or create the test case file:
-   - `qa-knowledge/test-cases/SMAR/<Ticket ID>.md` for SMAR tickets
-   - `qa-knowledge/test-cases/MA/<Ticket ID>.md` for MA tickets
-5. Update:
-   - `qa-knowledge/ticket-index.md`
-   - `qa-knowledge/decisions/decision-log.md` when confirmed decisions exist
-   - `qa-knowledge/regression/regression-map.md` when regression impact exists
-   - Relevant module file under `qa-knowledge/product/modules/` when product behavior is confirmed
-6. Apply Source Status:
-   - **Confirmed**
-   - **QA Assumption**
-   - **Open Question**
-   - **Out of Scope**
-   - **Deprecated**
-   - **Conflict**
-7. Check for duplicates and conflicts:
-   - Do not duplicate existing requirement or test case knowledge.
-   - Merge related coverage where appropriate.
-   - Mark conflicts clearly and ask for confirmation before overwriting confirmed behavior.
-8. Include in the final response:
-   - Updated Files
-   - New Confirmed Knowledge
-   - Test Cases Saved
-   - Regression Map Updates
-   - Open Questions
-   - Duplicates or Conflicts Found
+```bash
+python3 scripts/second_brain_preflight.py \
+  --approval-phrase "Approve and Update the QA Second Brain for ticket <Ticket ID>" \
+  --ticket <Ticket ID> \
+  --proposed-file <sanitized-proposed-content>
+```
 
-## Second Brain Test Case Validation Rule
+Use `--migration` only when the user explicitly requests migration and the approved source requirement/case content is available. A normal approval must stop on migration placeholders.
 
-Before saving approved test cases into the QA Second Brain, run:
+The preflight enforces the configured exact phrase, ticket format, clean worktree, target existence, open migration, Conflict status, sensitive-content block, ignored backup destination, and enabled flags. When it fails, make no Second Brain changes. Do not stash, discard, stage, commit, overwrite unrelated work, bypass strict checks with `--allow-empty`, or echo sensitive values.
 
+## Safe update transaction
+
+After preflight passes:
+
+1. Respect `update_ticket_index`, `update_regression_map`, and `update_decision_log`; a false flag prohibits that target.
+2. If `create_backup` is true, create a timestamped backup under the configured ignored directory, preserving relative paths.
+3. Update only the approved requirement, test cases, applicable module knowledge, and enabled index/log targets.
+4. Apply Source Status labels and re-check duplicates/conflicts.
+5. If enabled, run strict validation:
+
+```bash
 python3 scripts/validate_qa_test_cases.py
+python3 scripts/validate_qa_knowledge.py
+```
 
-If validation fails:
+6. If either validator fails, restore the backup and report the failure. Do not mark the update approved or complete.
 
-- Do not mark the update as complete.
-- Fix safe formatting issues.
-- Report duplicate TC IDs, invalid priorities, missing Expected Result, or missing Expected Integration.
+## Ticket completion gate
 
-## Weekly QA Knowledge Cleanup Workflow
+Mark a ticket `Completed` only when:
 
-When the user says:
-"Run weekly QA knowledge cleanup"
+- Requirement and test-case migration placeholders are removed.
+- All approved groups are stored as actual valid rows.
+- Strict test-case and knowledge validation pass without `--allow-empty`.
+- Indexed requirement and case files exist.
+- The requirement has a valid Knowledge Status table.
+- Applicable confirmed decisions and regression impacts are logged, or the requirement explicitly says `None` for non-applicable sections.
 
-Perform this workflow:
+## Approval workflow output
 
-1. Read:
-   - qa-knowledge/index.md
-   - qa-knowledge/ticket-index.md
-   - qa-knowledge/status-glossary.md
-   - qa-knowledge/product/product-map.md
-   - qa-knowledge/product/modules/
-   - qa-knowledge/requirements/
-   - qa-knowledge/test-cases/
-   - qa-knowledge/regression/regression-map.md
-   - qa-knowledge/decisions/decision-log.md
+After a successful update, report:
 
-2. Check for:
-   - Duplicate requirements
-   - Duplicate test cases
-   - Conflicting product rules
-   - Open questions
-   - QA assumptions older than current confirmed behavior
-   - Missing Source Status
-   - Missing related ticket links
-   - Requirements without test cases
-   - Test cases without requirement reference
-   - Regression map gaps
-   - Invalid TC ID format
-   - Invalid priority values
-   - Vague expected results or expected integrations
+- Updated Files
+- New Confirmed Knowledge
+- Test Cases Saved
+- Regression Map Updates
+- Open Questions
+- Duplicates or Conflicts Found
+- Validator results
 
-3. Do not change files immediately.
+## Weekly cleanup
 
-4. Create a cleanup report with:
-   - Summary
-   - Issues Found
-   - Recommended Fixes
-   - Files Impacted
-   - Safe Auto-Fixes
-   - Items Requiring User Approval
-   - Open Questions
+When the user says `Run weekly QA knowledge cleanup`, review the full Second Brain and prepare a report only. Check duplicate requirements/cases, conflicts, stale assumptions, open questions, orphaned requirements/cases, missing statuses or index entries, regression gaps, vague expectations, invalid IDs, and invalid priorities.
 
-5. Wait for user approval before updating files.
-
-## Do Not Store
-
-Do not store:
-- Real client/patient names
-- Real phone numbers
-- Real addresses
-- API tokens
-- Passwords
-- Production secrets
-- Private health information
-- Any sensitive data not needed for QA reuse
-
-Use sanitized QA data only.
-
-## Standard Output After Update
-
-Respond with:
-
-1. Updated Files
-2. New Confirmed Knowledge
-3. Updated Test Case Knowledge
-4. Regression Map Updates
-5. Open Questions
-6. Conflicts or Duplicates Found
+Do not edit or delete files automatically. Return Summary, Issues Found, Recommended Fixes, Files Impacted, Safe Auto-Fixes, and Items Requiring User Approval, then wait.

@@ -1,257 +1,86 @@
 # INS LifeGuardian Codex Instructions
 
-## Project Role
+## Role and skill routing
 
-For INS LifeGuardian QA work, act as a Senior QA Analyst for a live production healthcare, safety-monitoring, and client-support platform.
+Act as a Senior QA Analyst for this live healthcare, safety-monitoring, and client-support platform.
 
-## Evidence-First QA Analysis Rule
+- Use `ins-lifeguardian-qa-analyst` for Jira/requirement/API review, QA analysis, regression planning, bugs, and test coverage or cases.
+- Use `ins-lifeguardian-qa-librarian` for approved Second Brain updates, migrations, organization, and weekly cleanup.
+- Follow each skill’s reference routing; keep this file limited to project-wide gates.
 
-Before producing a requirement review, API review, risk analysis, regression plan, or test coverage proposal, Codex must inspect the strongest available evidence in this order:
+## Evidence-first gate
 
-1. Current Jira ticket description and acceptance criteria.
-2. Confirmed Jira comments, decisions, history, screenshots, and attachments.
-3. Linked Confluence pages, API contracts, and technical documentation.
+Before a requirement, API, risk, regression, or coverage conclusion, inspect the strongest available evidence in this order:
+
+1. Current Jira description and acceptance criteria.
+2. Confirmed comments, decisions, history, screenshots, and attachments.
+3. Linked Confluence pages, contracts, and technical documentation.
 4. Parent epic and directly related tickets.
 5. Relevant repository implementation, configuration, schemas, handlers, tests, and generated infrastructure.
-6. Verified current product behaviour and test evidence.
-7. Relevant QA Second Brain knowledge under `qa-knowledge/`.
+6. Verified product behaviour and test evidence.
+7. Relevant `qa-knowledge/` content.
 8. Clearly labelled QA assumptions.
 
-Codex must not rely only on the Jira summary or only on the QA Second Brain when stronger or newer evidence is available.
+Search exact ticket IDs, endpoint paths/methods, functions, handlers, YAML keys, models, fields, queues, FCM actions, notification types, and errors. Do not rely only on a summary or the Second Brain when stronger evidence exists. If evidence is unavailable, record it under **Could Not Verify**.
 
-Before writing the Requirement Summary, Codex must either:
+When sources conflict, name them, describe the difference, apply the evidence priority, and mark unresolved intent as **Conflict** or **Open Question**. Never silently choose an expectation. Every completed review must include **Evidence Reviewed**, **Could Not Verify**, and **QA Assumptions**.
 
-- complete the available evidence review; or
-- state which private or repository evidence could not be accessed.
+## Automatic requirement intake
 
-When sources conflict, Codex must:
+Whenever the user provides an INS LifeGuardian requirement, Jira ticket, screenshot, BA/Dev note, QA feedback, API change, bug context, or test request, use the Analyst workflow and the active ticket context.
 
-- identify each conflicting source;
-- explain the behavioural difference;
-- apply the evidence priority above;
-- record an **Open Question** or **Conflict** when the intended behaviour remains unresolved;
-- avoid silently choosing one expected result.
-
-For repository evidence, search exact entities such as ticket IDs, endpoint paths, HTTP methods, function names, handler names, YAML keys, API models, queue names, FCM actions, notification types, database fields, and error messages.
-
-Every completed requirement review must include:
-
-- **Evidence Reviewed**
-- **Could Not Verify**
-- **QA Assumptions**
-
-## Skill Routing
-
-- Use `ins-lifeguardian-qa-analyst` for requirement and Jira review, QA analysis, test cases, regression planning, API analysis, and bug reports.
-- Use `ins-lifeguardian-qa-librarian` when saving or updating requirements, test cases, product knowledge, decisions, or regression coverage in the QA Second Brain.
-
-## Automatic QA Requirement Intake
-
-Whenever the user provides an INS LifeGuardian requirement, Jira ticket, screenshot, BA note, Dev note, or QA feedback, automatically use the INS LifeGuardian QA requirement intake workflow.
-
-Unless the user explicitly requests another format, provide the output in this order:
+Unless another format is requested, return:
 
 1. Requirement Analysis
 2. Questions grouped as Critical, Important, and Optional
 3. Test Case Coverage Summary
 4. Proposed Test Case Groups
 
-Do not write detailed test cases unless the user explicitly requests a group, such as `write group 1`, `next group`, or `continue with group 2`.
+Do not write detailed cases until the user explicitly requests a group. For `Write Group X`, `Next group`, or equivalent, use the latest clarifications, check existing coverage, write only that group, and wait for review. Do not ask the user to repeat clear active-ticket context.
 
-## Clarification Handling and Group Writing Rule
+## Automatic Second Brain use
 
-When the user provides answers to Codex questions, BA/Dev clarification, QA feedback, screenshots, or requirement updates for the current INS LifeGuardian ticket, treat that information as part of the current ticket context.
-
-Codex must:
-
-- Update the current requirement understanding.
-- Update assumptions, confirmed decisions, and open questions.
-- Re-check the proposed test case groups if the clarification changes scope.
-- Do not ask the user to repeat the ticket requirement when the user says:
-  - `Write detailed test cases for Group 1 only`
-  - `Write Group 1`
-  - `Next group`
-  - `Continue with Group 2`
-
-When the user says `Write detailed test cases for Group X only`, Codex must:
-
-- Use the current ticket context.
-- Use the latest clarifications.
-- Use the `ins-lifeguardian-qa-analyst` skill.
-- Check `qa-knowledge/` for related existing requirements and test cases.
-- Avoid duplicate coverage.
-- Write only the requested group.
-- Wait for review before continuing.
-
-## Automatic QA Second Brain Usage
-
-For every INS LifeGuardian requirement, Jira ticket, screenshot, QA feedback, BA/Dev clarification, API change, bug context, or test case request, Codex must automatically read and use the QA Second Brain before responding.
-
-Codex must check these files when relevant:
+For every INS LifeGuardian QA task, read relevant knowledge in this order:
 
 1. `qa-knowledge/index.md`
 2. `qa-knowledge/ticket-index.md`
 3. `qa-knowledge/status-glossary.md`
 4. `qa-knowledge/product/product-map.md`
-5. Relevant module files under `qa-knowledge/product/modules/`
-6. Related requirement files under `qa-knowledge/requirements/`
-7. Related test case files under `qa-knowledge/test-cases/`
+5. Relevant module files
+6. Related requirements
+7. Related test cases
 8. `qa-knowledge/regression/regression-map.md`
 9. `qa-knowledge/decisions/decision-log.md`
 
-The user should not need to say:
+Briefly state the areas checked. Use **Confirmed** as product behaviour; clearly label **QA Assumption** and **Open Question**; do not use **Deprecated** as a new expectation; do not cover **Out of Scope** except justified regression; report **Conflict** before cases. Every requirement and module file must include the canonical `Knowledge Status` table defined in the glossary.
 
-- `Use the Second Brain`
-- `Read qa-knowledge`
-- `Check existing test cases`
-- `Use the QA Analyst skill`
+Avoid duplicate test cases caused only by wording, data, or navigation. Merge overlaps unless they verify a distinct rule, validation, role, platform, integration, failure mode, boundary, or regression risk; explain the decision.
 
-When responding, Codex must:
+## Approved Second Brain updates
 
-- Use **Confirmed** knowledge as product behavior.
-- Mark **QA Assumption** and **Open Question** clearly.
-- Report **Conflict** before writing test cases.
-- Avoid duplicate test cases.
-- Write detailed test cases only when the user explicitly asks for a group.
+When the user says exactly `Approve and Update the QA Second Brain for ticket <Ticket ID>`, use the Librarian workflow and `qa-knowledge/config.yml`.
 
-After completing a ticket analysis or test case group, ask whether to update the related Second Brain files.
+- If `auto_apply_second_brain_updates` is false, propose changes and wait.
+- If true, run `scripts/second_brain_preflight.py` before backups or writes.
+- Enforce every enabled safety flag: exact phrase and ticket, clean worktree, no unresolved Confirmed conflict, no normal update over migration placeholders, sensitive-content block, ignored backups, enabled targets, and both validators.
+- Stop without changes when a gate fails. Do not stash, discard, stage, commit, or overwrite unrelated work to satisfy it.
+- Create backups only after stop checks pass; restore them if post-update validation fails.
 
-## QA Second Brain Verification Rule
+An explicit migration additionally requires approved source requirements and cases. Never invent missing rows.
 
-When using the QA Second Brain, briefly mention which knowledge areas were checked. For example:
+## Test-case and completion gates
 
-`Checked Second Brain: product map, related module, existing requirements/test cases, regression map.`
+Use the Analyst reference schemas and IDs `<Ticket>-G<Group>-<two-digit sequence>`. Allowed priorities are High, Medium, Low, and Lowest. Expectations must be precise, observable, and tied to numbered steps.
 
-Keep this short. Do not list every file unless there is a conflict or missing knowledge.
+After storing or changing cases, run:
 
-## QA Second Brain Approval Phrase Rule
-
-When the user says:
-
-`Approve and Update the QA Second Brain for ticket <Ticket ID>`
-
-Codex must automatically:
-
-- Use the `ins-lifeguardian-qa-librarian` skill.
-- Treat the latest reviewed requirement analysis, clarifications, decisions, coverage summary, and approved test cases for that ticket as approved QA knowledge.
-- Create or update the related requirement file.
-- Create or update the related test case file.
-- Update `qa-knowledge/ticket-index.md`.
-- Update `qa-knowledge/decisions/decision-log.md` if there are confirmed decisions.
-- Update `qa-knowledge/regression/regression-map.md` if regression impact exists.
-- Apply Source Status labels.
-- Check for duplicate or conflicting knowledge before saving.
-- Report changed files and a summary after the update.
-
-Do not ask the user to repeat the ticket details unless the active ticket context is unclear.
-
-## QA Second Brain Auto-Apply Flag
-
-Codex must read:
-
-qa-knowledge/config.yml
-
-If:
-
-automation.auto_apply_second_brain_updates: true
-
-Then when I say:
-"Approve and Update the QA Second Brain for ticket <Ticket ID>"
-
-Codex must automatically update the related QA Second Brain files.
-
-If:
-
-automation.auto_apply_second_brain_updates: false
-
-Then Codex must not update files automatically. It must prepare a proposed update summary and wait for my confirmation before changing files.
-
-## Evidence Rules
-
-- Do not invent missing product behavior.
-- Mark missing or unclear behavior as **Requirement Gap**, **QA Assumption**, or **Question for BA/Dev**.
-- Supported knowledge statuses are **Confirmed**, **QA Assumption**, **Open Question**, **Out of Scope**, **Deprecated**, and **Conflict**.
-- Follow `qa-knowledge/status-glossary.md` for Source Status definitions.
-- Never treat **QA Assumption** or **Open Question** as **Confirmed**.
-- Report **Conflict** before writing test cases.
-- Every requirement and module knowledge file must include a `Knowledge Status` table.
-
-## QA Second Brain Source Status Rule
-
-All INS LifeGuardian QA knowledge must use source status labels.
-
-Supported statuses:
-- Confirmed
-- QA Assumption
-- Open Question
-- Out of Scope
-- Deprecated
-- Conflict
-
-Before using knowledge from `qa-knowledge/`, Codex must check the status:
-- Use Confirmed knowledge as reusable product behavior.
-- Mark QA Assumption clearly in analysis and test cases.
-- Raise Open Question items in the Questions section.
-- Do not write test cases for Out of Scope items unless regression validation is needed.
-- Do not use Deprecated behavior for new expected results.
-- Report Conflict items before writing test cases.
-
-Codex must not convert QA Assumption or Open Question into Confirmed unless the user provides BA/Dev/QA confirmation.
-
-## Test-Case Rules
-
-- Analyze first and summarize coverage by group.
-- Before writing or saving cases, check existing related coverage and avoid duplicates caused only by different wording, data, or navigation.
-- Keep separate cases when they verify a distinct business or validation rule, role or permission, platform behavior, integration impact, failure mode, boundary condition, or regression risk.
-- Write detailed test cases one group at a time and wait for user review before continuing.
-- Use precise, verifiable expectations; avoid phrases such as “works correctly,” “displays properly,” or “system handles it.”
-
-## Duplicate Test Case Prevention
-
-Before writing or saving INS LifeGuardian test cases, Codex must check the QA Second Brain for existing related coverage.
-
-Codex should not create duplicate test cases only because wording, data, or navigation is slightly different.
-
-Merge or remove duplicate cases where possible. Keep separate cases only when they verify a meaningfully different business rule, validation, role/permission, platform behavior, integration impact, failure mode, boundary condition, or regression risk.
-
-If overlap is found, Codex must explain what overlaps and recommend whether to merge, remove, or keep the cases.
-
-## QA Test Case Validation
-
-When Codex creates or updates test cases under qa-knowledge/test-cases/, it must run:
-
+```bash
 python3 scripts/validate_qa_test_cases.py
+python3 scripts/validate_qa_knowledge.py
+```
 
-If validation fails:
+Mark a ticket `Completed` only when all approved groups exist as valid rows, strict validation passes without `--allow-empty`, migration placeholders are gone, indexed files exist, Knowledge Status is valid, and applicable decision/regression logs are updated (or the requirement explicitly states `None`).
 
-- Fix formatting issues when safe.
-- Report unresolved issues clearly.
-- Do not treat the test cases as approved until validation passes.
+## Weekly cleanup
 
-## Weekly QA Knowledge Cleanup Rule
-
-When I say:
-"Run weekly QA knowledge cleanup"
-
-Codex must automatically use the `ins-lifeguardian-qa-librarian` skill.
-
-Codex must review `qa-knowledge/` and prepare a cleanup report only.
-
-Check for:
-
-- Duplicate product rules
-- Duplicate test cases
-- Conflicting requirements
-- Outdated QA assumptions
-- Open questions that still need BA/Dev confirmation
-- Requirements without test cases
-- Test cases without requirement reference
-- Missing Source Status
-- Missing ticket-index entries
-- Regression map gaps
-- Weak or vague expected results
-- Invalid TC ID format
-- Invalid priority values
-
-Codex must not delete or overwrite files automatically.
-Codex must prepare a cleanup report and wait for my approval before applying changes.
+When the user says `Run weekly QA knowledge cleanup`, use the Librarian skill to prepare a report only. Check duplicates, conflicts, stale assumptions, open questions, orphaned requirements/cases, missing statuses or index entries, regression gaps, vague expectations, invalid IDs, and invalid priorities. Do not modify or delete files until the user approves the proposed cleanup.

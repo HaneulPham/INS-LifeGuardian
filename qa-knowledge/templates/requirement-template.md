@@ -2,9 +2,9 @@
 
 ## Knowledge Status
 
-| Knowledge Item | Source Status | Source / Evidence | Notes |
-|---|---|---|---|
-| Requirement summary and scope | <Confirmed / QA Assumption / Open Question / Out of Scope / Deprecated / Conflict> | <ticket, decision, evidence, or observation> | <context> |
+| Knowledge Item | Source Status | Source / Evidence | Last Updated | Notes |
+|---|---|---|---|---|
+| Requirement summary and scope | <Confirmed / QA Assumption / Open Question / Out of Scope / Deprecated / Conflict> | <ticket, decision, evidence, or observation> | <YYYY-MM-DD> | <context> |
 
 ## Requirement Summary
 
@@ -34,7 +34,11 @@
 
 ## Regression Risk
 
+<Describe applicable reusable regression impact, or write `None`.>
+
 ## Confirmed Decisions
+
+<List decisions that are recorded in the decision log, or write `None`.>
 
 ## Open Questions
 

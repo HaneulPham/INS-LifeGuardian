@@ -57,7 +57,7 @@ Create Task flow:
 
 ## Knowledge Status
 
-| Item | Status | Source | Last Updated | Notes |
+| Knowledge Item | Source Status | Source / Evidence | Last Updated | Notes |
 |---|---|---|---|---|
 | Create Task has 5 steps: Style, Details, Schedules, Durations, Review & Create | Confirmed | MA-2136 QA review | 2026-07-17 | Used for mobile task creation test cases |
 | Current-day future check-in is allowed | Confirmed | MA-2136 QA feedback | 2026-07-17 | Future-day check-in remains blocked |

@@ -1,2 +1,14 @@
 automation:
   auto_apply_second_brain_updates: true
+  require_exact_approval_phrase: true
+  require_clean_worktree: true
+  create_backup: true
+  backup_directory: .backups
+  run_test_case_validation: true
+  run_knowledge_validation: true
+  stop_on_conflict: true
+  stop_on_open_migration: true
+  block_sensitive_data: true
+  update_ticket_index: true
+  update_regression_map: true
+  update_decision_log: true

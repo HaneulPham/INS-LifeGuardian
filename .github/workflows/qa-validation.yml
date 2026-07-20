@@ -1,0 +1,32 @@
+name: QA knowledge validation
+
+on:
+  push:
+  pull_request:
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    env:
+      QA_MIGRATION_MODE: "true"
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+      - name: Compile scripts
+        run: python3 -m py_compile scripts/*.py
+      - name: Run validator unit tests
+        run: python3 -m unittest discover -s tests -p "test_*.py"
+      - name: Validate QA knowledge
+        run: python3 scripts/validate_qa_knowledge.py
+      - name: Validate QA test cases
+        shell: bash
+        run: |
+          if [ "${QA_MIGRATION_MODE}" = "true" ]; then
+            echo "Running QA validation in explicit migration mode..."
+            python3 scripts/validate_qa_test_cases.py --allow-empty
+          else
+            echo "Running strict QA validation..."
+            python3 scripts/validate_qa_test_cases.py
+          fi
