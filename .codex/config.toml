@@ -16,3 +16,15 @@ required = false
 
 [mcp_servers.atlassian.env]
 ATLASSIAN_BASE_URL = "https://theinsgroup.atlassian.net"
+
+[mcp_servers.atlassian.tools.search_jira_issues]
+approval_mode = "approve"
+
+[mcp_servers.atlassian.tools.search_confluence_pages]
+approval_mode = "approve"
+
+[mcp_servers.atlassian.tools.download_confluence_page_complete]
+approval_mode = "approve"
+
+[mcp_servers.atlassian.tools.export_confluence_page]
+approval_mode = "approve"

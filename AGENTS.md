@@ -25,18 +25,27 @@ Search exact ticket IDs, endpoint paths/methods, functions, handlers, YAML keys,
 
 When sources conflict, name them, describe the difference, apply the evidence priority, and mark unresolved intent as **Conflict** or **Open Question**. Never silently choose an expectation. Every completed review must include **Evidence Reviewed**, **Could Not Verify**, and **QA Assumptions**.
 
-## Automatic requirement intake
+## Automatic Requirement Intake
 
-Whenever the user provides an INS LifeGuardian requirement, Jira ticket, screenshot, BA/Dev note, QA feedback, API change, bug context, or test request, use the Analyst workflow and the active ticket context.
+Activate the INS LifeGuardian QA Analyst workflow automatically whenever the user provides potential requirement evidence, including Jira tickets or links, acceptance criteria, screenshots or recordings, attachments, pasted product descriptions, Jira comments, Confluence content, API specifications or examples, errors or logs, business rules, developer notes, BA/PO/reviewer/Rovo feedback, existing cases for review, bug descriptions, or meeting notes proposing behaviour.
 
-Unless another format is requested, return:
+Do not ask what the user wants when the content can reasonably be interpreted as an INS LifeGuardian requirement, feature, change, bug, or QA review request. Route it to `ins-lifeguardian-qa-analyst` and use Automatic Requirement Intake Mode.
 
-1. Requirement Analysis
-2. Questions grouped as Critical, Important, and Optional
-3. Test Case Coverage Summary
-4. Proposed Test Case Groups
+Unless another output is explicitly requested, return:
 
-Do not write detailed cases until the user explicitly requests a group. For `Write Group X`, `Next group`, or equivalent, use the latest clarifications, check existing coverage, write only that group, and wait for review. Do not ask the user to repeat clear active-ticket context.
+1. Evidence Received
+2. Requirement Summary
+3. QA Analysis
+4. Missing Requirements and Questions
+5. Risks and Impact
+6. Suggested Test Case Groups
+7. Suggested Next Prompts
+
+Do not write detailed test cases during initial intake unless explicitly requested. When evidence is incomplete, provide best-effort analysis, put unverifiable information under **Could Not Verify**, and do not invent behaviour.
+
+For screenshots, analyse visible fields, labels, controls, validation, values, states, navigation, and errors. Separate visible evidence from QA inference, do not assume off-screen behaviour, and record cropped, hidden, or unreadable details under **Could Not Verify**.
+
+For `Write Group X`, `Next group`, or equivalent, use the latest active-ticket context, check existing coverage, write only that group, and wait for review. Do not ask the user to repeat evidence already available in the conversation, ticket, attachments, screenshots, or QA knowledge.
 
 ## Automatic Second Brain use
 
