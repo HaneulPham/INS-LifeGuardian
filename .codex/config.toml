@@ -28,3 +28,6 @@ approval_mode = "approve"
 
 [mcp_servers.atlassian.tools.export_confluence_page]
 approval_mode = "approve"
+
+[mcp_servers.atlassian.tools.read_jira_issue]
+approval_mode = "approve"
