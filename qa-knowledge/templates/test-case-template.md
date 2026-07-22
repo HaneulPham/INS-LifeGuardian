@@ -40,6 +40,14 @@ Use this ledger to preserve approved IDs and make `next` select the next not-yet
 
 - <Scenario blocked by an unresolved expected outcome and the clarification required.>
 
+### Requires Test Instrumentation
+
+- <Unobservable rule and the exact UI/API/log/payload/job/device/export evidence needed before the case is executable.>
+
+### Test Data and Cleanup
+
+- <Non-production recipients, isolated records, cleanup/rollback, and audit evidence that must remain.>
+
 ---
 
 ## Group 2 — <Group Name>

@@ -6,6 +6,7 @@ Act as a Senior QA Analyst for this live healthcare, safety-monitoring, and clie
 
 - Use `ins-lifeguardian-qa-analyst` for Jira/requirement/API review, QA analysis, regression planning, bugs, and test coverage or cases.
 - Use `ins-lifeguardian-qa-librarian` for approved Second Brain updates, migrations, organization, and weekly cleanup.
+- Use the Analyst question-decision workflow for material ambiguity: one decision per question, concrete selectable behaviours, `Other – specify`, and a recommendation only when a safe default exists. Convert selected answers into Confirmed Decisions and update risks, assumptions, groups, and affected cases.
 - Follow each skill’s reference routing; keep this file limited to project-wide gates.
 
 ## Evidence-first gate
@@ -45,7 +46,7 @@ Do not write detailed test cases during initial intake unless explicitly request
 
 For screenshots, analyse visible fields, labels, controls, validation, values, states, navigation, and errors. Separate visible evidence from QA inference, do not assume off-screen behaviour, and record cropped, hidden, or unreadable details under **Could Not Verify**.
 
-For `Write Group X`, `Next group`, or equivalent, use the latest active-ticket context, check existing coverage, write only that group, and wait for review. Do not ask the user to repeat evidence already available in the conversation, ticket, attachments, screenshots, or QA knowledge.
+For `Write Group X`, `Next group`, or equivalent, use the latest active-ticket context, check existing coverage, write only that group, and wait for review. This is the default review gate; when the user explicitly requests all groups, a complete suite, or continuation without pauses, generate all requested groups without stopping between them. Do not ask the user to repeat evidence already available in the conversation, ticket, attachments, screenshots, or QA knowledge.
 
 ## Automatic Second Brain use
 
@@ -77,8 +78,11 @@ For detailed UI, mobile, CP Web, CP Desktop, Portal, or workflow cases, follow t
 - Later cases may use shorter steps only when Preconditions and the steps still make the case reproducible. Do not use ambiguous phrases such as `continue from the previous case`.
 - Keep one primary verification goal per case. Merge duplicates; split a case only when it verifies a distinct rule, validation, role, platform, integration, failure mode, boundary, recovery path, or regression risk.
 - Group Expected Result and Expected Integration by numbered step using `**Verify after step #N:**`. State exact values, statuses, messages, enabled/read-only state, persistence, duplicate prevention, blocked actions, and no-false-save behaviour.
-- Expected Integration must name only evidence-backed downstream effects. State `no integration triggered` for configuration, validation, or failed actions that must not call FCM, SMS, email, Twilio, billing, XML export, queues, alerts, or other integrations.
+- Expected Integration must name only evidence-backed and realistically affected downstream effects. For configuration, validation, or failed actions, state the specific plausible integrations that must not trigger; do not copy a broad FCM/SMS/email/Twilio/billing/queue list into unrelated cases.
 - Never turn an unresolved business rule into an executable expected result. Put it under Deferred Scenarios, Open Question, or QA Assumption.
+- If the primary behaviour cannot be verified through accessible UI, API, notification, report, audit, export, device activity, or approved test logs, label it **Requires Test Instrumentation** and name the exact evidence needed; do not present it as currently executable.
+- For alarms, calls, messages, invoices, exports, device activity, queues, or persistent history, define safe non-production test data, recipient isolation, and cleanup or rollback. Verify cleanup does not remove unrelated data or required audit evidence.
+- Protect client and contact privacy in notifications, logs, screenshots, reports, exports, errors, and URLs. Do not expose unnecessary personal, medical, contact, authentication, or tenant data.
 
 When reviewer, Rovo, BA, developer, or user feedback is supplied:
 

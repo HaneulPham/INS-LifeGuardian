@@ -51,6 +51,42 @@ class QABehaviorContractTests(unittest.TestCase):
         for decision in ("Add", "Update", "Merge", "Remove", "Defer", "Reject"):
             self.assertIn(f"**{decision}**", text)
 
+    def test_question_workflow_and_traceability_reference_exist(self):
+        self.assertTrue((ROOT / ".agents/skills/ins-lifeguardian-qa-analyst/references/question-decision-workflow.md").is_file())
+        intake = self.read(".agents/skills/ins-lifeguardian-qa-analyst/references/requirement-intake.md")
+        template = self.read("qa-knowledge/templates/requirement-template.md")
+        self.assertIn("Requirement Traceability", intake)
+        self.assertIn("Material Behaviour | Source / Evidence | Status", template)
+
+    def test_selectable_questions_and_decision_updates_are_required(self):
+        agents = self.read("AGENTS.md")
+        workflow = self.read(".agents/skills/ins-lifeguardian-qa-analyst/references/question-decision-workflow.md")
+        self.assertIn("one decision per question", agents)
+        self.assertIn("Other – specify", workflow)
+        self.assertIn("Confirmed Decisions", workflow)
+        for decision in ("Add", "Update", "Merge", "Remove", "Defer"):
+            self.assertIn(f"**{decision}**", workflow)
+
+    def test_complete_suite_override_is_documented(self):
+        agents = self.read("AGENTS.md")
+        style = self.read(".agents/skills/ins-lifeguardian-qa-analyst/references/test-case-style.md")
+        self.assertIn("explicitly requests all groups", agents)
+        self.assertIn("complete suite", style)
+
+    def test_instrumentation_privacy_and_cleanup_are_required(self):
+        agents = self.read("AGENTS.md")
+        style = self.read(".agents/skills/ins-lifeguardian-qa-analyst/references/test-case-style.md")
+        gate = self.read(".agents/skills/ins-lifeguardian-qa-analyst/references/test-case-quality-gate.md")
+        self.assertIn("Requires Test Instrumentation", agents)
+        self.assertIn("safe cleanup/rollback", style)
+        self.assertIn("unnecessary personal, medical, contact, authentication, or tenant data", gate)
+
+    def test_bug_reports_separate_severity_and_priority(self):
+        text = self.read(".agents/skills/ins-lifeguardian-qa-analyst/references/bug-report-style.md")
+        self.assertIn("- Severity\n- Priority", text)
+        self.assertIn("Severity describes", text)
+        self.assertIn("Priority describes", text)
+
 
 if __name__ == "__main__":
     unittest.main()

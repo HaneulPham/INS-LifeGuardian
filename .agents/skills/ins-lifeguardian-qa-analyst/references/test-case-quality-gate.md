@@ -4,7 +4,7 @@ Run this self-review before returning a test-case group. Correct failures before
 
 ## Scope and continuity
 
-- Only the requested group is included.
+- Only the requested group is included, unless the user explicitly requested all groups or a complete suite.
 - The group matches the active approved coverage plan.
 - `next` selected the next not-yet-reviewed group.
 - Existing approved IDs and content are preserved unless feedback explicitly changes them.
@@ -27,6 +27,7 @@ Run this self-review before returning a test-case group. Correct failures before
 - Save, refresh/reopen, validate, export, and downstream inspection are separate when needed.
 - No step contains an expected result.
 - Later cases remain reproducible without relying on an earlier case.
+- Any unobservable primary behaviour is labelled **Requires Test Instrumentation** with the exact evidence needed; it is not presented as executable.
 
 ## Title and metadata
 
@@ -50,6 +51,9 @@ Run this self-review before returning a test-case group. Correct failures before
 - Duplicate requests, retries, queues, and idempotency are covered when relevant.
 - Failed or configuration-only actions explicitly state which integrations do not trigger.
 - Cross-platform consistency is included only when the feature has another consumer.
+- Non-trigger assertions name only plausible affected integrations rather than a copied generic list.
+- Alarm, message, call, billing, export, queue, device, and durable-history cases use isolated non-production data and define cleanup/rollback.
+- Notifications, logs, screenshots, reports, exports, errors, and URLs expose no unnecessary personal, medical, contact, authentication, or tenant data.
 - No unverified root cause, endpoint, database table, or integration is invented.
 
 ## Output finish

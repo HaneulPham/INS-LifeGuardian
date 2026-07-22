@@ -19,5 +19,8 @@ Output requirements:
 - Group Expected Result and Expected Integration by numbered step.
 - Include exact values/messages/statuses, persistence, no false save, duplicate prevention, and no unintended integration where relevant.
 - Put unresolved outcomes under Deferred Scenarios instead of inventing expected behaviour.
-- Do not include another group and stop after Group <GROUP NUMBER> for review.
+- Mark unobservable primary behaviour as Requires Test Instrumentation and name the exact evidence needed.
+- Use isolated non-production recipients/data and define cleanup for alarms, calls, messages, billing, exports, queues, devices, or durable history.
+- Name only realistically affected integrations and protect personal, medical, contact, authentication, and tenant data.
+- Do not include another group and stop after Group <GROUP NUMBER> for review, unless the user explicitly requested all groups or a complete suite.
 ```

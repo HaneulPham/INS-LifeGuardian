@@ -33,7 +33,7 @@ Detailed case generation must use:
 3. Review the relevant QA Second Brain files under `qa-knowledge/`.
 4. Complete requirement, risk, integration, and regression analysis before generating detailed test cases.
 5. Generate detailed test cases only when explicitly requested.
-6. Write one test-case group at a time and wait for review before continuing.
+6. Write one test-case group at a time and wait for review before continuing, unless the user explicitly requests all groups or a complete suite.
 7. Run the QA validator after creating or updating stored test cases.
 8. Update the QA Second Brain only through the approved QA librarian workflow.
 
@@ -52,7 +52,7 @@ Use evidence in this order when determining expected behaviour:
 
 Do not present assumptions as confirmed requirements.
 
-When sources conflict, record the conflict and request clarification rather than silently selecting one behaviour.
+When sources conflict, record the conflict and request clarification rather than silently selecting one behaviour. Use one decision per question with concrete selectable behaviour options, then record selected answers as Confirmed Decisions and update affected coverage.
 
 ## Supported Knowledge Statuses
 
@@ -167,9 +167,9 @@ When detailed cases are requested:
 
 1. Check existing requirements and test cases.
 2. Avoid duplicate coverage.
-3. Write only the requested group.
-4. Stop and wait for review.
-5. Continue only after the user says `next`, `next group`, or `go ahead`.
+3. Write only the requested group and stop for review by default.
+4. Continue after the user says `next`, `next group`, or `go ahead`.
+5. When the user explicitly requests all groups or a complete suite, write all requested groups in order without review pauses.
 
 ## INS LifeGuardian Coverage
 

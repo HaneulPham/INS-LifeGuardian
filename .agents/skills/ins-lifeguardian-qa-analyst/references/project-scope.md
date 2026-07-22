@@ -26,5 +26,7 @@ Consider only areas supported by the ticket or evidence; do not force every area
 - Authentication and authorization
 - Synchronization, jobs, queues, retries, and alert delivery
 - Notification, audit, activity, document-change, and operational logs
+- Privacy and sensitive-data exposure across UI, notifications, URLs, reports, exports, screenshots, and logs
+- Test-data isolation, non-production recipients, cleanup, rollback, and preservation of required audit evidence
 
 For each task, identify the affected module, platforms, backend/data, integrations, regression areas, and safety or business risk. Do not claim root cause, persistence, permissions, consumer usage, or integration behaviour without evidence.

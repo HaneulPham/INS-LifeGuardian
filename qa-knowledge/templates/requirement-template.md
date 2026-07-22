@@ -8,6 +8,11 @@
 
 ## Requirement Summary
 
+## Requirement Traceability
+
+| Material Behaviour | Source / Evidence | Status |
+|---|---|---|
+
 ## Confirmed Scope
 
 ## Out of Scope
@@ -31,6 +36,12 @@
 ## Reports / Export Impact
 
 ## Cross-Platform Sync Impact
+
+## Privacy / Sensitive Data Impact
+
+## Test Data, Isolation, and Cleanup
+
+## Required Test Instrumentation
 
 ## Regression Risk
 

@@ -33,11 +33,11 @@ Provide observable checks grouped where applicable as:
 - Data-Integrity Validation
 - Integration and Observability Validation
 
-Include positive/negative flows, authorization, generated infrastructure, persistence and false-persistence, duplicate prevention, downstream non-triggering, identifiers/correlation, and sensitive-log checks when relevant.
+Include positive/negative flows, authorization, generated infrastructure, persistence and false-persistence, duplicate prevention, downstream non-triggering, identifiers/correlation, privacy/sensitive-log checks, safe test recipients, test-data isolation, and cleanup or rollback when relevant. Mark unobservable primary behaviour as **Requires Test Instrumentation** and identify the exact evidence needed.
 
 ## 7. Questions
 
-Group decision-ready questions as **Critical**, **Important**, and **Optional**. Ask only questions that resolve genuine ambiguities not answered by available evidence.
+Group decision-ready questions as **Critical**, **Important**, and **Optional**. Ask only questions that resolve genuine ambiguities not answered by available evidence. Follow `question-decision-workflow.md`: one decision per question, two to five concrete behaviour options where practical, `Other – specify`, impact explanation, and a QA recommendation only when a safe default exists.
 
 ## 8. Proposed Test Coverage
 
@@ -45,4 +45,4 @@ Propose logical groups by feature, workflow stage, risk, platform, integration, 
 
 ## 9. Evidence and Assumptions
 
-End with **Evidence Reviewed**, **Could Not Verify**, and **QA Assumptions**. Add **Source Conflicts** only when conflicts exist. Cite exact ticket content, files, routes, methods, fields, functions, tests, logs, or commands inspected.
+End with **Evidence Reviewed**, **Could Not Verify**, and **QA Assumptions**. Add **Source Conflicts** only when conflicts exist. For material behaviours whose source or status affects the result, include a compact traceability table: `Material Behaviour | Source / Evidence | Status`. Cite exact ticket content, files, routes, methods, fields, functions, tests, logs, or commands inspected.

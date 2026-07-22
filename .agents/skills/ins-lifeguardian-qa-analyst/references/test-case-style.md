@@ -4,7 +4,7 @@ Read this file together with `test-case-quality-gate.md` and the approved SMAR-2
 
 Before writing cases, check the ticket index, related requirement and module files, existing cases, regression map, decisions, and the active conversation’s approved-case ledger. Do not duplicate coverage solely for different wording, sample data, or navigation. Merge overlapping cases unless they verify a distinct rule, validation, role, platform, integration, failure mode, boundary, recovery path, or regression risk.
 
-Write one requested group at a time and stop for review. `next` means the next not-yet-reviewed group from the active plan. Preserve approved IDs. For additions, use the next unused two-digit sequence within the group; do not renumber approved cases unless the group structure changes.
+Write one requested group at a time and stop for review by default. `next` means the next not-yet-reviewed group from the active plan. When the user explicitly requests all groups, a complete suite, or no review pauses, write all requested groups in order and apply the full quality gate to each. Preserve approved IDs. For additions, use the next unused two-digit sequence within the group; do not renumber approved cases unless the group structure changes.
 
 Use IDs `<Ticket>-G<Group>-<two-digit sequence>` such as `SMAR-2651-G1-01`. Allowed priorities are High, Medium, Low, and Lowest.
 
@@ -51,9 +51,11 @@ Include only scenario-specific setup:
 - relevant status, role, client file, Work Order, invoice, device, asset, queue, integration stub, or feature configuration;
 - exact test data needed to prove the rule;
 - existing records that must or must not exist;
-- values that must be recorded before the test.
+- values that must be recorded before the test;
+- safe non-production recipients, stubs, queue state, or isolated test accounts when messages, alarms, calls, billing, or external integrations may trigger;
+- cleanup or rollback needs for created records and downstream artefacts.
 
-Do not repeat ordinary login, environment, or standard permissions unless they are part of the verification goal.
+Do not repeat ordinary login, environment, or standard permissions unless they are part of the verification goal. Do not use real client health, contact, credential, or tenant data when synthetic or redacted data can prove the rule.
 
 ## Test Steps rules
 
@@ -109,7 +111,7 @@ Tie each integration assertion to a numbered step. Name only evidence-backed com
 - CP, Portal, Mobile, or Desktop synchronization;
 - reports, notification logs, activity logs, audit/history, or Document Change Log.
 
-For validation failures and configuration-only changes, explicitly state which downstream processes must not run. Examples:
+For validation failures and configuration-only changes, explicitly state only the downstream processes that could realistically be reached by the tested action. Do not paste a broad non-trigger list into unrelated cases. Examples:
 
 - no invoice record is created;
 - no XML-generation job is queued;
@@ -118,6 +120,10 @@ For validation failures and configuration-only changes, explicitly state which d
 - no duplicate queue message or audit entry is created.
 
 Do not claim a database table, endpoint, queue, log, or integration is affected unless evidence establishes it. Use `where supported` only for optional observability, never for the primary expected behaviour.
+
+If the primary rule cannot be observed through accessible UI, API, notification, report, export, audit/history, device activity, or approved test logs, do not disguise an internal assumption as an executable assertion. Add a **Requires Test Instrumentation** item naming the exact signal required, such as selected dialler number, queue payload and deduplication ID, cancelled-job status, FCM payload/topic, correlation ID, or export identifier.
+
+For cases that trigger alarms, calls, SMS/email/push, invoices, exports, queue messages, device activity, or durable history, include a safe cleanup/rollback note. Verify cleanup removes only test artefacts, leaves unrelated data unchanged, and preserves audit evidence required for review. Verify client and contact information is not unnecessarily exposed in notifications, logs, screenshots, reports, exports, errors, or URLs.
 
 ## Notes and deferred scenarios
 

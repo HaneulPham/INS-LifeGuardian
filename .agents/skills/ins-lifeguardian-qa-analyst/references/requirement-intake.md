@@ -27,6 +27,12 @@ Use this structure, omitting only subsections that are genuinely irrelevant:
 
 - ...
 
+### Requirement Traceability
+
+| Material Behaviour | Source / Evidence | Status |
+|---|---|---|
+| ... | ... | Confirmed / QA Assumption / Open Question / Conflict |
+
 ## Requirement Summary
 
 ...
@@ -83,7 +89,7 @@ Use this structure, omitting only subsections that are genuinely irrelevant:
 
 List the evidence reviewed, such as the ticket description, acceptance criteria, screenshots, Jira comments, API documentation, existing QA knowledge, and reviewer feedback. Always state **Could Not Verify** and **QA Assumptions**; add **Conflicting Evidence** when sources disagree. Do not present assumptions as confirmed behaviour.
 
-For screenshots, record visible fields, labels, controls, values, states, navigation, validation, and errors as evidence. Treat persistence, integration, off-screen behaviour, and hidden or unreadable details as unverified unless another source confirms them.
+For screenshots, record visible fields, labels, controls, values, states, navigation, validation, and errors as evidence. Treat persistence, integration, off-screen behaviour, and hidden or unreadable details as unverified unless another source confirms them. Use the Requirement Traceability table for material rules when multiple sources, assumptions, or conflicts affect the review.
 
 ### 2. Requirement Summary
 
@@ -112,7 +118,7 @@ Group decision-ready questions as:
 - **Important**: Affect expected behaviour, integration, regression, or coverage.
 - **Optional**: Improve usability or completeness without blocking the main workflow.
 
-Answer questions from available evidence rather than asking the user again.
+Answer questions from available evidence rather than asking the user again. For unresolved decisions, use `question-decision-workflow.md`: ask one decision per question, provide concrete selectable behaviours, explain why it matters, include `Other – specify`, and recommend an option only when a safe evidence-backed default exists.
 
 ### 5. Risks and Impact
 

@@ -4,7 +4,7 @@ This repository uses three layers to make Codex behave consistently as an INS Li
 
 ## 1. `AGENTS.md` — always-on project rules
 
-Codex reads repository `AGENTS.md` before work begins. It contains the project-wide evidence gate, workflow routing, one-group-at-a-time rule, title/ID conventions, feedback handling, and Second Brain safety gates.
+Codex reads repository `AGENTS.md` before work begins. It contains the project-wide evidence gate, workflow routing, default one-group-at-a-time rule with explicit complete-suite override, title/ID conventions, question/decision handling, feedback handling, instrumentation/privacy/cleanup requirements, and Second Brain safety gates.
 
 Keep `AGENTS.md` compact and use it for rules that must apply to every QA task.
 

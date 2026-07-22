@@ -15,6 +15,7 @@ Read `references/project-scope.md` for every task, then select all references th
 |---|---|
 | Potential requirement evidence without a more specific output request | `references/requirement-intake.md` plus other applicable references below |
 | Jira, requirement, BA/Dev note, screenshot, configuration or remediation review | `references/requirement-review.md` |
+| Missing, ambiguous, conflicting, or decision-dependent behaviour | `references/question-decision-workflow.md` plus the reference for the requested output |
 | Reviewer, Rovo, BA, developer, or user feedback on existing analysis/cases | `references/reviewer-feedback.md` plus the reference for the affected output |
 | Endpoint, contract, authentication, backend service or integration change | `references/api-analysis.md` plus `references/requirement-review.md` |
 | Test coverage proposal or detailed cases | `references/test-case-style.md`, `references/test-case-quality-gate.md`, and `references/examples/SMAR-2633-approved-test-case-pattern.md` |
@@ -105,12 +106,12 @@ When the user requests a formal review or another explicit QA output, use the ev
 4. Proposed Test Case Groups
 5. Evidence Reviewed, Could Not Verify, and QA Assumptions
 
-Use the more detailed contract in `references/requirement-review.md` for formal reviews. Do not write detailed cases until the user explicitly requests a group. When they request `Write Group X`, `Next group`, or equivalent, use the active ticket and latest clarifications, check existing coverage for duplicates, write only that group, and wait for review.
+Use the more detailed contract in `references/requirement-review.md` for formal reviews. Do not write detailed cases until the user explicitly requests a group. When they request `Write Group X`, `Next group`, or equivalent, use the active ticket and latest clarifications, check existing coverage for duplicates, write only that group, and wait for review. If the user explicitly requests all groups, a complete suite, or no review pauses, produce all requested groups in order while preserving the same quality gate for every group.
 
 
 ## Detailed test-case output gate
 
-Before producing a requested group, read the full test-case style, quality gate, and approved SMAR-2633 pattern. Use the active ticket’s latest confirmed decisions and approved case ledger. Titles must be plain text beginning with `Verify `. Output only the requested group, preserve approved IDs, and stop for review after the group.
+Before producing detailed cases, read the full test-case style, quality gate, and approved SMAR-2633 pattern. Use the active ticket’s latest confirmed decisions and approved case ledger. Titles must be plain text beginning with `Verify `. Output only the requested group and stop for review by default; when the user explicitly requests all groups or a complete suite, output all requested groups in order. Preserve approved IDs in either mode.
 
 Do not write an executable case for an unresolved expected outcome. Explain and defer it. Do not blindly accept reviewer feedback: classify it, check duplication and scope, and wait for confirmation when it changes business behaviour.
 
@@ -118,4 +119,4 @@ Do not write an executable case for an unresolved expected outcome. Explain and 
 
 When sources disagree, name each source, describe the behavioural difference, apply the evidence priority, and mark unresolved intent as **Conflict** or **Open Question**. Never silently select an expectation.
 
-Use these labels where needed: **Confirmed**, **QA Assumption**, **Open Question**, **Out of Scope**, **Deprecated**, **Conflict**, **Requirement Gap**, and **Question for BA/Dev**. Never promote an assumption or question to Confirmed without evidence.
+Use these labels where needed: **Confirmed**, **QA Assumption**, **Open Question**, **Out of Scope**, **Deprecated**, **Conflict**, **Requirement Gap**, **Question for BA/Dev**, and **Requires Test Instrumentation**. Never promote an assumption or question to Confirmed without evidence. Use `references/question-decision-workflow.md` to turn selected answers into traceable Confirmed Decisions and update all affected coverage.

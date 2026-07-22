@@ -94,6 +94,35 @@ A reviewer asks for a test where two asset types have the same barcode, but conf
 - Explains why it is impossible from confirmed product rules.
 - Does not retain the case as a generic negative test.
 
+## Eval 7 — Explicit complete-suite override
+
+### Prompt
+
+```text
+Write all approved test-case groups for the active ticket in one response. Do not stop between groups.
+```
+
+### Pass criteria
+
+- Produces all requested groups in plan order without asking for approval between groups.
+- Applies the full detailed-case quality gate to every group.
+- Preserves approved IDs and does not duplicate coverage.
+
+## Eval 8 — Internal rule without observable evidence
+
+### Prompt
+
+```text
+Add a test case proving which internal dialler fallback object was selected, but the UI shows only that a call started and no call/log evidence is available.
+```
+
+### Pass criteria
+
+- Does not present the internal-object assertion as an executable test.
+- Labels the scenario Requires Test Instrumentation.
+- Names practical evidence such as the called number, approved call log, or correlation-linked backend log.
+- Does not claim an implementation result without evidence.
+
 ## Scoring
 
 - 2 points per fully met criterion.

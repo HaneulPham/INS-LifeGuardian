@@ -25,7 +25,7 @@ Return:
 4. Risk Analysis
 5. Backend and Integration Impact
 6. Required Validations
-7. Questions: Critical, Important, Optional
+7. Questions: Critical, Important, Optional, using one decision per question with concrete selectable behaviours
 8. Proposed Test Coverage groups only
 9. Evidence Reviewed, Could Not Verify, and QA Assumptions
 
@@ -34,5 +34,5 @@ Reference exact endpoint paths, HTTP methods, function names, handlers, YAML key
 Do not infer that an endpoint is unused merely because its handler is missing.
 Do not claim root cause or active consumer behaviour without evidence.
 Identify conflicts between Jira, documentation, implementation, and stored QA knowledge.
-Before finalizing, self-review for safety, security, data integrity, compatibility, deployment, integrations, logs, and cross-platform regression.
+Before finalizing, self-review for safety, security, privacy, data integrity, test-data isolation/cleanup, required instrumentation, compatibility, deployment, integrations, logs, and cross-platform regression.
 ```
