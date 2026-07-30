@@ -2,6 +2,7 @@
 
 | Ticket | Module | Platform | Requirement File | Test Case File | Status | Notes |
 |---|---|---|---|---|---|---|
+| SMAR-2602 | AWS Old Backend Failover Routing | CP Desktop/Web, Portal Web, Mobile, Backend APIs, integrations | requirements/SMAR/SMAR-2602.md | test-cases/SMAR/SMAR-2602.md | Completed | 30 approved cases across Primary-only completion and invalid-Failover controlled failure for 15 affected requests |
 | SMAR-2633 | DVA Billing | CP Web | requirements/SMAR/SMAR-2633.md | test-cases/SMAR/SMAR-2633.md | Completed | 36 approved cases across generation, editing, validation, XML export, resubmission, and non-rental regression |
 | SMAR-2635 | Account Cancellation / Client File | Portal Web, Backend APIs | requirements/SMAR/SMAR-2635.md | test-cases/SMAR/SMAR-2635.md | Approved | 49 approved cases across Portal routing, PATCH/POST contracts, failure and concurrency handling, and targeted technical regression; exact HTTP and instrumentation contracts remain open |
 | SMAR-2638 | Old SHM Authentication / Alarm and Client File | Backend APIs, existing HMAC/OAuth consumers | requirements/SMAR/SMAR-2638.md | test-cases/SMAR/SMAR-2638.md | Approved | 13 approved cases across `RaiseAlarmRequest` and `GetClientFileRequest` HMAC enforcement; exact rejection/runtime instrumentation and referenced Group 4 remain open |
