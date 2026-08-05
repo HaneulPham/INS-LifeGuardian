@@ -22,7 +22,7 @@ Open only references required for the requested output. Do not read every refere
 | Regression/shared impact | `references/regression-analysis.md` |
 | Bug report/triage | `references/bug-report-style.md` |
 | Canonical workflow command or next-step selection | `references/workflow-commands.md` |
-| API automation implementation | route to `ins-lifeguardian-api-automation`; do not load Analyst case references unless needed |
+| API automation implementation | route to `ins-lifeguardian-playwright-api-automation`; do not load Analyst case references unless needed |
 | Platform/module/integration vocabulary is unclear | `references/project-scope.md` |
 | Format uncertainty or explicit example request | the single closest file under `references/examples/` |
 

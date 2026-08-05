@@ -19,7 +19,7 @@ FILES = {
     "CASE_STYLE": ROOT / ".agents/skills/ins-lifeguardian-qa-analyst/references/test-case-style.md",
     "CASE_GATE": ROOT / ".agents/skills/ins-lifeguardian-qa-analyst/references/test-case-quality-gate.md",
     "COMMANDS": ROOT / ".agents/skills/ins-lifeguardian-qa-analyst/references/workflow-commands.md",
-    "API_AUTOMATION": ROOT / ".agents/skills/ins-lifeguardian-api-automation/SKILL.md",
+    "API_AUTOMATION": ROOT / ".agents/skills/ins-lifeguardian-playwright-api-automation/SKILL.md",
 }
 
 LIMITS = {
@@ -28,14 +28,14 @@ LIMITS = {
     "INTAKE": 4_200,
     "CASE_STYLE": 6_500,
     "COMMANDS": 4_500,
-    "API_AUTOMATION": 4_800,
+    "API_AUTOMATION": 6_500,
 }
 
 FLOW_LIMITS = {
     "default_intake": ("AGENTS", "ANALYST_SKILL", "INTAKE", 19_500),
     "detailed_cases": ("AGENTS", "ANALYST_SKILL", "CASE_STYLE", "CASE_GATE", 25_000),
     "command_routing": ("AGENTS", "ANALYST_SKILL", "COMMANDS", 19_000),
-    "api_automation": ("AGENTS", "API_AUTOMATION", 12_000),
+    "api_automation": ("AGENTS", "API_AUTOMATION", 14_500),
 }
 
 FORBIDDEN = {

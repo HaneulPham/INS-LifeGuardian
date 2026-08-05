@@ -32,3 +32,13 @@ python3 scripts/validate_qa_test_cases.py
 python3 scripts/validate_qa_knowledge.py
 python3 scripts/check_prompt_budget.py
 ```
+
+
+## Separate Playwright API automation
+
+- Replaced the generic API automation route with `ins-lifeguardian-playwright-api-automation`.
+- Added the API-only TypeScript framework under `automation/api/` using standalone Playwright request contexts.
+- Added write, review, run, debug, fix, and mapping commands with context-aware suggestions.
+- Added non-production enforcement, secret scanning, cleanup fixtures, exact traceability, mapping validation, failure classification, and API-only architecture checks.
+- Added a separate CI workflow that validates API automation without installing browsers.
+- Web automation remains intentionally absent and will be a separate future skill/project.

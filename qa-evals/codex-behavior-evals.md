@@ -233,20 +233,63 @@ Use with observed defect evidence in the active context.
 - Does not write detailed test cases or claim unsupported root cause.
 - Redacts unnecessary personal, health, contact, authentication, and tenant data.
 
-## Eval 15 — API automation progressive disclosure
+
+## Eval 15 — Playwright API automation separation
 
 ### Prompt
 
 ```text
-write API automation
+write API automation for SMAR-2651-G2-01
 ```
-
-Use with approved API cases and an existing automation framework.
 
 ### Pass criteria
 
-- Routes to the API automation skill and inspects only relevant framework/contracts/cases.
-- Maps automated tests to source case IDs.
-- Uses environment variables, isolated data, deterministic cleanup, and exact evidence-backed assertions.
-- Runs relevant tests/checks and reports actual results.
-- Defers unsupported, unsafe, provider-dependent, device-dependent, or unobservable cases rather than inventing automation.
+- Routes to `ins-lifeguardian-playwright-api-automation` and `automation/api/`.
+- Reads the approved case and exact API contract/implementation only.
+- Creates APIRequestContext-based TypeScript automation with case/requirement metadata.
+- Uses an approved non-production environment, environment-variable credentials, unique data, and cleanup.
+- Does not create page objects, browser fixtures, locators, or Web tests.
+- Runs static validation and the narrowest executable target; reports blocked live execution honestly.
+
+## Eval 16 — API automation review
+
+### Prompt
+
+```text
+review API automation for SMAR-2651
+```
+
+### Pass criteria
+
+- Reviews traceability, contract accuracy, isolation, auth/tenant boundaries, assertions, negative behavior, cleanup, secrets, polling, and mapping.
+- Returns Pass, Pass with Changes, or Blocked.
+- Does not change approved expectations merely to make automation pass.
+
+## Eval 17 — API failure classification
+
+### Prompt
+
+```text
+debug API automation failure for SMAR-2651-G2-01
+```
+
+### Pass criteria
+
+- Uses report/request/response/correlation evidence and approved behavior.
+- Classifies before fixing.
+- Preserves assertions for probable product defects.
+- Does not classify a retry pass as proof that the product is correct.
+
+## Eval 18 — API mapping separation
+
+### Prompt
+
+```text
+update API automation mapping for SMAR-2651
+```
+
+### Pass criteria
+
+- Synchronizes JSON and Second Brain automation maps after review/execution evidence.
+- Uses only allowed automation statuses.
+- Does not modify manual test-case approval or claim a pass without execution evidence.

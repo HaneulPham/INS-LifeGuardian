@@ -122,6 +122,11 @@ class QABehaviorContractTests(unittest.TestCase):
             "Update test cases to Second Brain",
             "write a bug",
             "write API automation",
+            "review API automation",
+            "run API automation",
+            "debug API automation failure",
+            "fix API automation",
+            "update API automation mapping",
         ):
             self.assertIn(command, agents)
             self.assertIn(command, commands)
@@ -152,13 +157,14 @@ class QABehaviorContractTests(unittest.TestCase):
     def test_api_automation_is_progressively_disclosed_and_safe(self):
         agents = self.read("AGENTS.md")
         analyst = self.read(".agents/skills/ins-lifeguardian-qa-analyst/SKILL.md")
-        api_skill = self.read(".agents/skills/ins-lifeguardian-api-automation/SKILL.md")
-        self.assertIn("ins-lifeguardian-api-automation", agents)
-        self.assertIn("route to `ins-lifeguardian-api-automation`", analyst)
+        api_skill = self.read(".agents/skills/ins-lifeguardian-playwright-api-automation/SKILL.md")
+        self.assertIn("ins-lifeguardian-playwright-api-automation", agents)
+        self.assertIn("route to `ins-lifeguardian-playwright-api-automation`", analyst)
         self.assertIn("Do not invent endpoints", api_skill)
         self.assertIn("environment variables", api_skill)
         self.assertIn("Could Not Automate", api_skill)
-        self.assertIn("Do not add dependencies silently", api_skill)
+        self.assertIn("Do not add dependencies or a second framework silently", api_skill)
+        self.assertIn("must not create Web tests", api_skill)
 
     def test_workflow_prompt_templates_exist(self):
         for relative in (

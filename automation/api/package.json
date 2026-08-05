@@ -1,0 +1,28 @@
+{
+  "name": "ins-lifeguardian-playwright-api-automation",
+  "version": "1.0.0",
+  "private": true,
+  "description": "API-only Playwright automation for approved INS LifeGuardian QA cases.",
+  "engines": {
+    "node": ">=22"
+  },
+  "scripts": {
+    "typecheck": "tsc --noEmit",
+    "test:list": "playwright test --list --pass-with-no-tests",
+    "test": "node scripts/validate-environment.mjs && playwright test",
+    "test:smoke": "node scripts/validate-environment.mjs && playwright test --project api-smoke",
+    "test:regression": "node scripts/validate-environment.mjs && playwright test --project api-regression",
+    "test:case": "node scripts/run-target.mjs case",
+    "test:ticket": "node scripts/run-target.mjs ticket",
+    "validate:secrets": "node scripts/check-secrets.mjs",
+    "validate:traceability": "node scripts/check-traceability.mjs",
+    "validate:automation": "node scripts/validate-automation.mjs",
+    "validate": "npm run typecheck && npm run validate:secrets && npm run validate:traceability && npm run validate:automation && npm run test:list",
+    "report:summary": "node scripts/summarize-results.mjs"
+  },
+  "devDependencies": {
+    "@playwright/test": "1.61.1",
+    "@types/node": "22.15.30",
+    "typescript": "5.8.3"
+  }
+}

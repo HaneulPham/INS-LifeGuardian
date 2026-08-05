@@ -8,21 +8,16 @@ When sources conflict, Codex must record the conflict and request clarification 
 
 ## How Codex should use this knowledge
 
-Before analyzing a ticket or writing test cases, Codex must check relevant files in this order:
+Use targeted retrieval; do not preload every file.
 
-1. `qa-knowledge/index.md`
-2. `qa-knowledge/product/product-map.md`
-3. Related module file under `qa-knowledge/product/modules/`
-4. Existing ticket requirement under `qa-knowledge/requirements/`
-5. Existing test cases under `qa-knowledge/test-cases/`
-6. `qa-knowledge/regression/regression-map.md`
-7. `qa-knowledge/decisions/decision-log.md`
+1. Start with supplied/current ticket evidence.
+2. For a known ticket, open `ticket-index.md`, then only its linked requirement and test-case files.
+3. Open `product-map.md` and one relevant module only when product context is needed.
+4. Open the regression map only for shared-impact work.
+5. Open the decision log only for prior decisions or conflicts.
+6. Open the API automation map only for automation status work.
 
-Codex must not invent product behavior if the knowledge base does not contain it.
-If behavior is missing, mark it as:
-- Requirement gap
-- QA assumption
-- Question for BA/Dev
+Do not invent missing product behavior. Record it as a requirement gap, QA assumption, or BA/Dev question as appropriate.
 
 ## Main Product Areas
 
@@ -77,3 +72,9 @@ A ticket may be marked `Completed` in `ticket-index.md` only when:
 ## Decision Knowledge
 
 - Confirmed BA/Dev/QA decisions: `qa-knowledge/decisions/decision-log.md`
+
+## API Automation Knowledge
+
+- API automation map: `qa-knowledge/automation/api-automation-map.md`
+- Executable framework: `automation/api/`
+- API automation is separate from manual test-case approval and future Web automation.

@@ -37,7 +37,7 @@ Prompt-size drift is checked by `scripts/check_prompt_budget.py` and CI. Behavio
 5. Use `write test cases for G1`, `review test cases`, and `next` for controlled case development.
 6. Use `write test cases for all groups` only when a complete suite is required.
 7. Use `Update test cases to Second Brain` with supplied Confluence cases to review, normalize, and directly update the Second Brain.
-8. Use `write a bug` for a Jira defect and `write API automation` for approved API-case implementation.
+8. Use `write a bug` for a Jira defect. Use the dedicated Playwright API command chain for approved API automation; Web automation will be built separately later.
 9. Search only relevant Second Brain files; run validators after stored changes.
 
 ## Canonical Workflow Commands
@@ -50,7 +50,12 @@ Prompt-size drift is checked by `scripts/check_prompt_budget.py` and CI. Behavio
 | `review test cases` | Apply the complete case quality gate | Rewrite unrelated cases |
 | `Update test cases to Second Brain` | Retrieve supplied Confluence cases, review, normalize, and update relevant Second Brain files | Invent behaviour or bypass safety/validation gates |
 | `write a bug` | Produce one Jira-ready bug | Claim unsupported root cause |
-| `write API automation` | Implement approved API cases | Invent contracts or silently add a framework |
+| `write API automation for <IDs>` | Implement approved cases in the API-only Playwright project | Create Web tests or invent contracts |
+| `review API automation` | Apply the API automation quality gate | Change approved behavior to make code pass |
+| `run API automation for <scope>` | Execute the narrowest API target | Use production or claim blocked execution passed |
+| `debug API automation failure` | Classify from execution evidence | Assume every failure is a product defect |
+| `fix API automation` | Fix proven automation defects | Weaken approved assertions |
+| `update API automation mapping` | Synchronize automation status after evidence | Change manual case approval |
 
 After a substantive result, Codex may show exactly one context-aware `Suggested next command:` line. It must not display a generic command menu or suggest storage before cases pass review.
 
@@ -120,6 +125,11 @@ It stores reusable INS LifeGuardian QA knowledge.
 * `qa-knowledge/test-cases/SMAR/` — approved SMAR test cases
 * `qa-knowledge/test-cases/MA/` — approved MA test cases
 
+### Automation Knowledge
+
+* `qa-knowledge/automation/api-automation-map.md` — manual-case to Playwright API automation status
+* `automation/api/mappings/automation-map.json` — executable mapping validated by the API project
+
 ### Regression and Decisions
 
 * `qa-knowledge/regression/regression-map.md` — reusable regression impact and coverage
@@ -136,6 +146,10 @@ It stores reusable INS LifeGuardian QA knowledge.
 * `qa-knowledge/templates/update-second-brain-prompt.md`
 * `qa-knowledge/templates/write-bug-prompt.md`
 * `qa-knowledge/templates/write-api-automation-prompt.md`
+* `qa-knowledge/templates/review-api-automation-prompt.md`
+* `qa-knowledge/templates/run-api-automation-prompt.md`
+* `qa-knowledge/templates/debug-api-automation-prompt.md`
+* `qa-knowledge/templates/update-api-automation-mapping-prompt.md`
 
 The QA Second Brain is a reusable supporting knowledge base. Current Jira requirements, confirmed decisions, verified API contracts, current implementation evidence, and verified product behaviour take precedence.
 
@@ -157,13 +171,14 @@ Use this skill for:
 * Bug reports
 * QA feedback review
 
-### INS LifeGuardian API Automation
+### INS LifeGuardian Playwright API Automation
 
-Location:
+Locations:
 
-`.agents/skills/ins-lifeguardian-api-automation/`
+- `.agents/skills/ins-lifeguardian-playwright-api-automation/`
+- `automation/api/`
 
-Use this skill only to implement or update approved API automation using the repository's existing framework, safe data, and exact contracts.
+Use this API-only skill and TypeScript framework to write, review, run, debug, fix, and map approved API automation. It uses standalone Playwright request contexts, safe non-production environments, isolated data, cleanup, exact traceability, and CI validation. Browser/Web automation is intentionally excluded and will be a separate future project.
 
 ### INS LifeGuardian QA Librarian
 

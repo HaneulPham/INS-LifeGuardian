@@ -18,3 +18,18 @@ Every requirement and module knowledge file must include a `Knowledge Status` ta
 | Knowledge Item | Source Status | Source / Evidence | Last Updated | Notes |
 |---|---|---|---|---|
 | <item or section> | <supported status> | <ticket, decision, evidence, or observation> | <YYYY-MM-DD> | <context> |
+
+## API Automation Statuses
+
+These statuses apply only to `qa-knowledge/automation/api-automation-map.md` and the executable API mapping:
+
+| Status | Meaning |
+|---|---|
+| Candidate | Approved manual API case appears suitable but is not implemented. |
+| Automated | Implemented, validated, and mapped; last execution is recorded when available. |
+| Partially Automated | Deterministic supported portion is automated; manual remainder is stated. |
+| Blocked | Missing contract, access, data, environment, dependency, or instrumentation blocks implementation/execution. |
+| Not Suitable | Safe deterministic API automation is inappropriate; reason is recorded. |
+| Maintenance Required | Existing automation needs repair or contract-aligned update before reliable use. |
+
+Automation status never changes the manual test case's approval or requirement status.

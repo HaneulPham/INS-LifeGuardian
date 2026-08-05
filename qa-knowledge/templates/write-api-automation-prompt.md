@@ -1,13 +1,12 @@
-# Write API Automation Command
+# Write Playwright API Automation Command
 
 ```text
-write API automation
+write API automation for <approved case IDs or ticket ID>
 
-Automate the approved API test cases for the active INS LifeGuardian ticket using the repository's existing automation framework and patterns.
-Inspect only the exact cases, contracts, routes, auth, helpers, fixtures, nearby tests, and CI configuration required.
+Use the separate API-only framework under automation/api and the ins-lifeguardian-playwright-api-automation skill.
+Read only the requested approved cases, exact contracts/implementation, nearby automation, fixtures, helpers, mapping, and CI settings.
 
-Map automation to source case IDs. Use safe non-production data, environment variables for secrets, deterministic setup/cleanup, and exact evidence-backed assertions. Run the narrow affected tests and required lint/type checks.
-
-Do not invent endpoints or expected responses, add a new framework silently, automate unsafe or unobservable scenarios, or claim execution passed when blocked.
-Report automated IDs, files changed, commands/results, deferred manual cases, required environment-variable names, cleanup, and remaining concerns.
+Create TypeScript Playwright API tests with APIRequestContext, exact traceability, safe non-production data, environment-variable credentials, deterministic cleanup, and evidence-backed assertions.
+Do not create Web/browser automation, invent contracts, silently add another framework, use production data, or weaken approved behavior.
+Run static validation and the narrowest executable tests; report actual results, blockers, required variable names, and remaining concerns.
 ```
