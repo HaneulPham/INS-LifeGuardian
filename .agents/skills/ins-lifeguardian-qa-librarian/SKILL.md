@@ -7,9 +7,11 @@ description: Maintain the INS LifeGuardian QA Second Brain, including approved r
 
 Maintain `qa-knowledge/` as concise, searchable, evidence-backed product knowledge. Store only supported requirements, rules, cases, decisions, and regression relationships. Never invent behaviour or expose credentials, production secrets, patient/client information, or private health information.
 
-## Required evidence review
+## Direct command and evidence review
 
-Before proposing or applying an update, read:
+`Update test cases to Second Brain` is direct authorization to retrieve, review, normalize, and store the supplied Confluence test cases. Do not require another approval phrase. Infer the ticket from the page, case IDs, or active context; ask only if it cannot be identified safely.
+
+Before applying an update, read only relevant evidence:
 
 1. `qa-knowledge/config.yml`
 2. `qa-knowledge/index.md`, `ticket-index.md`, and `status-glossary.md`
@@ -24,26 +26,30 @@ Check for duplicate and conflicting behaviour or cases. Do not duplicate coverag
 
 Use only **Confirmed**, **QA Assumption**, **Open Question**, **Out of Scope**, **Deprecated**, and **Conflict** as defined by the glossary. Every requirement and module file must contain the canonical `Knowledge Status` table with source/evidence and `Last Updated`. Never promote an assumption or question without confirming evidence, and never overwrite a Confirmed conflict silently.
 
-## Approval and auto-apply gate
+## Direct execution and auto-apply gate
 
-The automatic workflow begins only when the user says exactly:
+The workflow begins when the user says `Update test cases to Second Brain` and supplies Confluence content or a retrievable page. Retrieve it using the configured Atlassian tools, sanitize a local proposed-content file, and review it before any write.
 
-`Approve and Update the QA Second Brain for ticket <Ticket ID>`
-
-If `automation.auto_apply_second_brain_updates` is false, prepare a proposed update and wait. If true, run the machine preflight before backups or writes:
+If `automation.auto_apply_second_brain_updates` is false, prepare the reviewed proposal and report that automatic writes are disabled. If true, run preflight before backups or writes:
 
 ```bash
 python3 scripts/second_brain_preflight.py \
-  --approval-phrase "Approve and Update the QA Second Brain for ticket <Ticket ID>" \
-  --ticket <Ticket ID> \
-  --proposed-file <sanitized-proposed-content>
+  --approval-phrase "Update test cases to Second Brain" \
+  --ticket <inferred-ticket-id> \
+  --proposed-file <sanitized-reviewed-content>
 ```
 
 Use `--migration` only when the user explicitly requests migration and the approved source requirement/case content is available. A normal approval must stop on migration placeholders.
 
 For a new ticket whose target files do not exist, run the same command with `--create-ticket`. This mode requires sanitized proposed content, rejects an existing target or ticket-index row, verifies the base directories and approved templates, and remains read-only. Without `--create-ticket`, missing targets must fail.
 
-The preflight enforces the configured exact phrase, ticket format, clean worktree, target existence, open migration, Conflict status, sensitive-content block, ignored backup destination, and enabled flags. When it fails, make no Second Brain changes. Do not stash, discard, stage, commit, overwrite unrelated work, bypass strict checks with `--allow-empty`, or echo sensitive values.
+The preflight enforces the direct command phrase, ticket format, clean worktree, target/create mode, sensitive-content block, ignored backup destination, and enabled flags. Preserve evidence-backed Conflict/GAP records and keep the ticket incomplete while updating unrelated valid content. When it fails, make no Second Brain changes. Do not stash, discard, stage, commit, overwrite unrelated work, bypass strict checks with `--allow-empty`, or echo sensitive values.
+
+## Review and normalization before storage
+
+Review supplied cases against the complete case quality gate. Safe corrections may include formatting, grammar, IDs, group ranges, High/Medium/Low priorities, `Verify ` titles, reproducible steps, observable outcomes, traceability formatting, duplicate consolidation, indexes, and counts. Do not silently change product behaviour, contracts, roles, messages, status codes, integrations, or expected states.
+
+For each case classify Add, Update, Merge, Remove, Retain, Defer, or Could Not Verify. Before Merge/Remove, prove that no unique requirement, risk, role, platform, boundary, integration state, failure mode, evidence type, or outcome is lost. Preserve unresolved conflicts and update unaffected valid cases.
 
 ## Safe update transaction
 
@@ -74,7 +80,7 @@ Mark a ticket `Completed` only when:
 - The requirement has a valid Knowledge Status table.
 - Applicable confirmed decisions and regression impacts are logged, or the requirement explicitly says `None` for non-applicable sections.
 
-## Approval workflow output
+## Direct-update output
 
 After a successful update, report:
 

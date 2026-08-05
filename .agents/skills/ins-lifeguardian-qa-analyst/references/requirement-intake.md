@@ -1,200 +1,85 @@
 # Automatic Requirement Intake
 
-## Purpose
+Use when the user supplies INS LifeGuardian requirement evidence without requesting another specific output. The goal is a useful first review, not an exhaustive report.
 
-Automatically analyse supplied INS LifeGuardian requirement evidence and guide the user toward the next useful QA action. Use this mode when the user supplies a description, screenshot, Jira ticket, acceptance criteria, comment, file, API example, log, bug, reviewer feedback, or other feature evidence without a more specific command.
+## Default concise output
 
-## Required Output
-
-Use this structure, omitting only subsections that are genuinely irrelevant:
+Omit empty sections.
 
 ```markdown
-# Requirement Intake — <Ticket ID or Feature Name>
-
-## Evidence Received
-
-- ...
-
-### Could Not Verify
-
-- ...
-
-### Conflicting Evidence
-
-- ...
-
-### QA Assumptions
-
-- ...
-
-### Requirement Traceability
-
-| Material Behaviour | Source / Evidence | Status |
-|---|---|---|
-| ... | ... | Confirmed / QA Assumption / Open Question / Conflict |
+# Requirement Intake — <Ticket ID or Feature>
 
 ## Requirement Summary
+- <confirmed or stated behaviour>
 
-...
+## Material QA Findings
+- <important workflow, validation, data, API, integration, permission, privacy, job, notification, audit, historical-data, recovery, or regression finding>
 
-## QA Analysis
+## Blocking or Material Questions
+Q1. <one concrete decision>
+- A. <behaviour>
+- B. <behaviour>
+- C. Other – specify
 
-### Business Workflow
+## Proposed Test Groups
+| Group | Coverage Area | Key Expected Behaviours | Priority | Readiness |
+|---|---|---|---|---|
 
-...
-
-### Validation and Data Rules
-
-...
-
-### Backend and Integration Impact
-
-...
-
-### Regression Impact
-
-...
-
-## Missing Requirements and Questions
-
-### Critical
-
-1. ...
-
-### Important
-
-1. ...
-
-### Optional
-
-1. ...
-
-## Risks and Impact
-
-| Risk | Impact | Area | Priority |
-|---|---|---|---|
-
-## Suggested Test Case Groups
-
-| Group | Test Area | Coverage | Priority Focus |
-|---|---|---|---|
-| Group 1 | ... | ... | High |
-
-## Suggested Next Prompts
-
-- `Write detailed test cases for Group 1 only.`
+## Evidence Limitations and Assumptions
+- **Could Not Verify:** ...
+- **QA Assumption A1:** ...
+- **Conflict:** ...
 ```
 
-### 1. Evidence Received
+Do not include generic next-prompt lists. One context-aware `Suggested next command:` line is allowed when the next action is clear. Do not generate detailed test cases unless explicitly requested.
 
-List the evidence reviewed, such as the ticket description, acceptance criteria, screenshots, Jira comments, API documentation, existing QA knowledge, and reviewer feedback. Always state **Could Not Verify** and **QA Assumptions**; add **Conflicting Evidence** when sources disagree. Do not present assumptions as confirmed behaviour.
+## Intake analysis rules
 
-For screenshots, record visible fields, labels, controls, values, states, navigation, validation, and errors as evidence. Treat persistence, integration, off-screen behaviour, and hidden or unreadable details as unverified unless another source confirms them. Use the Requirement Traceability table for material rules when multiple sources, assumptions, or conflicts affect the review.
+1. Separate stated/confirmed behaviour from QA inference.
+2. Extract atomic requirements only when traceability materially helps; use `R1...Rn`.
+3. Record the most precise source available: acceptance criterion, ticket paragraph, dated comment, screenshot, API section, decision, or verified repository evidence.
+4. Use **Could Not Verify** only when missing evidence affects a conclusion or testability.
+5. Name conflicting sources and behavioural differences; do not choose silently.
+6. Ask only blocking or material questions. Use the question-decision workflow for multiple options and recommendations.
+7. Propose non-overlapping groups; list exact expected behaviours rather than test-case titles.
+8. Mark group readiness `Ready`, `Pending Decision`, or the specific blocker.
+9. Use `Estimated` or `TBD`; do not invent exact case ranges before design.
+10. Do not repeat background already established in the active ticket.
 
-### 2. Requirement Summary
+## Requirement Traceability
 
-Summarize the business intent, affected platform and module, actor, trigger, main behaviour, important validation, confirmed errors or messages, and expected stored or downstream result. Make the summary understandable without rereading the supplied evidence.
+Use this only for multi-rule, disputed, safety-critical, integration-heavy, or formal reviews.
 
-### 3. QA Analysis
+| Requirement ID | Material Behaviour | Source / Evidence | Status | Proposed Group |
+|---|---|---|---|---|
+| R1 | ... | ... | Stated / Confirmed / Pending Decision | G1 |
 
-Analyse only applicable areas:
+Keep separate identifiers for decisions (`D`), assumptions (`A`), risks (`RK`), gaps (`GAP`), and groups (`G`). Never place a QA assumption or risk inside an `R` requirement.
 
-- Positive, negative, retry, cancel, create, edit, delete, and reorder workflows
-- Boundary values; required and optional fields; null, blank, whitespace, duplicate, and malformed values
-- Roles, permissions, backend/API behaviour, persistence, and data integrity
-- Jobs, queues, schedules, notifications, alerts, audit/history/logs, and reports
-- External integrations and cross-platform synchronization
-- Existing-data compatibility, upgrade, and migration impact
-- Offline/network failures, concurrency, duplicate submissions, and idempotency
-- Accessibility, production risk, and client-safety risk
+## Deep intake override
 
-Do not create artificial risks to fill the list or claim unverified root causes and downstream behaviour.
+For `analytics`, “formal review,” or an explicit full analysis, expand only applicable areas:
 
-### 4. Missing Requirements and Questions
+- business workflow and state transitions;
+- validation/data rules;
+- API, persistence, auth, permission, tenant and privacy impact;
+- integrations, jobs/queues, notifications, reports, audit/history;
+- failure/retry/recovery, historical data, migration and compatibility;
+- regression/shared-component impact;
+- evidence reviewed, conflicts, assumptions, gaps and risks.
 
-Group decision-ready questions as:
+Do not create headings merely to say “none.”
 
-- **Critical**: Prevent reliable implementation, testing, security, or safety validation.
-- **Important**: Affect expected behaviour, integration, regression, or coverage.
-- **Optional**: Improve usability or completeness without blocking the main workflow.
+## Screenshot and log evidence
 
-Answer questions from available evidence rather than asking the user again. For unresolved decisions, use `question-decision-workflow.md`: ask one decision per question, provide concrete selectable behaviours, explain why it matters, include `Other – specify`, and recommend an option only when a safe evidence-backed default exists.
+For screenshots, distinguish visible fields, controls, values, states, navigation, and errors from off-screen inference. Record cropped, hidden, or unreadable details only when material.
 
-### 5. Risks and Impact
+For logs/errors, describe the observed failure and identifiers. Do not claim root cause without repository, runtime, API, database, or developer evidence.
 
-Identify applicable business, client-safety, data-loss, duplicate-processing, notification/alarm, permission/privacy, integration, regression, backward-compatibility, and operational/support risks. State the affected platform or module and assign only justified priorities.
+## Restrictions
 
-### 6. Suggested Test Case Groups
-
-Propose logical groups without detailed test cases. For each group give its number, name, coverage objective, key scenarios, priority focus, and dependencies when applicable. Avoid overlap and scenarios duplicated only by wording, data, or navigation.
-
-### 7. Suggested Next Prompts
-
-End initial intake with a small, contextual set of copy-and-send prompts. Use only prompts relevant to the evidence.
-
-Select from or adapt this command pool when applicable:
-
-- `Deep analyse this requirement before test design.`
-- `Review the missing requirements and propose expected behaviour.`
-- `Compare this requirement with the QA Second Brain.`
-- `Review backend, API, database, and integration impact.`
-- `Review roles and permission impact.`
-- `Review regression and cross-platform impact.`
-- `Write detailed test cases for Group 1 only.`
-- `Show sample data for the proposed test groups.`
-- `Create an API test coverage matrix.`
-- `Create a regression coverage matrix.`
-- `Write a bug report from this evidence.`
-- `Summarize the final approved requirement.`
-
-For a new feature, prefer prompts such as:
-
-- `Deep analyse the missing requirements before test design.`
-- `Write detailed test cases for Group 1 only.`
-- `Review backend, API, and database impact.`
-- `Review regression and cross-platform impact.`
-
-For a screenshot, prefer:
-
-- `Analyse every visible field and interaction in this screenshot.`
-- `Compare this screen with the ticket requirement.`
-- `Propose validation and negative scenarios.`
-- `Write detailed test cases for Group 1 only.`
-
-For an API description, prefer:
-
-- `Create the API test coverage matrix.`
-- `Review authentication and permission scenarios.`
-- `Review validation, persistence, duplicate, and idempotency behaviour.`
-- `Review UI, API, and database consistency.`
-
-For reviewer feedback, prefer:
-
-- `Evaluate whether the reviewer feedback is valid.`
-- `Identify which existing cases must be updated, merged, or removed.`
-- `Show the proposed changes before rewriting the cases.`
-- `Update Group 2 using the approved reviewer feedback.`
-
-For a bug report, prefer:
-
-- `Write a production-ready bug report.`
-- `Analyse likely regression areas without claiming an unverified root cause.`
-- `Propose focused reproduction and diagnostic checks.`
-- `Identify related existing ticket coverage.`
-
-When all cases are finished, prefer:
-
-- `Summarize the final approved requirement.`
-- `List all approved test groups and final case counts.`
-- `Identify removed, merged, cancelled, and superseded cases.`
-- `Approve and Update the QA Second Brain for ticket SMAR-XXXX`
-
-Do not suggest the Second Brain approval command until the requirement and cases appear final or the user indicates approval.
-
-## Default Restrictions
-
-- Do not write all detailed test cases during intake.
-- Do not save anything to the QA Second Brain without the exact approval command.
-- Do not ask the user to repeat evidence already available in the conversation, Jira, attachments, screenshots, or QA knowledge.
-- Do not claim a screenshot proves backend persistence or integration behaviour.
-- Do not treat reviewer suggestions as approved requirements without confirmation.
+- No invented product, clinical, legal, privacy, security, permission, provider, or integration rules.
+- No executable expected result for unresolved behaviour.
+- No broad integration/non-trigger list unless the action can plausibly reach those components.
+- No unnecessary personal, medical, contact, authentication, or tenant data.
+- No full Second Brain scan; use targeted retrieval from `AGENTS.md` and the Analyst skill.

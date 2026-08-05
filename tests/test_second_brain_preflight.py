@@ -67,7 +67,7 @@ class PreflightTests(unittest.TestCase):
             proposal.write_text("Sanitized approved content\n", encoding="utf-8")
             self.write_config(root)
             self.initialize_git(root)
-            phrase = "Approve and Update the QA Second Brain for ticket SMAR-100"
+            phrase = "Update test cases to Second Brain"
             self.assertEqual([], preflight.evaluate(root, phrase, "SMAR-100", [proposal], migration=False))
 
     def test_create_ticket_mode_accepts_new_ticket_with_templates(self):
@@ -86,7 +86,7 @@ class PreflightTests(unittest.TestCase):
             proposal.write_text("Sanitized approved content\n", encoding="utf-8")
             self.write_config(root)
             self.initialize_git(root)
-            phrase = "Approve and Update the QA Second Brain for ticket SMAR-3000"
+            phrase = "Update test cases to Second Brain"
             issues = preflight.evaluate(root, phrase, "SMAR-3000", [proposal], migration=False, create_ticket=True)
             self.assertEqual([], issues)
             requirement, test_cases = preflight.ticket_paths(root, "SMAR-3000")
@@ -109,9 +109,79 @@ class PreflightTests(unittest.TestCase):
             proposal.write_text("Sanitized approved content\n", encoding="utf-8")
             self.write_config(root)
             self.initialize_git(root)
-            phrase = "Approve and Update the QA Second Brain for ticket SMAR-3000"
+            phrase = "Update test cases to Second Brain"
             issues = preflight.evaluate(root, phrase, "SMAR-3000", [proposal], migration=False, create_ticket=True)
             self.assertTrue(any("already exists" in issue for issue in issues))
+
+    def test_direct_command_phrase_is_case_insensitive(self):
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            requirement = root / "qa-knowledge/requirements/SMAR/SMAR-104.md"
+            test_cases = root / "qa-knowledge/test-cases/SMAR/SMAR-104.md"
+            requirement.parent.mkdir(parents=True)
+            test_cases.parent.mkdir(parents=True)
+            requirement.write_text("# Requirement\n", encoding="utf-8")
+            test_cases.write_text("# Cases\n", encoding="utf-8")
+            proposal = root / "proposal.md"
+            proposal.write_text("Reviewed content\n", encoding="utf-8")
+            self.write_config(root)
+            self.initialize_git(root)
+            issues = preflight.evaluate(root, "update test cases to second brain", "SMAR-104", [proposal], migration=False)
+            self.assertEqual([], issues)
+
+    def test_old_two_step_approval_phrase_is_rejected(self):
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            requirement = root / "qa-knowledge/requirements/SMAR/SMAR-101.md"
+            test_cases = root / "qa-knowledge/test-cases/SMAR/SMAR-101.md"
+            requirement.parent.mkdir(parents=True)
+            test_cases.parent.mkdir(parents=True)
+            requirement.write_text("# Requirement\n", encoding="utf-8")
+            test_cases.write_text("# Cases\n", encoding="utf-8")
+            proposal = root / "proposal.md"
+            proposal.write_text("Reviewed content\n", encoding="utf-8")
+            self.write_config(root)
+            self.initialize_git(root)
+            issues = preflight.evaluate(
+                root,
+                "Approve and Update the QA Second Brain for ticket SMAR-101",
+                "SMAR-101",
+                [proposal],
+                migration=False,
+            )
+            self.assertTrue(any("direct update command phrase" in issue for issue in issues))
+
+    def test_existing_conflict_does_not_block_unrelated_reviewed_update(self):
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            requirement = root / "qa-knowledge/requirements/SMAR/SMAR-102.md"
+            test_cases = root / "qa-knowledge/test-cases/SMAR/SMAR-102.md"
+            requirement.parent.mkdir(parents=True)
+            test_cases.parent.mkdir(parents=True)
+            requirement.write_text("| Rule | Conflict |\n", encoding="utf-8")
+            test_cases.write_text("# Cases\n", encoding="utf-8")
+            proposal = root / "proposal.md"
+            proposal.write_text("Reviewed unrelated valid case\n", encoding="utf-8")
+            self.write_config(root)
+            self.initialize_git(root)
+            issues = preflight.evaluate(root, "Update test cases to Second Brain", "SMAR-102", [proposal], migration=False)
+            self.assertEqual([], issues)
+
+    def test_proposed_conflict_is_blocked(self):
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            requirement = root / "qa-knowledge/requirements/SMAR/SMAR-103.md"
+            test_cases = root / "qa-knowledge/test-cases/SMAR/SMAR-103.md"
+            requirement.parent.mkdir(parents=True)
+            test_cases.parent.mkdir(parents=True)
+            requirement.write_text("# Requirement\n", encoding="utf-8")
+            test_cases.write_text("# Cases\n", encoding="utf-8")
+            proposal = root / "proposal.md"
+            proposal.write_text("| Rule | Conflict |\n", encoding="utf-8")
+            self.write_config(root)
+            self.initialize_git(root)
+            issues = preflight.evaluate(root, "Update test cases to Second Brain", "SMAR-103", [proposal], migration=False)
+            self.assertTrue(any("proposed content contains unresolved Conflict" in issue for issue in issues))
 
 
 if __name__ == "__main__":

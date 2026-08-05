@@ -17,25 +17,44 @@ This workspace helps Codex and QA team members:
 
 ## Codex Behaviour Standard
 
-The repository now uses an approved detailed-case pattern based on SMAR-2633. The behaviour architecture and evaluation workflow are documented in `docs/codex-qa-behavior.md`. Manual model-behaviour checks are available in `qa-evals/codex-behavior-evals.md`.
+The Codex architecture uses progressive disclosure: `AGENTS.md` contains only always-on safety and workflow rules; the Analyst skill routes to task-specific references; QA Second Brain files are searched and opened only when relevant. This preserves ChatGPT-style QA behaviour while reducing repeated prompt context.
 
-Detailed case generation must use:
+Detailed case generation normally uses:
 
 - `.agents/skills/ins-lifeguardian-qa-analyst/references/test-case-style.md`
 - `.agents/skills/ins-lifeguardian-qa-analyst/references/test-case-quality-gate.md`
-- `.agents/skills/ins-lifeguardian-qa-analyst/references/examples/SMAR-2633-approved-test-case-pattern.md`
-- `.agents/skills/ins-lifeguardian-qa-analyst/references/reviewer-feedback.md` for Rovo/BA/Dev/user feedback
+
+Approved examples are loaded only for explicit comparison, format uncertainty, or drift review. They are not mandatory context for every test-case request.
+
+Prompt-size drift is checked by `scripts/check_prompt_budget.py` and CI. Behaviour scenarios remain in `qa-evals/codex-behavior-evals.md`.
 
 ## How to Use This Repository
 
-1. Read `AGENTS.md` before performing INS LifeGuardian QA work.
-2. Use the appropriate skill under `.agents/skills/`.
-3. Review the relevant QA Second Brain files under `qa-knowledge/`.
-4. Complete requirement, risk, integration, and regression analysis before generating detailed test cases.
-5. Generate detailed test cases only when explicitly requested.
-6. Write one test-case group at a time and wait for review before continuing, unless the user explicitly requests all groups or a complete suite.
-7. Run the QA validator after creating or updating stored test cases.
-8. Update the QA Second Brain only through the approved QA librarian workflow.
+1. Start Codex from the repository root so `AGENTS.md` and project skills are discovered.
+2. Supply the Jira ticket, screenshots, acceptance criteria, comments, API details, logs, or review feedback.
+3. Let concise intake use the supplied evidence first.
+4. Use `analytics` for deep ticket QA analysis without detailed test cases.
+5. Use `write test cases for G1`, `review test cases`, and `next` for controlled case development.
+6. Use `write test cases for all groups` only when a complete suite is required.
+7. Use `Update test cases to Second Brain` with supplied Confluence cases to review, normalize, and directly update the Second Brain.
+8. Use `write a bug` for a Jira defect and `write API automation` for approved API-case implementation.
+9. Search only relevant Second Brain files; run validators after stored changes.
+
+## Canonical Workflow Commands
+
+| Command | Purpose | Must not do |
+|---|---|---|
+| `analytics` | Any material ticket QA analysis | Detailed test-case rows or file writes |
+| `write test cases for G#` | Write one approved group | Continue to another group unless requested |
+| `write test cases for all groups` | Write the approved complete suite | Invent unresolved behaviour |
+| `review test cases` | Apply the complete case quality gate | Rewrite unrelated cases |
+| `Update test cases to Second Brain` | Retrieve supplied Confluence cases, review, normalize, and update relevant Second Brain files | Invent behaviour or bypass safety/validation gates |
+| `write a bug` | Produce one Jira-ready bug | Claim unsupported root cause |
+| `write API automation` | Implement approved API cases | Invent contracts or silently add a framework |
+
+After a substantive result, Codex may show exactly one context-aware `Suggested next command:` line. It must not display a generic command menu or suggest storage before cases pass review.
+
+Prompt examples are under `qa-knowledge/templates/`.
 
 ## Evidence Priority
 
@@ -111,6 +130,12 @@ It stores reusable INS LifeGuardian QA knowledge.
 * `qa-knowledge/templates/requirement-template.md`
 * `qa-knowledge/templates/test-case-template.md`
 * `qa-knowledge/templates/weekly-cleanup-report-template.md`
+* `qa-knowledge/templates/analytics-prompt.md`
+* `qa-knowledge/templates/write-test-case-group-prompt.md`
+* `qa-knowledge/templates/review-test-cases-prompt.md`
+* `qa-knowledge/templates/update-second-brain-prompt.md`
+* `qa-knowledge/templates/write-bug-prompt.md`
+* `qa-knowledge/templates/write-api-automation-prompt.md`
 
 The QA Second Brain is a reusable supporting knowledge base. Current Jira requirements, confirmed decisions, verified API contracts, current implementation evidence, and verified product behaviour take precedence.
 
@@ -132,6 +157,14 @@ Use this skill for:
 * Bug reports
 * QA feedback review
 
+### INS LifeGuardian API Automation
+
+Location:
+
+`.agents/skills/ins-lifeguardian-api-automation/`
+
+Use this skill only to implement or update approved API automation using the repository's existing framework, safe data, and exact contracts.
+
 ### INS LifeGuardian QA Librarian
 
 Location:
@@ -150,26 +183,19 @@ Use this skill for:
 
 ## Standard QA Workflow
 
-For requirement, Jira, BA, Dev, screenshot, or API review:
+Codex follows the requested response mode rather than always producing the full workflow.
 
-1. Requirement Analysis
-2. Scope
-3. Missing Requirements and Gaps
-4. Risk Analysis
-5. Backend and Integration Impact
-6. Required Validations
-7. Questions grouped as Critical, Important, and Optional
-8. Proposed Test Case Coverage
+Default concise intake:
 
-Do not generate detailed test cases unless the user explicitly requests a group.
+1. Requirement Summary
+2. Material QA Findings
+3. Blocking or material Questions
+4. Proposed Test Groups
+5. Evidence limitations or assumptions only when present
 
-When detailed cases are requested:
+Use `analytics` for a deeper review of applicable workflow, validation, data, API, permissions, privacy, integrations, jobs, notifications, audit, historical data, recovery, and regression. Empty or irrelevant sections are omitted.
 
-1. Check existing requirements and test cases.
-2. Avoid duplicate coverage.
-3. Write only the requested group and stop for review by default.
-4. Continue after the user says `next`, `next group`, or `go ahead`.
-5. When the user explicitly requests all groups or a complete suite, write all requested groups in order without review pauses.
+Detailed cases are generated only when requested. One group is returned by default; a clear complete-suite request generates all requested groups without intermediate pauses.
 
 ## INS LifeGuardian Coverage
 
@@ -224,6 +250,7 @@ After changing test cases or Second Brain knowledge, run:
 ```bash
 python3 scripts/validate_qa_test_cases.py
 python3 scripts/validate_qa_knowledge.py
+python3 scripts/check_prompt_budget.py
 python3 -m unittest discover -s tests -p "test_*.py"
 ```
 
@@ -244,33 +271,29 @@ Remove migration mode after approved cases have been stored. Do not treat stored
 
 The test-case validator supports UI/Mobile, API, and Regression matrices, including group/ID consistency, semantic wording, step sequences, HTTP methods/statuses, and potential duplicate titles. The knowledge validator covers Knowledge Status, ticket-index integrity, orphan files, migration/completion gates, and decision/regression log requirements.
 
-## QA Second Brain Approval
+## Direct QA Second Brain Update
 
-When the reviewed analysis and cases are ready to store, use:
+When approved or good test cases are supplied from Confluence, use:
 
 ```text
-Approve and Update the QA Second Brain for ticket <Ticket ID>
+Update test cases to Second Brain
 ```
 
-Codex will apply the behaviour defined in:
+This single command authorizes the Librarian workflow. Codex retrieves the supplied page/content, infers the ticket, reviews the cases, applies safe non-behavioural corrections, updates relevant Second Brain files and indexes, preserves history, and runs preflight, backups, strict validators, and tests. No second approval phrase is required.
 
-* `AGENTS.md`
-* `.agents/skills/ins-lifeguardian-qa-librarian/SKILL.md`
-* `qa-knowledge/config.yml`
-
-Before an automatic write, the Librarian runs `scripts/second_brain_preflight.py`. It enforces the configured approval, ticket, clean-worktree, migration, conflict, sensitive-content, backup-ignore, and target-file gates.
-
-For a genuinely new approved ticket, use the explicit read-only creation gate:
+The preflight remains machine-enforced:
 
 ```bash
 python3 scripts/second_brain_preflight.py \
-  --approval-phrase "Approve and Update the QA Second Brain for ticket SMAR-3000" \
+  --approval-phrase "Update test cases to Second Brain" \
   --ticket SMAR-3000 \
-  --proposed-file /tmp/SMAR-3000-approved.md \
+  --proposed-file /tmp/SMAR-3000-reviewed.md \
   --create-ticket
 ```
 
-After it passes, the Librarian creates the requirement and test-case files from the approved templates, adds the ticket index row, and runs both strict validators. The preflight itself never creates files.
+Use `--create-ticket` only when targets do not exist. Use `--migration` when approved Confluence content replaces known migration placeholders. The preflight itself never writes files.
+
+Safe corrections include formatting, IDs, High/Medium/Low priority, `Verify ` titles, reproducible steps, observable outcomes, traceability, duplicate consolidation, ranges, counts, and indexes. Codex must not invent or silently change product behaviour. Unsupported or conflicting items remain Could Not Verify, Open Question, Conflict, or GAP; unrelated supported updates continue.
 
 ## Repository Safety
 

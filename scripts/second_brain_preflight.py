@@ -128,9 +128,9 @@ def evaluate(
     if not TICKET_PATTERN.fullmatch(ticket):
         issues.append("ticket must match SMAR-<number> or MA-<number>")
         return issues
-    expected_phrase = f"Approve and Update the QA Second Brain for ticket {ticket}"
-    if settings.get("require_exact_approval_phrase") and approval_phrase != expected_phrase:
-        issues.append("exact approval phrase is missing or does not match the ticket")
+    expected_phrase = "Update test cases to Second Brain"
+    if settings.get("require_exact_approval_phrase") and approval_phrase.strip().casefold() != expected_phrase.casefold():
+        issues.append("direct update command phrase is missing or invalid")
 
     requirement, test_cases = ticket_paths(root, ticket)
     if create_ticket:
@@ -173,10 +173,11 @@ def evaluate(
         for path in existing_paths:
             if MIGRATION_PATTERN.search(path.read_text(encoding="utf-8")):
                 issues.append(f"open migration placeholder: {path.relative_to(root)}")
-    if settings.get("stop_on_conflict"):
-        for path in existing_paths:
-            if CONFLICT_ROW_PATTERN.search(path.read_text(encoding="utf-8")):
-                issues.append(f"unresolved Conflict status: {path.relative_to(root)}")
+    if settings.get("stop_on_conflict") and proposed_files:
+        resolved_proposals = [path if path.is_absolute() else root / path for path in proposed_files]
+        for path in resolved_proposals:
+            if path.is_file() and CONFLICT_ROW_PATTERN.search(path.read_text(encoding="utf-8")):
+                issues.append(f"proposed content contains unresolved Conflict status: {path}")
 
     if settings.get("block_sensitive_data"):
         if not proposed_files:

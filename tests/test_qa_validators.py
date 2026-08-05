@@ -70,6 +70,11 @@ class TestCaseValidatorTests(unittest.TestCase):
         issues, _ = self.validate("SMAR-100.md", self.ui_table(ui_row(priority="Critical")))
         self.assertTrue(any("invalid Priority" in issue.message for issue in issues))
 
+    def test_lowest_priority_is_rejected(self):
+        issues, _ = self.validate("SMAR-100.md", self.ui_table(ui_row(priority="Lowest")))
+        self.assertTrue(any("invalid Priority" in issue.message for issue in issues))
+        self.assertTrue(any("allowed: High, Medium, Low" in issue.message for issue in issues))
+
     def test_incorrect_ticket_prefix_is_rejected(self):
         issues, _ = self.validate("SMAR-100.md", self.ui_table(ui_row(tc_id="MA-100-G1-01")))
         self.assertTrue(any("prefix must match" in issue.message for issue in issues))

@@ -27,7 +27,7 @@ SCHEMAS = {
     "API": API_COLUMNS,
     "Regression": REGRESSION_COLUMNS,
 }
-ALLOWED_PRIORITIES = ("High", "Medium", "Low", "Lowest")
+ALLOWED_PRIORITIES = ("High", "Medium", "Low")
 ALLOWED_HTTP_METHODS = {"GET", "POST", "PUT", "PATCH", "DELETE"}
 VAGUE_PHRASES = (
     "works correctly",

@@ -16,7 +16,7 @@ Group as **Critical**, **Important**, and **Optional**. State what is missing, w
 
 ## 4. Risk Analysis
 
-Include only meaningful, evidence-supported risks. When useful, use High, Medium, Low, or Lowest. Cover consequence and affected consumers for safety, unauthorized access, tenant/data exposure, corruption or false persistence, missed or duplicate notifications, compatibility, platform inconsistency, deployment failure, jobs/queues, billing/reports, and observability.
+Include only meaningful, evidence-supported risks. When useful, use High, Medium, or Low. Cover consequence and affected consumers for safety, unauthorized access, tenant/data exposure, corruption or false persistence, missed or duplicate notifications, compatibility, platform inconsistency, deployment failure, jobs/queues, billing/reports, and observability.
 
 ## 5. Backend and Integration Impact
 

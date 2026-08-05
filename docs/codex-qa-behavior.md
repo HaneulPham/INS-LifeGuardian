@@ -1,50 +1,74 @@
 # Codex QA Behaviour Architecture
 
-This repository uses three layers to make Codex behave consistently as an INS LifeGuardian Senior QA Analyst.
+The repository uses progressive disclosure so Codex can preserve INS LifeGuardian QA depth without loading every instruction and knowledge file for every request.
 
-## 1. `AGENTS.md` — always-on project rules
+## 1. `AGENTS.md` — compact always-on contract
 
-Codex reads repository `AGENTS.md` before work begins. It contains the project-wide evidence gate, workflow routing, default one-group-at-a-time rule with explicit complete-suite override, title/ID conventions, question/decision handling, feedback handling, instrumentation/privacy/cleanup requirements, and Second Brain safety gates.
+`AGENTS.md` contains only project-wide gates: role, evidence priority, minimum-context retrieval, response selection, question/traceability rules, detailed-case essentials, privacy, and stored-knowledge safety.
 
-Keep `AGENTS.md` compact and use it for rules that must apply to every QA task.
+It must not require a full QA Second Brain scan or every reference/example on every task.
 
-## 2. QA Analyst skill — task-specific expertise
+## 2. Analyst skill — selective task router
 
-`.agents/skills/ins-lifeguardian-qa-analyst/` contains:
+`.agents/skills/ins-lifeguardian-qa-analyst/SKILL.md` maps each request to the smallest relevant reference set.
 
-- `SKILL.md` for routing and the high-level workflow;
-- reference files for intake, review, API, regression, bugs, detailed cases, feedback, and the quality gate;
-- approved examples that demonstrate the expected depth and format.
+Examples:
 
-The SMAR-2633 approved pattern is the primary detailed-case example. Update it when the user approves a materially better pattern.
+- concise evidence intake → `requirement-intake.md`;
+- formal review → `requirement-review.md`;
+- detailed cases → `test-case-style.md` plus `test-case-quality-gate.md`;
+- API, regression, bug, feedback, or questions → only the corresponding reference;
+- approved examples → only for explicit comparison, drift review, or format uncertainty.
 
-## 3. Validators and evals — drift protection
+The skill also defines targeted QA Second Brain retrieval. A known ticket opens its exact index links; module, regression, decision, and status files are loaded only when the task needs them.
 
-- `scripts/validate_qa_test_cases.py` checks IDs, priorities, group matching, title style, navigation, numbered steps, step references, API methods/statuses, vague wording, and duplicates.
+## 3. Response depth
+
+Default intake is intentionally lean:
+
+1. Requirement Summary
+2. Material QA Findings
+3. Blocking or material Questions
+4. Proposed Test Groups
+5. Material evidence limitations/assumptions, when present
+
+`analytics` requests the deep review. Detailed cases remain group-by-group by default, with an explicit complete-suite override.
+
+
+## Canonical command workflow
+
+The project recognizes `analytics`, `write test cases`, `review test cases`, `Update test cases to Second Brain`, `write a bug`, and `write API automation` as explicit workflow intents. Their strict boundaries live in `references/workflow-commands.md`; API implementation is isolated in the progressive-disclosure `ins-lifeguardian-api-automation` skill.
+
+Completion output may include one context-specific `Suggested next command:` line. Generic menus are prohibited, and Second Brain storage is not suggested until the requested cases pass review.
+
+## 4. Drift protection
+
+- `scripts/check_prompt_budget.py` limits prompt-surface growth and detects broad mandatory-load language.
+- `scripts/validate_qa_test_cases.py` validates IDs, priorities, titles, steps, outcomes, and duplicates.
 - `scripts/validate_qa_knowledge.py` protects Second Brain structure and status integrity.
-- `tests/` prevents validator and instruction regressions.
-- `qa-evals/codex-behavior-evals.md` provides manual model-behaviour scenarios that static validation cannot fully prove.
+- `tests/test_qa_behavior_contract.py` checks behavioural and token-efficiency contracts.
+- `qa-evals/codex-behavior-evals.md` covers model behaviours that static checks cannot prove.
 
 ## Recommended workflow
 
-1. Start Codex from the repository root so root `AGENTS.md` and `.agents/skills` are discovered.
-2. Provide the Jira ticket, link, screenshots, comments, or attachments.
-3. Let Automatic Requirement Intake produce analysis and groups.
-4. Use `Write detailed test cases for Group 1 only.`
-5. Review and correct the group.
-6. Use `next` for each approved group.
-7. Give Rovo/BA/Dev feedback; Codex first classifies Add/Update/Merge/Remove/Defer/Reject.
-8. When all content is approved, use the exact Second Brain approval command.
-9. Run validators and unit tests before committing.
+1. Start Codex from the repository root.
+2. Supply current evidence.
+3. Use concise intake or a narrow command (`summary`, `questions`, `groups`, `api`, `regression`).
+4. Use `analytics` only when deeper analysis is required.
+5. Use `write test cases for G1`, then `review test cases`; use `next` only after approval.
+6. Use `Update test cases to Second Brain` with supplied Confluence cases for direct Librarian review, normalization, storage, and validation.
+7. Use `write a bug` or `write API automation` only for those artifacts.
+8. Run validation before committing.
 
 ## Validation commands
 
 ```bash
 python3 -m unittest discover -s tests -p "test_*.py" -v
+python3 scripts/check_prompt_budget.py
 python3 scripts/validate_qa_test_cases.py
 python3 scripts/validate_qa_knowledge.py
 ```
 
-## Important limitation
+## Limitation
 
-Instructions and examples strongly improve consistency, but they do not guarantee identical wording on every run. The validators catch structural drift, while the behaviour evals are used to compare reasoning and workflow decisions that cannot be enforced by Markdown parsing alone.
+Instruction routing improves consistency and reduces context cost, but cannot guarantee identical wording on every run. Static checks enforce structure and budgets; behaviour evals remain necessary for reasoning quality.

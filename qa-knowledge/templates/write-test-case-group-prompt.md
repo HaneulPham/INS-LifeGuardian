@@ -1,9 +1,9 @@
 # Write One Detailed Test-Case Group
 
 ```text
-Use the active INS LifeGuardian ticket context and the ins-lifeguardian-qa-analyst skill.
+write test cases for G<GROUP NUMBER>
 
-Write detailed test cases for Group <GROUP NUMBER> only.
+Use the active INS LifeGuardian ticket context and the ins-lifeguardian-qa-analyst skill. Write detailed test cases for Group <GROUP NUMBER> only.
 
 Before writing:
 - Re-read the latest confirmed requirement decisions and reviewer feedback.
@@ -23,4 +23,5 @@ Output requirements:
 - Use isolated non-production recipients/data and define cleanup for alarms, calls, messages, billing, exports, queues, devices, or durable history.
 - Name only realistically affected integrations and protect personal, medical, contact, authentication, and tenant data.
 - Do not include another group and stop after Group <GROUP NUMBER> for review, unless the user explicitly requested all groups or a complete suite.
+- Finish with the single contextual suggestion: `review test cases`.
 ```

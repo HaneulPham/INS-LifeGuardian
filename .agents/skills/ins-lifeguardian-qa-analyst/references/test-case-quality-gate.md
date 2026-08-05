@@ -34,7 +34,7 @@ Run this self-review before returning a test-case group. Correct failures before
 - UI/API Title starts with `Verify `.
 - Title is not fully bolded.
 - Test Area is specific.
-- Priority is one of High, Medium, Low, Lowest and matches business/safety risk.
+- Priority is one of High, Medium, Low and matches business/safety risk.
 - Preconditions contain only scenario-specific setup and exact data.
 
 ## Expected Result
