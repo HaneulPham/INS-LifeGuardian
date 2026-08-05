@@ -2,6 +2,7 @@
 
 | Ticket | Module | Platform | Requirement File | Test Case File | Status | Notes |
 |---|---|---|---|---|---|---|
+| SMAR-2467 | Hardware Rental Billing and Reports | CP Desktop, Backend APIs, EventBridge, Billing Reports, QuickBooks | requirements/SMAR/SMAR-2467.md | test-cases/SMAR/SMAR-2467.md | Completed | 44 approved cases across UI/validation, calculation/API, Device Information, scheduler lifecycle, Billing Reports and QuickBooks export; exact API and EventBridge field-level contracts require supported evidence |
 | SMAR-2602 | AWS Old Backend Failover Routing | CP Desktop/Web, Portal Web, Mobile, Backend APIs, integrations | requirements/SMAR/SMAR-2602.md | test-cases/SMAR/SMAR-2602.md | Completed | 30 approved cases across Primary-only completion and invalid-Failover controlled failure for 15 affected requests |
 | SMAR-2633 | DVA Billing | CP Web | requirements/SMAR/SMAR-2633.md | test-cases/SMAR/SMAR-2633.md | Completed | 36 approved cases passed on STAG; includes first/later invoice-period clarification, XML export, resubmission, and Buy/Recycle regression |
 | SMAR-2635 | Account Cancellation / Client File | Portal Web, Backend APIs | requirements/SMAR/SMAR-2635.md | test-cases/SMAR/SMAR-2635.md | Approved | 49 approved cases across Portal routing, PATCH/POST contracts, failure and concurrency handling, and targeted technical regression; exact HTTP and instrumentation contracts remain open |
