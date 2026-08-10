@@ -3,6 +3,7 @@
 ## Platforms
 
 - CP Desktop
+- CP Web
 - Backend APIs
 - Background jobs and EventBridge schedules
 - Billing Reports
@@ -18,6 +19,15 @@
 - Eligible Hardware Rental occurrences appear in Village, Provider or Client Billing Reports without duplicate rows.
 - QuickBooks Activity is `HARDWARE RENTAL`; descriptions use the approved billing-party format, term and payment sequence.
 
+## Confirmed DVA Prior Approval Number Rules
+
+- Work Orders and Invoices reject normalized exact `N/A`, `NA`, and `None` Prior Approval Number values case-insensitively in CP Web and the API.
+- A supplied whitespace-only value is invalid, while a genuinely empty optional value remains allowed.
+- Leading and trailing whitespace is trimmed before persistence; internal characters and variable valid free-text formats remain unchanged.
+- Invalid API input returns HTTP `400 Bad Request` with `Error = "bad_request"` and `ErrorDescription = "'Dva Presc On' must be a valid value or blank"`.
+- Historical invalid values remain viewable but must be corrected or cleared before an affected Work Order or Invoice update can persist.
+- Final CP Web invalid-input presentation and exact message remain unresolved because current Jira and approved Confluence evidence conflict.
+
 ## Regression Areas
 
 - Billing Service Status dialog and existing End Date workflows.
@@ -28,6 +38,9 @@
 - Village, Provider and Client Billing Reports, filters, calculations and regeneration.
 - Monitoring, SIM, Welfare Check, Establishment Fee and Hardware Purchase report/export behavior.
 - QuickBooks item mappings, invoice descriptions, occurrence sequence and duplicate export protection.
+- Work Order create/update and Invoice update optional-value, exact-match, case-insensitive, whitespace, free-text, atomic-rejection, and historical-correction behavior.
+- CP Web/API convergence for persisted Prior Approval Number values and protection of Invoice status, totals, payment state, and export state.
+- SMAR-2633 DVA rental-date generation and XML export using supported Presc On data.
 
 ## Knowledge Status
 
@@ -36,3 +49,6 @@
 | Hardware Rental term, End Date and automatic-Offline lifecycle | Confirmed | Jira SMAR-2467; approved Confluence page 2581889038 v28 | 2026-08-05 | Reusable CP Desktop, API and scheduler behavior |
 | Hardware Rental Billing Report and QuickBooks mapping | Confirmed | Jira SMAR-2467; Confluence pages 2581889038 v28 and 2438201345 v6 | 2026-08-05 | Village and Provider/Client report/export paths |
 | Exact Billing API and EventBridge field-level contracts | Open Question | Not supplied in reviewed Jira or Confluence evidence | 2026-08-05 | Use implemented contract and developer-supported evidence; do not hardcode unknown fields |
+| DVA Prior Approval Number invalid list, whitespace distinction, trimming, affected records, and API 400 contract | Confirmed | Jira SMAR-2528 current description; Confluence page 2628780034 v10 | 2026-08-10 | Reusable Work Order and Invoice validation behavior |
+| CP Web invalid-input presentation and exact message for Prior Approval Number | Conflict | Jira SMAR-2528 description and comment 44529; Confluence page 2628780034 v10 | 2026-08-10 | Resolve error display versus field clearing and `Presc On.` versus `Dva Presc On` wording before activating deferred UI cases |
+| Work Order/Invoice route methods and successful API response contracts for SMAR-2528 | Open Question | Confluence assumptions A1–A3; successful response schemas not supplied | 2026-08-10 | Confirm before executing deferred positive API cases |
