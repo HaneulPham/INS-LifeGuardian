@@ -28,6 +28,14 @@
 - Historical invalid values remain viewable but must be corrected or cleared before an affected Work Order or Invoice update can persist.
 - Final CP Web invalid-input presentation and exact message remain unresolved because current Jira and approved Confluence evidence conflict.
 
+## Confirmed DVA Mandatory Work Order and Invoice Fields
+
+- CP Web Add Work Order, Edit Work Order, and Edit Invoice enforce requiredness for Client First Name, Client Last Name, Client/Invoice Postcode, Client/Invoice Address, Delivery Postcode, and Delivery Address.
+- A blank applicable mandatory value prevents Save/Next from reaching a completed persisted create or update state.
+- After the applicable missing value is populated, the record can be saved and the value remains after reopen.
+- SMAR-2600 does not add postcode numeric-format or valid-State validation.
+- Exact validation text, simultaneous multi-field presentation, checked Same As Client Details behavior, historical incomplete-record handling, Client File synchronization, and backend/API enforcement remain unconfirmed.
+
 ## Regression Areas
 
 - Billing Service Status dialog and existing End Date workflows.
@@ -52,3 +60,5 @@
 | DVA Prior Approval Number invalid list, whitespace distinction, trimming, affected records, and API 400 contract | Confirmed | Jira SMAR-2528 current description; Confluence page 2628780034 v10 | 2026-08-10 | Reusable Work Order and Invoice validation behavior |
 | CP Web invalid-input presentation and exact message for Prior Approval Number | Conflict | Jira SMAR-2528 description and comment 44529; Confluence page 2628780034 v10 | 2026-08-10 | Resolve error display versus field clearing and `Presc On.` versus `Dva Presc On` wording before activating deferred UI cases |
 | Work Order/Invoice route methods and successful API response contracts for SMAR-2528 | Open Question | Confluence assumptions A1–A3; successful response schemas not supplied | 2026-08-10 | Confirm before executing deferred positive API cases |
+| DVA Work Order/Invoice mandatory identity and address fields | Confirmed | Jira SMAR-2600; Confluence page 2644836353 v3 | 2026-08-13 | CP Web create/edit validation; requiredness only |
+| SMAR-2600 validation presentation, historical data, Client File isolation, Same As behavior, and backend contract | Open Question | Confluence page 2644836353 v3 contains assumptions not confirmed by Jira | 2026-08-13 | 14 executable cases stored and 13 source cases deferred |
