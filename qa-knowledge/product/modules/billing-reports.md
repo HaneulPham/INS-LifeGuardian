@@ -19,6 +19,16 @@
 - Eligible Hardware Rental occurrences appear in Village, Provider or Client Billing Reports without duplicate rows.
 - QuickBooks Activity is `HARDWARE RENTAL`; descriptions use the approved billing-party format, term and payment sequence.
 
+## Confirmed Establishment Fee Billing Default Rules
+
+- Establishment Fee is available once in System, Village/Group, and Client File Billing Defaults.
+- The System default amount is `$14.42`; Village and Client File may override the inherited amount without changing their parent or unrelated files.
+- `Non-Recurring` is the approved singular-payment Rate Type and is read-only for Establishment Fee at all three Billing Default levels.
+- Default Billing Type remains selectable; the ticket does not lock Establishment Fee to Village billing.
+- Non-Recurring Establishment Fee date editing shows one field labelled `DATE`; the selected value persists as both Start Date and End Date, while the existing Billing Services grid may continue to show both equal dates.
+- New Client Files inherit Village configuration before System default, and a File without its own override re-inherits after its Village changes.
+- Hardware Purchase is not migrated to Non-Recurring by SMAR-2421.
+
 ## Confirmed QuickBooks Invoice Description Rules
 
 - Provider and Client invoice descriptions do not include Client File name, Village name, Date On, or Date Off.
@@ -60,6 +70,8 @@
 ## Regression Areas
 
 - Billing Service Status dialog and existing End Date workflows.
+- Establishment Fee System/Village/File labels, `$14.42` default, Rate Type lock, amount hierarchy, override isolation, new-file inheritance, Village-change re-inheritance, and equal service dates.
+- Hardware Purchase and representative recurring service Rate Types/amounts must remain unchanged when Non-Recurring is introduced.
 - Monitoring and other non-Hardware recurring services.
 - Billing API persistence, authorization, tenant/client targeting and duplicate prevention.
 - Client File Device Information Village Rental labels and unrelated fields.
@@ -79,6 +91,8 @@
 |---|---|---|---|---|
 | Hardware Rental term, End Date and automatic-Offline lifecycle | Confirmed | Jira SMAR-2467; approved Confluence page 2581889038 v28 | 2026-08-05 | Reusable CP Desktop, API and scheduler behavior |
 | Hardware Rental Billing Report and QuickBooks mapping | Confirmed | Jira SMAR-2467; Confluence pages 2581889038 v28 and 2438201345 v6 | 2026-08-05 | Village and Provider/Client report/export paths |
+| Establishment Fee Billing Defaults, Non-Recurring lock, hierarchy, and equal service dates | Confirmed | Jira SMAR-2421 Approved description/comments 42987/42992; Confluence page 2358968322 v18 | 2026-08-13 | Reusable CP Desktop Billing Default and Billing Services behaviour; Hardware Purchase excluded |
+| SMAR-2421 exact permissions, invalid-input/API/audit contracts, File-override Village-change behaviour, and CP Web path | Open Question | Not supplied in reviewed Jira or Confluence evidence | 2026-08-13 | Do not infer roles, messages, endpoints, or cross-platform parity |
 | Provider/Client non-Hardware-Rental QuickBooks description templates and Village regression | Confirmed | Jira SMAR-2576; Confluence pages 2438201345 v6 and 2534605201 v8 | 2026-08-13 | Monitoring, Telstra/Voda SIM, Welfare Check, Establishment Fee, and Hardware Purchase |
 | SMAR-2576 Hardware Rental rows without term/payment suffix | Conflict | Confluence page 2534605201 v8 conflicts with linked page 2438201345 v6 and DEC-015/SMAR-2467 | 2026-08-13 | Ten source rows deferred; do not replace confirmed Hardware Rental knowledge without a new decision |
 | Exact Billing API and EventBridge field-level contracts | Open Question | Not supplied in reviewed Jira or Confluence evidence | 2026-08-05 | Use implemented contract and developer-supported evidence; do not hardcode unknown fields |
