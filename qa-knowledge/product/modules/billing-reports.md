@@ -28,6 +28,15 @@
 - Historical invalid values remain viewable but must be corrected or cleared before an affected Work Order or Invoice update can persist.
 - Final CP Web invalid-input presentation and exact message remain unresolved because current Jira and approved Confluence evidence conflict.
 
+## Confirmed DVA Invoice Pre-Export Validation Rules
+
+- In CP Web Raptor DVA Submissions, **Validate Invoices Before Export** rejects selected invoices whose Prior Approval Number is exactly `N/A`, `N.A`, `NA`, or whitespace only.
+- The affected selected row's **Errors** column displays `Prior App Number must be blank or a valid number.`
+- A genuinely blank Prior Approval Number does not trigger this error and remains eligible for the next export step when no other validation errors exist.
+- Validation applies only to selected invoices and does not change invoice status or automatically modify the stored Prior Approval Number.
+- After correction to valid value `123456`, the saved value remains after reopen and the selected invoice displays `The invoice has no validation errors.` when no other errors exist.
+- Lowercase/alternate-separator normalization and `None` handling at this pre-export stage remain Open Questions; do not infer them from the distinct SMAR-2528 save-time rule.
+
 ## Confirmed DVA Mandatory Work Order and Invoice Fields
 
 - CP Web Add Work Order, Edit Work Order, and Edit Invoice enforce requiredness for Client First Name, Client Last Name, Client/Invoice Postcode, Client/Invoice Address, Delivery Postcode, and Delivery Address.
@@ -48,6 +57,7 @@
 - QuickBooks item mappings, invoice descriptions, occurrence sequence and duplicate export protection.
 - Work Order create/update and Invoice update optional-value, exact-match, case-insensitive, whitespace, free-text, atomic-rejection, and historical-correction behavior.
 - CP Web/API convergence for persisted Prior Approval Number values and protection of Invoice status, totals, payment state, and export state.
+- Raptor DVA selected-record validation for exact invalid Prior Approval values, whitespace-versus-blank handling, Errors-column messaging, non-mutation, and correction/revalidation before export.
 - SMAR-2633 DVA rental-date generation and XML export using supported Presc On data.
 
 ## Knowledge Status
@@ -60,5 +70,7 @@
 | DVA Prior Approval Number invalid list, whitespace distinction, trimming, affected records, and API 400 contract | Confirmed | Jira SMAR-2528 current description; Confluence page 2628780034 v10 | 2026-08-10 | Reusable Work Order and Invoice validation behavior |
 | CP Web invalid-input presentation and exact message for Prior Approval Number | Conflict | Jira SMAR-2528 description and comment 44529; Confluence page 2628780034 v10 | 2026-08-10 | Resolve error display versus field clearing and `Presc On.` versus `Dva Presc On` wording before activating deferred UI cases |
 | Work Order/Invoice route methods and successful API response contracts for SMAR-2528 | Open Question | Confluence assumptions A1–A3; successful response schemas not supplied | 2026-08-10 | Confirm before executing deferred positive API cases |
+| Raptor DVA selected-invoice Prior Approval validation, exact message, blank handling, isolation, and non-mutation | Confirmed | Jira SMAR-2504; Confluence page 2564390934 v7 | 2026-08-13 | Distinct pre-export workflow; 5 normalized cases stored |
+| Raptor DVA lowercase/alternate-separator normalization and `None` handling | Open Question | SMAR-2504 does not define these outcomes; related SMAR-2528 applies at save time | 2026-08-13 | Do not promote cross-stage behavior without confirmation |
 | DVA Work Order/Invoice mandatory identity and address fields | Confirmed | Jira SMAR-2600; Confluence page 2644836353 v3 | 2026-08-13 | CP Web create/edit validation; requiredness only |
 | SMAR-2600 validation presentation, historical data, Client File isolation, Same As behavior, and backend contract | Open Question | Confluence page 2644836353 v3 contains assumptions not confirmed by Jira | 2026-08-13 | 14 executable cases stored and 13 source cases deferred |
