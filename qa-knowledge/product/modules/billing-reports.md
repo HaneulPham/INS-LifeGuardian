@@ -19,6 +19,18 @@
 - Eligible Hardware Rental occurrences appear in Village, Provider or Client Billing Reports without duplicate rows.
 - QuickBooks Activity is `HARDWARE RENTAL`; descriptions use the approved billing-party format, term and payment sequence.
 
+## Confirmed QuickBooks Invoice Description Rules
+
+- Provider and Client invoice descriptions do not include Client File name, Village name, Date On, or Date Off.
+- Monitoring uses `{DEVICE_TYPE} - Alarm Rental and Monitoring - {CYCLE} in {TIMING}`.
+- Telstra and Voda SIM use `{DEVICE_TYPE} - {CYCLE} in {TIMING}` with the carrier-specific Activity.
+- Welfare Check uses `{CYCLE} in {TIMING}`.
+- Provider/Client Establishment Fee uses a blank Description and Activity `ESTAB FEE`.
+- Provider/Client Hardware Purchase uses `{DEVICE_TYPE}`.
+- Recurring Provider/Client mappings cover Monthly, Quarterly, Biannual, and Annual in Advance and Arrears.
+- Village Monitoring, SIM, Welfare Check, Establishment Fee, and Hardware Purchase mappings remain regression coverage.
+- Hardware Rental term/payment formatting remains governed by the confirmed SMAR-2467 rule. SMAR-2576 case page 2534605201 v8 omits that suffix and is Conflict evidence, not a replacement rule.
+
 ## Confirmed DVA Prior Approval Number Rules
 
 - Work Orders and Invoices reject normalized exact `N/A`, `NA`, and `None` Prior Approval Number values case-insensitively in CP Web and the API.
@@ -55,6 +67,7 @@
 - Village, Provider and Client Billing Reports, filters, calculations and regeneration.
 - Monitoring, SIM, Welfare Check, Establishment Fee and Hardware Purchase report/export behavior.
 - QuickBooks item mappings, invoice descriptions, occurrence sequence and duplicate export protection.
+- Provider/Client removal of legacy Client File/Village/date text, service-specific Cycle/Timing templates, blank Establishment Fee behavior, carrier Activity, and billing-party isolation.
 - Work Order create/update and Invoice update optional-value, exact-match, case-insensitive, whitespace, free-text, atomic-rejection, and historical-correction behavior.
 - CP Web/API convergence for persisted Prior Approval Number values and protection of Invoice status, totals, payment state, and export state.
 - Raptor DVA selected-record validation for exact invalid Prior Approval values, whitespace-versus-blank handling, Errors-column messaging, non-mutation, and correction/revalidation before export.
@@ -66,6 +79,8 @@
 |---|---|---|---|---|
 | Hardware Rental term, End Date and automatic-Offline lifecycle | Confirmed | Jira SMAR-2467; approved Confluence page 2581889038 v28 | 2026-08-05 | Reusable CP Desktop, API and scheduler behavior |
 | Hardware Rental Billing Report and QuickBooks mapping | Confirmed | Jira SMAR-2467; Confluence pages 2581889038 v28 and 2438201345 v6 | 2026-08-05 | Village and Provider/Client report/export paths |
+| Provider/Client non-Hardware-Rental QuickBooks description templates and Village regression | Confirmed | Jira SMAR-2576; Confluence pages 2438201345 v6 and 2534605201 v8 | 2026-08-13 | Monitoring, Telstra/Voda SIM, Welfare Check, Establishment Fee, and Hardware Purchase |
+| SMAR-2576 Hardware Rental rows without term/payment suffix | Conflict | Confluence page 2534605201 v8 conflicts with linked page 2438201345 v6 and DEC-015/SMAR-2467 | 2026-08-13 | Ten source rows deferred; do not replace confirmed Hardware Rental knowledge without a new decision |
 | Exact Billing API and EventBridge field-level contracts | Open Question | Not supplied in reviewed Jira or Confluence evidence | 2026-08-05 | Use implemented contract and developer-supported evidence; do not hardcode unknown fields |
 | DVA Prior Approval Number invalid list, whitespace distinction, trimming, affected records, and API 400 contract | Confirmed | Jira SMAR-2528 current description; Confluence page 2628780034 v10 | 2026-08-10 | Reusable Work Order and Invoice validation behavior |
 | CP Web invalid-input presentation and exact message for Prior Approval Number | Conflict | Jira SMAR-2528 description and comment 44529; Confluence page 2628780034 v10 | 2026-08-10 | Resolve error display versus field clearing and `Presc On.` versus `Dva Presc On` wording before activating deferred UI cases |
