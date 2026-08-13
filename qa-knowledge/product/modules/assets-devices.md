@@ -13,6 +13,16 @@
 - VFI refers to the F1-frequency model and is not interchangeable with VFII.
 - Reference-description changes must preserve existing device, asset, stock, client-file, Service Request, setup-step, and billing relationships.
 
+## Confirmed Asset Import Identifier Updates
+
+- CP Desktop Import Asset accepts the mandatory `Barcode,Imei,MacAddress` CSV format.
+- Barcode plus the selected Asset Type targets an existing asset; a mismatched selected Asset Type is a validation failure.
+- An existing match is updated in place and only supplied Imei/MacAddress values change; blank optional values do not clear stored values.
+- An unmatched Barcode continues through the existing new-asset creation path.
+- Supplied Imei is 15 numeric digits and Luhn-valid; supplied MacAddress contains six colon-separated hexadecimal pairs.
+- Leading/trailing whitespace is removed before matching, validation, blank evaluation, and persistence.
+- Duplicate Barcode behavior within one CSV and exact backend/audit contracts remain open.
+
 ## Confirmed Peripheral Service Request Steps
 
 - The 18 SMAR-2537 supported non-PIR peripherals use Custom, Select Client File, Create Medi Alarm, and Listen for Alarm when top-level; a child instance omits Select Client File and uses the parent Assign to Client File context.
@@ -45,3 +55,4 @@
 | Undefined StockTrans and Service Request stock effects use deployed pre-refactor behavior as their regression baseline | Confirmed | DEC-021; SMAR-1839 user decisions Q1-A, Q2-D, Q3-A | 2026-08-10 | This confirms the evidence source; exact unresolved values remain Open Questions |
 | Peripheral eligibility, topology-specific Client File source, Create/Listen workflow, and asymmetric removal | Confirmed | Jira SMAR-2537; Confluence page 2517598218 v49 | 2026-08-13 | 72 reviewed cases are stored; exact API/error/log contracts remain open |
 | Active-listener removal, timeout/cancel, and failure-atomicity outcomes | QA Assumption | SMAR-2537 A1–A3 and risk cases | 2026-08-13 | Retain as traceable coverage until baseline or instrumentation evidence confirms exact behaviour |
+| Asset Import Barcode/Asset Type matching and Imei/MacAddress update rules | Confirmed | Jira SMAR-2525; Confluence page 2566684674 v11 | 2026-08-13 | 29 normalized cases; duplicate-row behavior and exact backend/audit contracts remain open. |
