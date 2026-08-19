@@ -32,6 +32,15 @@
 - Listen for Alarm must match the intended File, topology/main-parent context, and generated Medi Alarm UUID; the legacy `RecivedFromMediAlarmDeviceId` field stores that UUID for mobile backward compatibility.
 - Service Request-initiated removal deletes the generated device from the Client File; direct Client File deletion does not rewrite the originating Service Request.
 
+## Confirmed InteliCare Dialler Rules
+
+- `InteliCare Dialler` is a distinct CP Asset Type, Device Type, Stock Type, billing identity, and report identity while using the approved LGX/CAMS runtime behavior.
+- Generated assets use exact ten-character `IN########` barcodes beginning at `IN00000001` when `LastBarcodeId = 0`; generated devices use an `I`-prefixed Device Code.
+- InteliCare supports the approved Asset Management, Stock, Settings, Device Setup, Devices, Service Request/CAMS creation, Client File assignment, alarm, SIP/DTMF, SMS/command, power/battery, peripheral, SIM/Jasper, and lifecycle workflows.
+- Existing LGX and other device records are not automatically migrated or reclassified; only a targeted authorized workflow changes a record.
+- Compatible code containing the compiled InteliCare enum must be deployed before the RavenDB `AssetType` document is created.
+- For SMAR-2700, Return Received moves quantity from Pending Return to In Stock while leaving Total and Available unchanged when Allocated is unchanged; this ticket-specific decision does not replace DEC-021 as a universal Stock rule.
+
 ## Reusable Regression Areas
 
 - Settings device types and Device Setup Steps mappings.
@@ -42,6 +51,7 @@
 - Peripheral Select/Create/Listen eligibility, parent-versus-top-level Client File source, CAMS/INS device placement, alarm matching, duplicate prevention, and asymmetric removal.
 - CP Desktop and Portal reports/exports that consume device, asset, or stock descriptions.
 - Duplicate reference options and unchanged identifiers, counts, rates, and links.
+- InteliCare-versus-LGX catalogue, identifier, Stock, Service Request, CAMS/runtime, SIM/Jasper, Client File, and lifecycle isolation.
 
 ## Knowledge Status
 
@@ -56,3 +66,4 @@
 | Peripheral eligibility, topology-specific Client File source, Create/Listen workflow, and asymmetric removal | Confirmed | Jira SMAR-2537; Confluence page 2517598218 v49 | 2026-08-13 | 72 reviewed cases are stored; exact API/error/log contracts remain open |
 | Active-listener removal, timeout/cancel, and failure-atomicity outcomes | QA Assumption | SMAR-2537 A1–A3 and risk cases | 2026-08-13 | Retain as traceable coverage until baseline or instrumentation evidence confirms exact behaviour |
 | Asset Import Barcode/Asset Type matching and Imei/MacAddress update rules | Confirmed | Jira SMAR-2525; Confluence page 2566684674 v11 | 2026-08-13 | 29 normalized cases; duplicate-row behavior and exact backend/audit contracts remain open. |
+| InteliCare Dialler identity, identifiers, LGX/CAMS parity, lifecycle, and Service Request support | Confirmed | Jira SMAR-2700; Confluence page 2658795521 v17; DEC-033 | 2026-08-19 | 108 normalized cases across seven groups; exact low-level contracts require supported evidence where needed |

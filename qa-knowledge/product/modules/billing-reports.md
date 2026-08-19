@@ -78,6 +78,14 @@
 - The existing Services Installed report remains available without the Services Installed Summary footer figures.
 - Exact Price currency-symbol presentation, the conflicting source Work Order Type filter value, zero-price denominator behaviour, and empty-dataset outcome remain unresolved.
 
+## Confirmed InteliCare Billing and Report Rules
+
+- InteliCare Dialler has its own selectable Billing Default/rate identity and must not inherit a different Device Type's rate merely because it uses LGX runtime behavior.
+- Device Billing Services, Billing History, Billing Report results, and QuickBooks test exports retain the intended InteliCare device, Client File, service, cycle, timing, and amount.
+- Provider/Client Monitoring descriptions resolve the confirmed DEC-029 template with Device Type `InteliCare Dialler`.
+- Low Usage, Device Network, Billing, and Stock Level reports expose InteliCare separately from LGX.
+- Report regeneration and repeated export processing do not create duplicate billing records, invoice lines, or cross-client charges.
+
 ## Regression Areas
 
 - Billing Service Status dialog and existing End Date workflows.
@@ -96,6 +104,7 @@
 - Raptor DVA selected-record validation for exact invalid Prior Approval values, whitespace-versus-blank handling, Errors-column messaging, non-mutation, and correction/revalidation before export.
 - SMAR-2633 DVA rental-date generation and XML export using supported Presc On data.
 - Services Installed Summary Price/Purchase Type columns, saved Work Order item-price mapping, same/different-price grouping, quantity-weighted category averages, Installed Date population, and existing Services Installed non-footer regression.
+- InteliCare Billing Default/rate isolation, billing-service status, reports/history, QuickBooks identity, duplicate prevention, and existing LGX/other-device regression.
 
 ## Knowledge Status
 
@@ -118,3 +127,4 @@
 | Services Installed Summary columns, source-price mapping, grouping, category averages, date population, and Services Installed regression | Confirmed | Jira SMAR-2415; Confluence page 2384363522 v8 | 2026-08-13 | 10 executable normalized cases stored from 14 source rows |
 | SMAR-2415 currency symbol, Work Order Type source mismatch, zero-price denominator, and empty-dataset outcome | Conflict | Confluence page 2384363522 v8 TC#2, TC#8, TC#10, and TC#11 | 2026-08-13 | Three source cases deferred; exact currency-symbol expectation excluded from executable results |
 | SMAR-2415 exact report-query/API, authorization, and internal calculation contract | Open Question | Not supplied in reviewed Jira or Confluence evidence | 2026-08-13 | Generated reports and prepared Work Orders are the current tester-accessible evidence |
+| InteliCare Billing Defaults, reports, history, QuickBooks identity, and isolation | Confirmed | Jira SMAR-2700; Confluence page 2658795521 v17; DEC-033 and DEC-029 | 2026-08-19 | Uses the approved generic billing/description templates with Device Type `InteliCare Dialler`; 10 Group 7 cases stored |
