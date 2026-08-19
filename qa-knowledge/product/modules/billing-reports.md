@@ -67,6 +67,17 @@
 - SMAR-2600 does not add postcode numeric-format or valid-State validation.
 - Exact validation text, simultaneous multi-field presentation, checked Same As Client Details behavior, historical incomplete-record handling, Client File synchronization, and backend/API enforcement remain unconfirmed.
 
+## Confirmed Services Installed Summary Rules
+
+- CP Web Services Installed Summary includes Price and Purchase Type after the existing report columns.
+- Price uses the applicable Work Order item price, including an edited value that differs from the product default.
+- Purchase Type identifies Purchase and Rental rows.
+- The same State, Product Code, Purchase Type, and Price combination is grouped once with quantity summed; different prices produce separate rows.
+- The footer displays separate quantity-weighted Average Purchase Price and Average Rental Price figures rounded to two decimal places.
+- Report rows and footer averages use the selected Installed Date population; Rentals outside that period are not included merely because they remain current.
+- The existing Services Installed report remains available without the Services Installed Summary footer figures.
+- Exact Price currency-symbol presentation, the conflicting source Work Order Type filter value, zero-price denominator behaviour, and empty-dataset outcome remain unresolved.
+
 ## Regression Areas
 
 - Billing Service Status dialog and existing End Date workflows.
@@ -84,6 +95,7 @@
 - CP Web/API convergence for persisted Prior Approval Number values and protection of Invoice status, totals, payment state, and export state.
 - Raptor DVA selected-record validation for exact invalid Prior Approval values, whitespace-versus-blank handling, Errors-column messaging, non-mutation, and correction/revalidation before export.
 - SMAR-2633 DVA rental-date generation and XML export using supported Presc On data.
+- Services Installed Summary Price/Purchase Type columns, saved Work Order item-price mapping, same/different-price grouping, quantity-weighted category averages, Installed Date population, and existing Services Installed non-footer regression.
 
 ## Knowledge Status
 
@@ -103,3 +115,6 @@
 | Raptor DVA lowercase/alternate-separator normalization and `None` handling | Open Question | SMAR-2504 does not define these outcomes; related SMAR-2528 applies at save time | 2026-08-13 | Do not promote cross-stage behavior without confirmation |
 | DVA Work Order/Invoice mandatory identity and address fields | Confirmed | Jira SMAR-2600; Confluence page 2644836353 v3 | 2026-08-13 | CP Web create/edit validation; requiredness only |
 | SMAR-2600 validation presentation, historical data, Client File isolation, Same As behavior, and backend contract | Open Question | Confluence page 2644836353 v3 contains assumptions not confirmed by Jira | 2026-08-13 | 14 executable cases stored and 13 source cases deferred |
+| Services Installed Summary columns, source-price mapping, grouping, category averages, date population, and Services Installed regression | Confirmed | Jira SMAR-2415; Confluence page 2384363522 v8 | 2026-08-13 | 10 executable normalized cases stored from 14 source rows |
+| SMAR-2415 currency symbol, Work Order Type source mismatch, zero-price denominator, and empty-dataset outcome | Conflict | Confluence page 2384363522 v8 TC#2, TC#8, TC#10, and TC#11 | 2026-08-13 | Three source cases deferred; exact currency-symbol expectation excluded from executable results |
+| SMAR-2415 exact report-query/API, authorization, and internal calculation contract | Open Question | Not supplied in reviewed Jira or Confluence evidence | 2026-08-13 | Generated reports and prepared Work Orders are the current tester-accessible evidence |
