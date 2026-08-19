@@ -4,6 +4,17 @@
 
 - CP Desktop
 - Portal Web
+- Backend APIs
+- Twilio incoming-message alarm path
+
+## Confirmed SafetyWatch LineNumber Mapping
+
+- A returned SafetyWatch uses its stored LineNumber when populated.
+- When stored SafetyWatch LineNumber is blank, returned/transformed LineNumber remains blank and does not use the system-generated Asset Barcode.
+- SmartHomeMini/Mobile retains the existing Asset Barcode fallback when its LineNumber is blank.
+- CP Device Listing/DeviceTransformer must show the same device-type-specific mapping without persisting a response fallback into device data.
+- `GetDeviceByLineNumberRequest` can resolve a SafetyWatch through its unique stored LineNumber for the existing Twilio incoming-message alarm path.
+- Whether a blank-LineNumber SafetyWatch may be found directly through its Asset Barcode is Conflict evidence in SMAR-2404 and must not be treated as reusable confirmed behavior.
 
 ## Confirmed LGX VFII Reference Labels
 
@@ -52,6 +63,8 @@
 - CP Desktop and Portal reports/exports that consume device, asset, or stock descriptions.
 - Duplicate reference options and unchanged identifiers, counts, rates, and links.
 - InteliCare-versus-LGX catalogue, identifier, Stock, Service Request, CAMS/runtime, SIM/Jasper, Client File, and lifecycle isolation.
+- SafetyWatch versus SmartHomeMini/Mobile LineNumber/Barcode mapping across dispatcher responses, DeviceTransformer, CP Device Listing, Client File device loading, billing consumers, and Twilio lookup.
+- Unique LineNumber/Barcode test data and DeviceUuid/client-file verification to prevent wrong-device or cross-client alarm association.
 
 ## Knowledge Status
 
@@ -67,3 +80,6 @@
 | Active-listener removal, timeout/cancel, and failure-atomicity outcomes | QA Assumption | SMAR-2537 A1–A3 and risk cases | 2026-08-13 | Retain as traceable coverage until baseline or instrumentation evidence confirms exact behaviour |
 | Asset Import Barcode/Asset Type matching and Imei/MacAddress update rules | Confirmed | Jira SMAR-2525; Confluence page 2566684674 v11 | 2026-08-13 | 29 normalized cases; duplicate-row behavior and exact backend/audit contracts remain open. |
 | InteliCare Dialler identity, identifiers, LGX/CAMS parity, lifecycle, and Service Request support | Confirmed | Jira SMAR-2700; Confluence page 2658795521 v17; DEC-033 | 2026-08-19 | 108 normalized cases across seven groups; exact low-level contracts require supported evidence where needed |
+| SafetyWatch returned LineNumber and SmartHomeMini/Mobile fallback mapping | Confirmed | Jira SMAR-2404 description/Test Cases; Jira SMAR-2403; Confluence page 2644410373 v3 | 2026-08-19 | 17 normalized cases stored; direct SafetyWatch-by-Barcode lookup remains Conflict. |
+| Blank-LineNumber SafetyWatch lookup through Asset Barcode | Conflict | Jira SMAR-2404 Test Cases versus Confluence page 2644410373 v3 G1-06/G2-02 | 2026-08-19 | Do not activate the direct lookup or derived Twilio case until clarified. |
+| Exact dispatcher accepted/not-found and Twilio unresolved-device contracts | Open Question | Not defined by reviewed SMAR-2404/SMAR-2403 evidence | 2026-08-19 | Record deployed status/body and use sanitized correlation evidence. |

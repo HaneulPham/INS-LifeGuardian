@@ -86,6 +86,13 @@
 - Low Usage, Device Network, Billing, and Stock Level reports expose InteliCare separately from LGX.
 - Report regeneration and repeated export processing do not create duplicate billing records, invoice lines, or cross-client charges.
 
+## Confirmed Device LineNumber Billing Dependency
+
+- SMAR-2404 identifies `GetDeviceRequest` as a dependency of GET Device Billing, PATCH Device Billing, and POST Device Linking Code.
+- SafetyWatch provider/rate evaluation must consume the stored LineNumber when present and must not treat the system-generated Asset Barcode as returned LineNumber when the stored value is blank.
+- `DeviceTransformer`/`FindDevicesRequest` feeds GET Device Billing by File/Group and Billing Report consumers, so CP device output and billing/report source data must use the same SafetyWatch versus SmartHomeMini/Mobile mapping.
+- Exact billing/provider/rate, linking-code, and blank-LineNumber failure/fallback outcomes are not defined by the reviewed cases and remain Open Questions.
+
 ## Regression Areas
 
 - Billing Service Status dialog and existing End Date workflows.
@@ -105,6 +112,8 @@
 - SMAR-2633 DVA rental-date generation and XML export using supported Presc On data.
 - Services Installed Summary Price/Purchase Type columns, saved Work Order item-price mapping, same/different-price grouping, quantity-weighted category averages, Installed Date population, and existing Services Installed non-footer regression.
 - InteliCare Billing Default/rate isolation, billing-service status, reports/history, QuickBooks identity, duplicate prevention, and existing LGX/other-device regression.
+- SafetyWatch LineNumber versus Asset Barcode isolation across device billing GET/PATCH, linking-code assignment, Billing Online/Offline, CP Billing, Billing Report, and GET Device Billing by File/Group.
+- SmartHomeMini/Mobile Barcode fallback protection in the same shared billing and transformer consumers.
 
 ## Knowledge Status
 
@@ -128,3 +137,5 @@
 | SMAR-2415 currency symbol, Work Order Type source mismatch, zero-price denominator, and empty-dataset outcome | Conflict | Confluence page 2384363522 v8 TC#2, TC#8, TC#10, and TC#11 | 2026-08-13 | Three source cases deferred; exact currency-symbol expectation excluded from executable results |
 | SMAR-2415 exact report-query/API, authorization, and internal calculation contract | Open Question | Not supplied in reviewed Jira or Confluence evidence | 2026-08-13 | Generated reports and prepared Work Orders are the current tester-accessible evidence |
 | InteliCare Billing Defaults, reports, history, QuickBooks identity, and isolation | Confirmed | Jira SMAR-2700; Confluence page 2658795521 v17; DEC-033 and DEC-029 | 2026-08-19 | Uses the approved generic billing/description templates with Device Type `InteliCare Dialler`; 10 Group 7 cases stored |
+| SafetyWatch stored LineNumber dependency and no Asset Barcode substitution in returned billing source data | Confirmed | Jira SMAR-2404 description and Test Cases field | 2026-08-19 | Applies to GetDeviceRequest and DeviceTransformer consumers; SmartHomeMini/Mobile fallback remains unchanged. |
+| Exact blank-LineNumber SafetyWatch billing/provider/rate, linking-code, and report outcomes | Open Question | Jira SMAR-2404 names the impacted consumers but Confluence page 2644410373 v3 contains no corresponding cases | 2026-08-19 | Add targeted cases only after the observable source mapping and expected downstream result are supplied. |
